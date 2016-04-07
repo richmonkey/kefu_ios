@@ -7,6 +7,13 @@
 //
 
 #import "AppDelegate.h"
+#import <gobelieve/IMService.h>
+#import <gobelieve/PeerMessageHandler.h>
+#import <gobelieve/GroupMessageHandler.h>
+#import <gobelieve/CustomerMessageHandler.h>
+#import <gobelieve/CustomerMessageDB.h>
+#import <gobelieve/CustomerOutbox.h>
+#import <gobelieve/IMHttpAPI.H>
 
 @interface AppDelegate ()
 
@@ -17,6 +24,16 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+
+    [IMService instance].deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSLog(@"device id:%@", [[[UIDevice currentDevice] identifierForVendor] UUIDString]);
+    [IMService instance].peerMessageHandler = [PeerMessageHandler instance];
+    [IMService instance].groupMessageHandler = [GroupMessageHandler instance];
+    [IMService instance].customerMessageHandler = [CustomerMessageHandler instance];
+    [[IMService instance] startRechabilityNotifier];
+
+    
     return YES;
 }
 

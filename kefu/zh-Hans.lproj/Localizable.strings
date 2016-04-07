@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  kefu
+
+  Created by houxh on 16/4/7.
+  Copyright © 2016年 beetle. All rights reserved.
+*/
+"login.success" = "登录成功";
+"login.failure" = "登录失败";
+"login.doing" = "登录中...";

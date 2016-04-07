@@ -7,15 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4BF5438D56AB7BB7A5CEAE96 /* libPods-kefu.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5EF4A6AAFD97CBCE3ECDD42 /* libPods-kefu.a */; };
 		6D12EC661CB517650003A03B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC651CB517650003A03B /* main.m */; };
 		6D12EC691CB517650003A03B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC681CB517650003A03B /* AppDelegate.m */; };
 		6D12EC6C1CB517650003A03B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC6B1CB517650003A03B /* ViewController.m */; };
 		6D12EC6F1CB517650003A03B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC6D1CB517650003A03B /* Main.storyboard */; };
 		6D12EC711CB517650003A03B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC701CB517650003A03B /* Assets.xcassets */; };
 		6D12EC741CB517650003A03B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC721CB517650003A03B /* LaunchScreen.storyboard */; };
+		6D12EC801CB5FFC70003A03B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC821CB5FFC70003A03B /* Localizable.strings */; };
+		6D12EC891CB600C60003A03B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC881CB600C60003A03B /* Info.plist */; };
+		6D12EC8C1CB604010003A03B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC8E1CB604010003A03B /* InfoPlist.strings */; };
+		6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC911CB6061E0003A03B /* CustomerMessageListViewController.m */; };
+		6D12EC961CB606390003A03B /* MessageConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC941CB606390003A03B /* MessageConversationCell.m */; };
+		6D12EC971CB606390003A03B /* MessageConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC951CB606390003A03B /* MessageConversationCell.xib */; };
+		6D12EC9B1CB618210003A03B /* AppDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC9A1CB618210003A03B /* AppDB.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3A796CD52B9AF5311EB96B5D /* Pods-kefu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kefu.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kefu/Pods-kefu.debug.xcconfig"; sourceTree = "<group>"; };
 		6D12EC611CB517650003A03B /* kefu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kefu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D12EC651CB517650003A03B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6D12EC671CB517650003A03B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -25,7 +34,20 @@
 		6D12EC6E1CB517650003A03B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6D12EC701CB517650003A03B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6D12EC731CB517650003A03B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		6D12EC751CB517650003A03B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6D12EC811CB5FFC70003A03B /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6D12EC841CB600090003A03B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		6D12EC881CB600C60003A03B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6D12EC8D1CB604010003A03B /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6D12EC8F1CB604030003A03B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		6D12EC901CB6061E0003A03B /* CustomerMessageListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerMessageListViewController.h; sourceTree = "<group>"; };
+		6D12EC911CB6061E0003A03B /* CustomerMessageListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerMessageListViewController.m; sourceTree = "<group>"; };
+		6D12EC931CB606390003A03B /* MessageConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageConversationCell.h; sourceTree = "<group>"; };
+		6D12EC941CB606390003A03B /* MessageConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageConversationCell.m; sourceTree = "<group>"; };
+		6D12EC951CB606390003A03B /* MessageConversationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageConversationCell.xib; sourceTree = "<group>"; };
+		6D12EC991CB618210003A03B /* AppDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDB.h; sourceTree = "<group>"; };
+		6D12EC9A1CB618210003A03B /* AppDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDB.m; sourceTree = "<group>"; };
+		D5EF4A6AAFD97CBCE3ECDD42 /* libPods-kefu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kefu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD63C0FC9F93DB2C0E44BA29 /* Pods-kefu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kefu.release.xcconfig"; path = "Pods/Target Support Files/Pods-kefu/Pods-kefu.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,17 +55,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BF5438D56AB7BB7A5CEAE96 /* libPods-kefu.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		41493CA340133906C8067453 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D5EF4A6AAFD97CBCE3ECDD42 /* libPods-kefu.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		6D12EC581CB517650003A03B = {
 			isa = PBXGroup;
 			children = (
 				6D12EC631CB517650003A03B /* kefu */,
 				6D12EC621CB517650003A03B /* Products */,
+				D58DBF347EB9114A2B9EA566 /* Pods */,
+				41493CA340133906C8067453 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,14 +91,21 @@
 		6D12EC631CB517650003A03B /* kefu */ = {
 			isa = PBXGroup;
 			children = (
+				6D12EC991CB618210003A03B /* AppDB.h */,
+				6D12EC9A1CB618210003A03B /* AppDB.m */,
 				6D12EC671CB517650003A03B /* AppDelegate.h */,
 				6D12EC681CB517650003A03B /* AppDelegate.m */,
 				6D12EC6A1CB517650003A03B /* ViewController.h */,
 				6D12EC6B1CB517650003A03B /* ViewController.m */,
+				6D12EC931CB606390003A03B /* MessageConversationCell.h */,
+				6D12EC941CB606390003A03B /* MessageConversationCell.m */,
+				6D12EC951CB606390003A03B /* MessageConversationCell.xib */,
+				6D12EC901CB6061E0003A03B /* CustomerMessageListViewController.h */,
+				6D12EC911CB6061E0003A03B /* CustomerMessageListViewController.m */,
 				6D12EC6D1CB517650003A03B /* Main.storyboard */,
 				6D12EC701CB517650003A03B /* Assets.xcassets */,
 				6D12EC721CB517650003A03B /* LaunchScreen.storyboard */,
-				6D12EC751CB517650003A03B /* Info.plist */,
+				6D12EC881CB600C60003A03B /* Info.plist */,
 				6D12EC641CB517650003A03B /* Supporting Files */,
 			);
 			path = kefu;
@@ -74,9 +114,20 @@
 		6D12EC641CB517650003A03B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				6D12EC8E1CB604010003A03B /* InfoPlist.strings */,
+				6D12EC821CB5FFC70003A03B /* Localizable.strings */,
 				6D12EC651CB517650003A03B /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D58DBF347EB9114A2B9EA566 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3A796CD52B9AF5311EB96B5D /* Pods-kefu.debug.xcconfig */,
+				FD63C0FC9F93DB2C0E44BA29 /* Pods-kefu.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -86,9 +137,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6D12EC781CB517650003A03B /* Build configuration list for PBXNativeTarget "kefu" */;
 			buildPhases = (
+				4439CF3551F98695C291F9C2 /* Check Pods Manifest.lock */,
 				6D12EC5D1CB517650003A03B /* Sources */,
 				6D12EC5E1CB517650003A03B /* Frameworks */,
 				6D12EC5F1CB517650003A03B /* Resources */,
+				44820ED2793BED4FA6C3A88F /* Embed Pods Frameworks */,
+				DD7CF6DBCC8FA9673689690C /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -118,8 +172,8 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 6D12EC581CB517650003A03B;
 			productRefGroup = 6D12EC621CB517650003A03B /* Products */;
@@ -137,21 +191,76 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D12EC741CB517650003A03B /* LaunchScreen.storyboard in Resources */,
+				6D12EC8C1CB604010003A03B /* InfoPlist.strings in Resources */,
+				6D12EC801CB5FFC70003A03B /* Localizable.strings in Resources */,
 				6D12EC711CB517650003A03B /* Assets.xcassets in Resources */,
+				6D12EC891CB600C60003A03B /* Info.plist in Resources */,
 				6D12EC6F1CB517650003A03B /* Main.storyboard in Resources */,
+				6D12EC971CB606390003A03B /* MessageConversationCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4439CF3551F98695C291F9C2 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		44820ED2793BED4FA6C3A88F /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-kefu/Pods-kefu-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DD7CF6DBCC8FA9673689690C /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-kefu/Pods-kefu-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6D12EC5D1CB517650003A03B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */,
 				6D12EC6C1CB517650003A03B /* ViewController.m in Sources */,
 				6D12EC691CB517650003A03B /* AppDelegate.m in Sources */,
+				6D12EC9B1CB618210003A03B /* AppDB.m in Sources */,
 				6D12EC661CB517650003A03B /* main.m in Sources */,
+				6D12EC961CB606390003A03B /* MessageConversationCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,6 +281,24 @@
 				6D12EC731CB517650003A03B /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		6D12EC821CB5FFC70003A03B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6D12EC811CB5FFC70003A03B /* Base */,
+				6D12EC841CB600090003A03B /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		6D12EC8E1CB604010003A03B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6D12EC8D1CB604010003A03B /* Base */,
+				6D12EC8F1CB604030003A03B /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -197,6 +324,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -240,6 +368,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -259,8 +388,15 @@
 		};
 		6D12EC791CB517650003A03B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3A796CD52B9AF5311EB96B5D /* Pods-kefu.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					MAS_SHORTHAND,
+				);
 				INFOPLIST_FILE = kefu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu.kefu;
@@ -270,8 +406,15 @@
 		};
 		6D12EC7A1CB517650003A03B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FD63C0FC9F93DB2C0E44BA29 /* Pods-kefu.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					MAS_SHORTHAND,
+				);
 				INFOPLIST_FILE = kefu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu.kefu;
@@ -298,6 +441,7 @@
 				6D12EC7A1CB517650003A03B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
