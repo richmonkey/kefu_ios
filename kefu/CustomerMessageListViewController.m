@@ -52,6 +52,12 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
 
 }
 
+-(NSString*)getDocumentPath {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    return basePath;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -60,6 +66,11 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     id object = [ldb objectForKey:@"user_auth"];
     int64_t uid = [[object objectForKey:@"uid"] longLongValue];
     NSString *token = [object objectForKey:@"access_token"];
+    
+    
+    NSString *path = [self getDocumentPath];
+    NSString *customerPath = [NSString stringWithFormat:@"%@/customer", path];
+    [[CustomerMessageDB instance] setDbPath:customerPath];
     
     [IMService instance].uid = uid;
     [IMService instance].token = token;
@@ -362,7 +373,7 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     u.uid = uid;
     u.name = [NSString stringWithFormat:@"uid:%lld", uid];
     u.identifier = u.name;
-    return nil;
+    return u;
 }
 
 //从服务器获取用户信息
