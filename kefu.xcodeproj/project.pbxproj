@@ -399,7 +399,7 @@
 				);
 				INFOPLIST_FILE = kefu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu.kefu;
+				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -417,7 +417,7 @@
 				);
 				INFOPLIST_FILE = kefu/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu.kefu;
+				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
