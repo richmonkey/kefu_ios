@@ -23,6 +23,9 @@
 #import "CustomerConversation.h"
 #import <gobelieve/IMHttpAPI.h>
 #import <gobelieve/IMService.h>
+
+#import "SettingViewController.h"
+
 //RGB颜色
 #define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
 //RGB颜色和不透明度
@@ -137,6 +140,18 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     if ([[IMService instance] connectState] == STATE_CONNECTING) {
         self.navigationItem.title = @"连接中...";
     }
+    
+    UIBarButtonItem *barButtonItemRight =[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"first_pg_right_setting"]
+                                                                          style:UIBarButtonItemStylePlain
+                                                                         target:self
+                                                                         action:@selector(rightBarButtonItemClicked:)];
+    [self.navigationItem setRightBarButtonItem:barButtonItemRight];
+}
+
+- (void)rightBarButtonItemClicked:(id)sender{
+    SettingViewController *setting = [[SettingViewController alloc] init];
+    setting.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:setting animated:YES];
 }
 
 - (void)updateConversationDetail:(Conversation*)conv {

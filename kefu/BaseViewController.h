@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "UIView+Toast.h"
+#import "UIAlertView+XPAlertView.h"
+
 
 
 @interface BaseViewController : UIViewController
