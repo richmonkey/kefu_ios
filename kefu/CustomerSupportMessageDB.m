@@ -114,7 +114,7 @@
 
 
 //4字节magic + 4字节消息长度 + 消息主体 + 4字节消息长度 + 4字节magic
-//消息主体：4字节标志 ＋ 4字节时间戳 + 8字节发送者id + 8字节接受者id ＋ 8字节客户appid ＋
+//消息主体：4字节标志 ＋ 4字节时间戳 + 8字节客户appid ＋
 //8字节客户id ＋ 8字节商店id ＋ 8字节客服id ＋ 1字节消息是否来自客服＋ 消息内容
 +(BOOL)writeMessage:(IMessage*)m fd:(int)fd {
     ICustomerMessage *msg = (ICustomerMessage*)m;
@@ -122,7 +122,7 @@
     char *p = buf;
     
     const char *raw = [msg.rawContent UTF8String];
-    size_t len = strlen(raw) + 8 + 8 + 4 + 4 + 8 + 8 + 8 + 8 + 1;
+    size_t len = strlen(raw) + 4 + 4 + 8 + 8 + 8 + 8 + 1;
     
     if (4 + 4 + len + 4 + 4 > 64*1024) return NO;
     
@@ -134,10 +134,6 @@
     p += 4;
     writeInt32(msg.timestamp, p);
     p += 4;
-    writeInt64(msg.sender, p);
-    p += 8;
-    writeInt64(msg.receiver, p);
-    p += 8;
     
     writeInt64(msg.customerAppID, p);
     p += 8;
@@ -191,10 +187,6 @@
     p += 4;
     msg.timestamp = readInt32(p);
     p += 4;
-    msg.sender = readInt64(p);
-    p += 8;
-    msg.receiver = readInt64(p);
-    p += 8;
     
     msg.customerAppID = readInt64(p);
     p += 8;
@@ -208,7 +200,7 @@
     msg.isSupport = *p;
     p++;
     
-    msg.rawContent = [[NSString alloc] initWithBytes:p length:len - 57 encoding:NSUTF8StringEncoding];
+    msg.rawContent = [[NSString alloc] initWithBytes:p length:len - 41 encoding:NSUTF8StringEncoding];
     return msg;
 }
 
