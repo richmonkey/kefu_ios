@@ -21,6 +21,10 @@
 		6D12EC961CB606390003A03B /* MessageConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC941CB606390003A03B /* MessageConversationCell.m */; };
 		6D12EC971CB606390003A03B /* MessageConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC951CB606390003A03B /* MessageConversationCell.xib */; };
 		6D12EC9B1CB618210003A03B /* AppDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC9A1CB618210003A03B /* AppDB.m */; };
+		6D25219E1CBFF598004C6FBE /* CustomerSupportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */; };
+		6D2521A11CC1D58F004C6FBE /* CustomerSupportMessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2521A01CC1D58F004C6FBE /* CustomerSupportMessageDB.m */; };
+		6D2521A41CC1D8F1004C6FBE /* CustomerConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2521A31CC1D8F1004C6FBE /* CustomerConversation.m */; };
+		6D2521A71CC1DF27004C6FBE /* CustomerSupportMessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2521A61CC1DF27004C6FBE /* CustomerSupportMessageHandler.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +50,14 @@
 		6D12EC951CB606390003A03B /* MessageConversationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageConversationCell.xib; sourceTree = "<group>"; };
 		6D12EC991CB618210003A03B /* AppDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDB.h; sourceTree = "<group>"; };
 		6D12EC9A1CB618210003A03B /* AppDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDB.m; sourceTree = "<group>"; };
+		6D25219C1CBFF598004C6FBE /* CustomerSupportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerSupportViewController.h; sourceTree = "<group>"; };
+		6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerSupportViewController.m; sourceTree = "<group>"; };
+		6D25219F1CC1D58F004C6FBE /* CustomerSupportMessageDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerSupportMessageDB.h; sourceTree = "<group>"; };
+		6D2521A01CC1D58F004C6FBE /* CustomerSupportMessageDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerSupportMessageDB.m; sourceTree = "<group>"; };
+		6D2521A21CC1D8F1004C6FBE /* CustomerConversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerConversation.h; sourceTree = "<group>"; };
+		6D2521A31CC1D8F1004C6FBE /* CustomerConversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerConversation.m; sourceTree = "<group>"; };
+		6D2521A51CC1DF27004C6FBE /* CustomerSupportMessageHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerSupportMessageHandler.h; sourceTree = "<group>"; };
+		6D2521A61CC1DF27004C6FBE /* CustomerSupportMessageHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerSupportMessageHandler.m; sourceTree = "<group>"; };
 		D5EF4A6AAFD97CBCE3ECDD42 /* libPods-kefu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kefu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD63C0FC9F93DB2C0E44BA29 /* Pods-kefu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kefu.release.xcconfig"; path = "Pods/Target Support Files/Pods-kefu/Pods-kefu.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +112,14 @@
 				6D12EC931CB606390003A03B /* MessageConversationCell.h */,
 				6D12EC941CB606390003A03B /* MessageConversationCell.m */,
 				6D12EC951CB606390003A03B /* MessageConversationCell.xib */,
+				6D2521A21CC1D8F1004C6FBE /* CustomerConversation.h */,
+				6D2521A31CC1D8F1004C6FBE /* CustomerConversation.m */,
+				6D25219F1CC1D58F004C6FBE /* CustomerSupportMessageDB.h */,
+				6D2521A01CC1D58F004C6FBE /* CustomerSupportMessageDB.m */,
+				6D2521A51CC1DF27004C6FBE /* CustomerSupportMessageHandler.h */,
+				6D2521A61CC1DF27004C6FBE /* CustomerSupportMessageHandler.m */,
+				6D25219C1CBFF598004C6FBE /* CustomerSupportViewController.h */,
+				6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */,
 				6D12EC901CB6061E0003A03B /* CustomerMessageListViewController.h */,
 				6D12EC911CB6061E0003A03B /* CustomerMessageListViewController.m */,
 				6D12EC6D1CB517650003A03B /* Main.storyboard */,
@@ -255,12 +275,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D25219E1CBFF598004C6FBE /* CustomerSupportViewController.m in Sources */,
 				6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */,
+				6D2521A71CC1DF27004C6FBE /* CustomerSupportMessageHandler.m in Sources */,
 				6D12EC6C1CB517650003A03B /* ViewController.m in Sources */,
 				6D12EC691CB517650003A03B /* AppDelegate.m in Sources */,
 				6D12EC9B1CB618210003A03B /* AppDB.m in Sources */,
 				6D12EC661CB517650003A03B /* main.m in Sources */,
 				6D12EC961CB606390003A03B /* MessageConversationCell.m in Sources */,
+				6D2521A41CC1D8F1004C6FBE /* CustomerConversation.m in Sources */,
+				6D2521A11CC1D58F004C6FBE /* CustomerSupportMessageDB.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

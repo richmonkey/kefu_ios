@@ -35,17 +35,18 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 3.0)
-  - gobelieve (from `git@github.com:GoBelieveIO/im_ios.git`)
+  - gobelieve (from `git@github.com:GoBelieveIO/im_ios.git`, branch `kefu`)
   - Masonry
   - Objective-LevelDB
 
 EXTERNAL SOURCES:
   gobelieve:
+    :branch: kefu
     :git: git@github.com:GoBelieveIO/im_ios.git
 
 CHECKOUT OPTIONS:
   gobelieve:
-    :commit: beaeae0360356fca0e22ce14076f0f912e81b10b
+    :commit: bd579e76a2e7aec32dbf3b1b6ba26aec75a413a1
     :git: git@github.com:GoBelieveIO/im_ios.git
 
 SPEC CHECKSUMS:

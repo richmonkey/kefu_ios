@@ -15,6 +15,8 @@
 #import <gobelieve/IMService.h>
 #import "AppDB.h"
 @interface ViewController ()
+@property (weak, nonatomic) IBOutlet UITextField *userNameTextField;
+@property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 
 @end
 
@@ -36,13 +38,18 @@
 }
 
 - (IBAction)onLogin:(id)sender {
-    [self login:@"13800000000@gobelieve.io" password:@"11111111"];
+    if (self.userNameTextField.text.length == 0 || self.passwordTextField.text.length == 0) {
+        return;
+    }
+    NSString *userName = self.userNameTextField.text;
+    NSString *password = self.passwordTextField.text;
+    [self login:userName password:password];
 }
 
 - (void)login:(NSString*)username password:(NSString*)password {
     LevelDB *ldb = [AppDB instance].db;
     
-    NSURL *baseURL = [NSURL URLWithString:@"http://192.168.33.10:6000/"];
+    NSURL *baseURL = [NSURL URLWithString:@"http://192.168.33.10:60001/"];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     

@@ -15,11 +15,12 @@
 #import <gobelieve/CustomerMessageDB.h>
 #import <gobelieve/PeerMessageViewController.h>
 #import <gobelieve/GroupMessageViewController.h>
-#import <gobelieve/CustomerMessageViewController.h>
-
+#import "CustomerSupportMessageDB.h"
+#import "CustomerSupportViewController.h"
 #import "MessageConversationCell.h"
 #import "LevelDB.h"
 #import "AppDB.h"
+#import "CustomerConversation.h"
 #import <gobelieve/IMService.h>
 //RGB颜色
 #define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
@@ -49,7 +50,7 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
 }
 
 -(void)dealloc {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(NSString*)getDocumentPath {
@@ -66,17 +67,20 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     id object = [ldb objectForKey:@"user_auth"];
     int64_t uid = [[object objectForKey:@"uid"] longLongValue];
     NSString *token = [object objectForKey:@"access_token"];
+    int64_t storeID = [[object objectForKey:@"store_id"] longLongValue];
     
     
     NSString *path = [self getDocumentPath];
     NSString *customerPath = [NSString stringWithFormat:@"%@/customer", path];
-    [[CustomerMessageDB instance] setDbPath:customerPath];
+    [[CustomerSupportMessageDB instance] setDbPath:customerPath];
     
     [IMService instance].uid = uid;
     [IMService instance].token = token;
     [[IMService instance] start];
     
     self.currentUID = uid;
+    self.storeID = storeID;
+    NSLog(@"store id:%lld uid:%lld", self.storeID, self.currentUID);
     
     CGRect rect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     self.tableview = [[UITableView alloc]initWithFrame:rect style:UITableViewStylePlain];
@@ -94,8 +98,10 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     [[IMService instance] addConnectionObserver:self];
     [[IMService instance] addCustomerMessageObserver:self];
     
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newCustomerMessage:) name:LATEST_CUSTOMER_MESSAGE object:nil];
     
-    id<ConversationIterator> iterator =  [[CustomerMessageDB instance] newConversationIterator];
+    
+    id<ConversationIterator> iterator =  [[CustomerSupportMessageDB instance] newConversationIterator];
     Conversation * conversation = [iterator next];
     while (conversation) {
         [self.conversations addObject:conversation];
@@ -235,14 +241,16 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    Conversation *con = [self.conversations objectAtIndex:indexPath.row];
+    CustomerConversation *con = [self.conversations objectAtIndex:indexPath.row];
     if (con.type == CONVERSATION_CUSTOMER_SERVICE) {
-        CustomerMessageViewController *msgController = [[CustomerMessageViewController alloc] init];
+        CustomerSupportViewController *msgController = [[CustomerSupportViewController alloc] init];
         msgController.userDelegate = self.userDelegate;
-        msgController.peerUID = con.cid;
-        msgController.peerName = con.name;
+        msgController.customerAppID = con.customerAppID;
+        msgController.customerID = con.customerID;
+        msgController.customerName = @"";
         msgController.currentUID = self.currentUID;
-        msgController.isShowUserName = YES;
+        msgController.storeID = self.storeID;
+        msgController.isShowUserName = NO;
         msgController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:msgController animated:YES];
     }
@@ -250,85 +258,116 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-
-
-- (void)newMessage:(NSNotification*) notification {
-    IMessage *m = notification.object;
-    NSLog(@"new message:%lld, %lld", m.sender, m.receiver);
-    [self onNewMessage:m cid:m.receiver];
+#pragma mark CustomerMessageObserver
+-(void)onCustomerMessage:(CustomerMessage*)msg {
+    ICustomerMessage *cm = [[ICustomerMessage alloc] init];
+    
+    cm.sender = msg.customerID;
+    cm.receiver = msg.storeID;
+    
+    cm.customerAppID = msg.customerAppID;
+    cm.customerID = msg.customerID;
+    cm.storeID = msg.storeID;
+    cm.sellerID = msg.sellerID;
+    cm.timestamp = msg.timestamp;
+    cm.isSupport = NO;
+    cm.isOutgoing = NO;
+    
+    cm.rawContent = msg.content;
+    
+    [self onNewCustomerMessage:cm];
 }
 
-- (void)clearSinglePeerNewState:(NSNotification*) notification {
-    int64_t usrid = [(NSNumber*)notification.object longLongValue];
-    for (int index = 0 ; index < [self.conversations count] ; index++) {
-        Conversation *conv = [self.conversations objectAtIndex:index];
-        if (conv.type == CONVERSATION_PEER && conv.cid == usrid) {
-            if (conv.newMsgCount > 0) {
-                conv.newMsgCount = 0;
-                [self resetConversationsViewControllerNewState];
-            }
-        }
-    }
+-(void)onCustomerSupportMessage:(CustomerMessage*)msg {
+    ICustomerMessage *cm = [[ICustomerMessage alloc] init];
+    
+    cm.sender = msg.customerID;
+    cm.receiver = msg.storeID;
+    
+    cm.customerAppID = msg.customerAppID;
+    cm.customerID = msg.customerID;
+    cm.storeID = msg.storeID;
+    cm.sellerID = msg.sellerID;
+    cm.timestamp = msg.timestamp;
+    cm.isSupport = YES;
+    cm.isOutgoing = (msg.sellerID == self.currentUID);
+    cm.rawContent = msg.content;
+    
+    [self onNewCustomerMessage:cm];
 }
 
--(void)onNewMessage:(IMessage*)msg cid:(int64_t)cid{
+- (int)findCustomerConversation:(ICustomerMessage*)msg {
     int index = -1;
     for (int i = 0; i < [self.conversations count]; i++) {
-        Conversation *con = [self.conversations objectAtIndex:i];
-        if (con.type == CONVERSATION_CUSTOMER_SERVICE && con.cid == cid) {
+        CustomerConversation *con = [self.conversations objectAtIndex:i];
+        if (con.type == CONVERSATION_CUSTOMER_SERVICE &&
+            con.customerID == msg.customerID &&
+            con.customerAppID == msg.customerAppID) {
             index = i;
             break;
         }
     }
+    return index;
+}
+
+- (void)updateCustomerConversation:(ICustomerMessage*)msg index:(int)index {
+    CustomerConversation *con = [self.conversations objectAtIndex:index];
+    con.message = msg;
     
-    if (index != -1) {
-        Conversation *con = [self.conversations objectAtIndex:index];
-        con.message = msg;
-        
-        [self updateConversationDetail:con];
-        
-        if (self.currentUID == msg.receiver) {
-            con.newMsgCount += 1;
-            [self setNewOnTabBar];
-        }
-        
-        if (index != 0) {
-            //置顶
-            [self.conversations removeObjectAtIndex:index];
-            [self.conversations insertObject:con atIndex:0];
-            [self.tableview reloadData];
-        }
-    } else {
-        Conversation *con = [[Conversation alloc] init];
-        con.type = CONVERSATION_CUSTOMER_SERVICE;
-        con.cid = cid;
-        con.message = msg;
-        
-        [self updateConversationName:con];
-        [self updateConversationDetail:con];
-        
-        if (self.currentUID == msg.receiver) {
-            con.newMsgCount += 1;
-            [self setNewOnTabBar];
-        }
-        
+    [self updateConversationDetail:con];
+    
+    if (msg.isIncomming) {
+        con.newMsgCount += 1;
+        [self setNewOnTabBar];
+    }
+    
+    if (index != 0) {
+        //置顶
+        [self.conversations removeObjectAtIndex:index];
         [self.conversations insertObject:con atIndex:0];
-        NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
-        NSArray *array = [NSArray arrayWithObject:path];
-        [self.tableview insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
+        [self.tableview reloadData];
+    }
+
+}
+
+- (void)newCustomerConversation:(ICustomerMessage*)msg {
+    CustomerConversation *con = [[CustomerConversation alloc] init];
+    con.type = CONVERSATION_CUSTOMER_SERVICE;
+    con.cid = msg.customerID;
+    con.customerID = msg.customerID;
+    con.customerAppID = msg.customerAppID;
+    con.message = msg;
+    
+    [self updateConversationName:con];
+    [self updateConversationDetail:con];
+    
+    if (self.currentUID == msg.receiver) {
+        con.newMsgCount += 1;
+        [self setNewOnTabBar];
+    }
+    
+    [self.conversations insertObject:con atIndex:0];
+    NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+    NSArray *array = [NSArray arrayWithObject:path];
+    [self.tableview insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
+}
+
+- (void)onNewCustomerMessage:(ICustomerMessage*)msg {
+    int index = [self findCustomerConversation:msg];
+    if (index != -1) {
+        [self updateCustomerConversation:msg index:index];
+    } else {
+        [self newCustomerConversation:msg];
     }
 }
 
--(void)onCustomerMessage:(CustomerMessage*)im {
-    IMessage *m = [[IMessage alloc] init];
-    m.sender = im.sender;
-    m.receiver = im.receiver;
-    m.msgLocalID = im.msgLocalID;
-    m.rawContent = im.content;
-    m.timestamp = im.timestamp;
-    
-    [self onNewMessage:m cid:im.customer];
+- (void)newCustomerMessage:(NSNotification*) notification {
+    ICustomerMessage *msg = notification.object;
+    NSLog(@"new message:%lld, %lld", msg.sender, msg.receiver);
+    [self onNewCustomerMessage:msg];
 }
+
+
 
 //同IM服务器连接的状态变更通知
 -(void)onConnectState:(int)state {
