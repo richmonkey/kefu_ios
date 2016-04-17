@@ -21,6 +21,7 @@
 #import "LevelDB.h"
 #import "AppDB.h"
 #import "CustomerConversation.h"
+#import <gobelieve/IMHttpAPI.h>
 #import <gobelieve/IMService.h>
 //RGB颜色
 #define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
@@ -74,6 +75,7 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     NSString *customerPath = [NSString stringWithFormat:@"%@/customer", path];
     [[CustomerSupportMessageDB instance] setDbPath:customerPath];
     
+    [IMHttpAPI instance].accessToken = token;
     [IMService instance].uid = uid;
     [IMService instance].token = token;
     [[IMService instance] start];

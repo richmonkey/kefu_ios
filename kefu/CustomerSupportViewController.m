@@ -7,7 +7,7 @@
 //
 
 #import "CustomerSupportViewController.h"
-#import "CustomerOutbox.h"
+#import "CustomerSupportOutbox.h"
 #import "AudioDownloader.h"
 #import "CustomerSupportMessageDB.h"
 #import "SDImageCache.h"
@@ -46,14 +46,14 @@
 
 -(void)addObserver {
     [[AudioDownloader instance] addDownloaderObserver:self];
-    [[CustomerOutbox instance] addBoxObserver:self];
+    [[CustomerSupportOutbox instance] addBoxObserver:self];
     [[IMService instance] addConnectionObserver:self];
     [[IMService instance] addCustomerMessageObserver:self];
 }
 
 -(void)removeObserver {
     [[AudioDownloader instance] removeDownloaderObserver:self];
-    [[CustomerOutbox instance] removeBoxObserver:self];
+    [[CustomerSupportOutbox instance] removeBoxObserver:self];
     [[IMService instance] removeConnectionObserver:self];
     [[IMService instance] removeCustomerMessageObserver:self];
 }
@@ -208,9 +208,9 @@
 -(void)checkMessageFailureFlag:(IMessage*)msg {
     if (msg.isOutgoing) {
         if (msg.type == MESSAGE_AUDIO) {
-            msg.uploading = [[CustomerOutbox instance] isUploading:msg];
+            msg.uploading = [[CustomerSupportOutbox instance] isUploading:msg];
         } else if (msg.type == MESSAGE_IMAGE) {
-            msg.uploading = [[CustomerOutbox instance] isUploading:msg];
+            msg.uploading = [[CustomerSupportOutbox instance] isUploading:msg];
         }
         
         //消息发送过程中，程序异常关闭
@@ -250,12 +250,6 @@
 }
 
 -(BOOL)markMesageListened:(IMessage*)msg {
-    int64_t cid = 0;
-    if (msg.sender == self.currentUID) {
-        cid = msg.receiver;
-    } else {
-        cid = msg.sender;
-    }
     return [[CustomerSupportMessageDB instance] markMesageListened:msg.msgLocalID
                                                                uid:self.customerID
                                                              appID:self.customerAppID];
@@ -365,7 +359,7 @@
 
 - (void)sendMessage:(IMessage *)msg withImage:(UIImage*)image {
     msg.uploading = YES;
-    [[CustomerOutbox instance] uploadImage:msg withImage:image];
+    [[CustomerSupportOutbox instance] uploadImage:msg withImage:image];
     NSNotification* notification = [[NSNotification alloc] initWithName:LATEST_CUSTOMER_MESSAGE object:msg userInfo:nil];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
@@ -374,10 +368,10 @@
     ICustomerMessage *msg = (ICustomerMessage*)message;
     if (message.type == MESSAGE_AUDIO) {
         message.uploading = YES;
-        [[CustomerOutbox instance] uploadAudio:message];
+        [[CustomerSupportOutbox instance] uploadAudio:message];
     } else if (message.type == MESSAGE_IMAGE) {
         message.uploading = YES;
-        [[CustomerOutbox instance] uploadImage:message];
+        [[CustomerSupportOutbox instance] uploadImage:message];
     } else {
         CustomerMessage *im = [[CustomerMessage alloc] init];
         im.customerAppID = msg.customerAppID;
