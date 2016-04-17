@@ -30,12 +30,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"对话"
-                                                             style:UIBarButtonItemStyleDone
-                                                            target:self
-                                                            action:@selector(returnMainTableViewController)];
+//    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"对话"
+//                                                             style:UIBarButtonItemStyleDone
+//                                                            target:self
+//                                                            action:@selector(returnMainTableViewController)];
+//    self.navigationItem.leftBarButtonItem = item;
     
-    self.navigationItem.leftBarButtonItem = item;
+    int imageSize = 30; //REPLACE WITH YOUR IMAGE WIDTH
+    
+    UIImage *barBackBtnImg = [[UIImage imageNamed:@"back"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, imageSize, 0, 0)];
+    UIBarButtonItem *barButtonItemLeft=[[UIBarButtonItem alloc] initWithImage:barBackBtnImg
+                                                                        style:UIBarButtonItemStylePlain
+                                                                       target:self
+                                                                       action:@selector(returnMainTableViewController)];
+    [self.navigationItem setLeftBarButtonItem:barButtonItemLeft];
+
     
     if (self.customerName.length > 0) {
         self.navigationItem.title = self.customerName;

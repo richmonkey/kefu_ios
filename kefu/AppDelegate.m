@@ -16,6 +16,8 @@
 #import <gobelieve/IMHttpAPI.H>
 #import "CustomerSupportMessageHandler.h"
 
+#import "LoginViewController.h"
+
 #define APPID 1453
 
 @interface AppDelegate ()
@@ -26,6 +28,8 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    
     // Override point for customization after application launch.
     [IMHttpAPI instance].apiURL = @"http://192.168.1.101";
     [IMService instance].host = @"192.168.1.101";
@@ -38,6 +42,12 @@
     [IMService instance].customerMessageHandler = [CustomerSupportMessageHandler instance];
     [[IMService instance] startRechabilityNotifier];
 
+    self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    
+    LoginViewController *vtr = [[LoginViewController alloc] init];
+//    UINavigationController *mainNav = [[UINavigationController alloc] initWithRootViewController:vtr];
+    self.window.rootViewController = vtr;
+    [self.window makeKeyAndVisible];
     
     return YES;
 }

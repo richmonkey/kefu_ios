@@ -7,13 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4803C80B1CC3B323007550E6 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4803C7F71CC3B323007550E6 /* LoginViewController.m */; };
+		4803C80C1CC3B323007550E6 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4803C7F81CC3B323007550E6 /* LoginViewController.xib */; };
+		4803C80D1CC3B323007550E6 /* LoginViewOneCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4803C7FA1CC3B323007550E6 /* LoginViewOneCell.m */; };
+		4803C80E1CC3B323007550E6 /* LoginViewOneCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4803C7FB1CC3B323007550E6 /* LoginViewOneCell.xib */; };
+		4803C8111CC3B323007550E6 /* LoginViewTwoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4803C8001CC3B323007550E6 /* LoginViewTwoCell.m */; };
+		4803C8121CC3B323007550E6 /* LoginViewTwoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4803C8011CC3B323007550E6 /* LoginViewTwoCell.xib */; };
+		487D48B01CC3D9EE005DE19D /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 487D48AF1CC3D9EE005DE19D /* BaseViewController.m */; };
 		4BF5438D56AB7BB7A5CEAE96 /* libPods-kefu.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5EF4A6AAFD97CBCE3ECDD42 /* libPods-kefu.a */; };
 		6D12EC661CB517650003A03B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC651CB517650003A03B /* main.m */; };
 		6D12EC691CB517650003A03B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC681CB517650003A03B /* AppDelegate.m */; };
-		6D12EC6C1CB517650003A03B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC6B1CB517650003A03B /* ViewController.m */; };
-		6D12EC6F1CB517650003A03B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC6D1CB517650003A03B /* Main.storyboard */; };
 		6D12EC711CB517650003A03B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC701CB517650003A03B /* Assets.xcassets */; };
-		6D12EC741CB517650003A03B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC721CB517650003A03B /* LaunchScreen.storyboard */; };
 		6D12EC801CB5FFC70003A03B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC821CB5FFC70003A03B /* Localizable.strings */; };
 		6D12EC891CB600C60003A03B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC881CB600C60003A03B /* Info.plist */; };
 		6D12EC8C1CB604010003A03B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC8E1CB604010003A03B /* InfoPlist.strings */; };
@@ -30,15 +34,22 @@
 
 /* Begin PBXFileReference section */
 		3A796CD52B9AF5311EB96B5D /* Pods-kefu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kefu.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kefu/Pods-kefu.debug.xcconfig"; sourceTree = "<group>"; };
+		4803C7F61CC3B323007550E6 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		4803C7F71CC3B323007550E6 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		4803C7F81CC3B323007550E6 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
+		4803C7F91CC3B323007550E6 /* LoginViewOneCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewOneCell.h; sourceTree = "<group>"; };
+		4803C7FA1CC3B323007550E6 /* LoginViewOneCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewOneCell.m; sourceTree = "<group>"; };
+		4803C7FB1CC3B323007550E6 /* LoginViewOneCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewOneCell.xib; sourceTree = "<group>"; };
+		4803C7FF1CC3B323007550E6 /* LoginViewTwoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewTwoCell.h; sourceTree = "<group>"; };
+		4803C8001CC3B323007550E6 /* LoginViewTwoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewTwoCell.m; sourceTree = "<group>"; };
+		4803C8011CC3B323007550E6 /* LoginViewTwoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewTwoCell.xib; sourceTree = "<group>"; };
+		487D48AE1CC3D9EE005DE19D /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		487D48AF1CC3D9EE005DE19D /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		6D12EC611CB517650003A03B /* kefu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kefu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D12EC651CB517650003A03B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6D12EC671CB517650003A03B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6D12EC681CB517650003A03B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		6D12EC6A1CB517650003A03B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		6D12EC6B1CB517650003A03B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		6D12EC6E1CB517650003A03B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6D12EC701CB517650003A03B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		6D12EC731CB517650003A03B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6D12EC811CB5FFC70003A03B /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6D12EC841CB600090003A03B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		6D12EC881CB600C60003A03B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -85,6 +96,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4803C7EA1CC3B323007550E6 /* login */ = {
+			isa = PBXGroup;
+			children = (
+				4803C7F61CC3B323007550E6 /* LoginViewController.h */,
+				4803C7F71CC3B323007550E6 /* LoginViewController.m */,
+				4803C7F81CC3B323007550E6 /* LoginViewController.xib */,
+				4803C7F91CC3B323007550E6 /* LoginViewOneCell.h */,
+				4803C7FA1CC3B323007550E6 /* LoginViewOneCell.m */,
+				4803C7FB1CC3B323007550E6 /* LoginViewOneCell.xib */,
+				4803C7FF1CC3B323007550E6 /* LoginViewTwoCell.h */,
+				4803C8001CC3B323007550E6 /* LoginViewTwoCell.m */,
+				4803C8011CC3B323007550E6 /* LoginViewTwoCell.xib */,
+			);
+			path = login;
+			sourceTree = "<group>";
+		};
 		6D12EC581CB517650003A03B = {
 			isa = PBXGroup;
 			children = (
@@ -106,12 +133,13 @@
 		6D12EC631CB517650003A03B /* kefu */ = {
 			isa = PBXGroup;
 			children = (
+				4803C7EA1CC3B323007550E6 /* login */,
 				6D12EC991CB618210003A03B /* AppDB.h */,
 				6D12EC9A1CB618210003A03B /* AppDB.m */,
 				6D12EC671CB517650003A03B /* AppDelegate.h */,
 				6D12EC681CB517650003A03B /* AppDelegate.m */,
-				6D12EC6A1CB517650003A03B /* ViewController.h */,
-				6D12EC6B1CB517650003A03B /* ViewController.m */,
+				487D48AE1CC3D9EE005DE19D /* BaseViewController.h */,
+				487D48AF1CC3D9EE005DE19D /* BaseViewController.m */,
 				6D12EC931CB606390003A03B /* MessageConversationCell.h */,
 				6D12EC941CB606390003A03B /* MessageConversationCell.m */,
 				6D12EC951CB606390003A03B /* MessageConversationCell.xib */,
@@ -127,9 +155,7 @@
 				6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */,
 				6D12EC901CB6061E0003A03B /* CustomerMessageListViewController.h */,
 				6D12EC911CB6061E0003A03B /* CustomerMessageListViewController.m */,
-				6D12EC6D1CB517650003A03B /* Main.storyboard */,
 				6D12EC701CB517650003A03B /* Assets.xcassets */,
-				6D12EC721CB517650003A03B /* LaunchScreen.storyboard */,
 				6D12EC881CB600C60003A03B /* Info.plist */,
 				6D12EC641CB517650003A03B /* Supporting Files */,
 			);
@@ -215,12 +241,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D12EC741CB517650003A03B /* LaunchScreen.storyboard in Resources */,
+				4803C80C1CC3B323007550E6 /* LoginViewController.xib in Resources */,
 				6D12EC8C1CB604010003A03B /* InfoPlist.strings in Resources */,
+				4803C80E1CC3B323007550E6 /* LoginViewOneCell.xib in Resources */,
 				6D12EC801CB5FFC70003A03B /* Localizable.strings in Resources */,
 				6D12EC711CB517650003A03B /* Assets.xcassets in Resources */,
 				6D12EC891CB600C60003A03B /* Info.plist in Resources */,
-				6D12EC6F1CB517650003A03B /* Main.storyboard in Resources */,
+				4803C8121CC3B323007550E6 /* LoginViewTwoCell.xib in Resources */,
 				6D12EC971CB606390003A03B /* MessageConversationCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -282,37 +309,24 @@
 			files = (
 				6D25219E1CBFF598004C6FBE /* CustomerSupportViewController.m in Sources */,
 				6D485DFB1CC3612E0082588F /* CustomerSupportOutbox.m in Sources */,
+				4803C80D1CC3B323007550E6 /* LoginViewOneCell.m in Sources */,
 				6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */,
 				6D2521A71CC1DF27004C6FBE /* CustomerSupportMessageHandler.m in Sources */,
-				6D12EC6C1CB517650003A03B /* ViewController.m in Sources */,
+				487D48B01CC3D9EE005DE19D /* BaseViewController.m in Sources */,
 				6D12EC691CB517650003A03B /* AppDelegate.m in Sources */,
 				6D12EC9B1CB618210003A03B /* AppDB.m in Sources */,
+				4803C8111CC3B323007550E6 /* LoginViewTwoCell.m in Sources */,
 				6D12EC661CB517650003A03B /* main.m in Sources */,
 				6D12EC961CB606390003A03B /* MessageConversationCell.m in Sources */,
 				6D2521A41CC1D8F1004C6FBE /* CustomerConversation.m in Sources */,
 				6D2521A11CC1D58F004C6FBE /* CustomerSupportMessageDB.m in Sources */,
+				4803C80B1CC3B323007550E6 /* LoginViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		6D12EC6D1CB517650003A03B /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6D12EC6E1CB517650003A03B /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		6D12EC721CB517650003A03B /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6D12EC731CB517650003A03B /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
 		6D12EC821CB5FFC70003A03B /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -421,6 +435,7 @@
 			baseConfigurationReference = 3A796CD52B9AF5311EB96B5D /* Pods-kefu.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -439,6 +454,7 @@
 			baseConfigurationReference = FD63C0FC9F93DB2C0E44BA29 /* Pods-kefu.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
