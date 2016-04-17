@@ -45,7 +45,6 @@
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     
     LoginViewController *vtr = [[LoginViewController alloc] init];
-//    UINavigationController *mainNav = [[UINavigationController alloc] initWithRootViewController:vtr];
     self.window.rootViewController = vtr;
     [self.window makeKeyAndVisible];
     

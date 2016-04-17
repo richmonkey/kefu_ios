@@ -9,10 +9,13 @@
 #import "SettingViewController.h"
 #import "SettingInforTableViewCell.h"
 #import "QuitTableViewCell.h"
-
+#import "AppDB.h"
+#import "LoginViewController.h"
+#import <gobelieve/IMService.h>
 
 @interface SettingViewController () <UITableViewDelegate,UITableViewDataSource>
-
+@property(nonatomic) int64_t number;
+@property(nonatomic, copy) NSString *name;
 @end
 
 @implementation SettingViewController
@@ -20,6 +23,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"设置";
+    
+    
+    LevelDB *ldb = [AppDB instance].db;
+    
+    id object = [ldb objectForKey:@"user_auth"];
+    int64_t uid = [[object objectForKey:@"uid"] longLongValue];
+    NSString *token = [object objectForKey:@"access_token"];
+    int64_t storeID = [[object objectForKey:@"store_id"] longLongValue];
+    NSString *name = [object objectForKey:@"name"];
+    
+    self.number = uid;
+    self.name = name;
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -42,7 +58,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     if (section==0) {
-        return 3;
+        return 2;
     }else if (section == 1) {
         return 1;
     }
@@ -60,17 +76,19 @@
         }
         if (indexPath.row == 0) {
             [cell.nameLabel setText:@"客服工号"];
-            [cell.valueLabel setText:@"100001"];
+            NSString *number = [NSString stringWithFormat:@"%lld", self.number];
+            [cell.valueLabel setText:number];
         }else if(indexPath.row == 1){
             [cell.nameLabel setText:@"客服姓名"];
-            [cell.valueLabel setText:@"王军君"];
-        }else if(indexPath.row == 2){
-            [cell.nameLabel setText:@"客服性别"];
-            [cell.valueLabel setText:@"男"];
+            if (self.name.length > 0) {
+                [cell.valueLabel setText:self.name];
+            } else {
+                [cell.valueLabel setText:@""];
+            }
         }
         
         [cell.line setHidden:NO];
-        if (indexPath.row==2) {
+        if (indexPath.row==1) {
             [cell.line setHidden:YES];
         }
         
@@ -99,12 +117,22 @@
     [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 }
 
+- (void)logout {
+    NSLog(@"quit...");
+    LevelDB *ldb = [AppDB instance].db;
+    [ldb setObject:@{} forKey:@"user_auth"];
 
+    [[IMService instance] stop];
+    
+    LoginViewController *vtr = [[LoginViewController alloc] init];
+    [UIApplication sharedApplication].keyWindow.rootViewController = vtr;
+}
 - (void)quitAction{
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"是否退出当前账户" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"退出",nil];
     [alert showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
         if (buttonIndex==1) {
 
+            [self logout];
         }
     }];
 }

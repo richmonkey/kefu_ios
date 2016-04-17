@@ -159,12 +159,12 @@
 #pragma mark -- 登录界面Action
 
 - (void)loginSubmitButtonAction:(id)sender{
-    if (DEBUG) {
-        CustomerMessageListViewController *ctrl = [[CustomerMessageListViewController alloc] init];
-        UINavigationController *navigationCtrl = [[UINavigationController alloc] initWithRootViewController:ctrl];
-        [UIApplication sharedApplication].keyWindow.rootViewController = navigationCtrl;
-        return;
-    }
+//    if (DEBUG) {
+//        CustomerMessageListViewController *ctrl = [[CustomerMessageListViewController alloc] init];
+//        UINavigationController *navigationCtrl = [[UINavigationController alloc] initWithRootViewController:ctrl];
+//        [UIApplication sharedApplication].keyWindow.rootViewController = navigationCtrl;
+//        return;
+//    }
     if (self.loginNumberTextField.text.length == 0){
         [self.view makeToast:@"客服账号不能为空" duration:1.0 position:@"center"];
         return;
