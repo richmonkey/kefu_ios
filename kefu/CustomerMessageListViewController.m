@@ -75,7 +75,7 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     
     
     NSString *path = [self getDocumentPath];
-    NSString *customerPath = [NSString stringWithFormat:@"%@/customer", path];
+    NSString *customerPath = [NSString stringWithFormat:@"%@/%lld/customer", path, uid];
     [[CustomerSupportMessageDB instance] setDbPath:customerPath];
     
     [IMHttpAPI instance].accessToken = token;
