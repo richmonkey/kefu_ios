@@ -2,7 +2,7 @@
 xcshareddata
 .DS_Store
 Podfile.lock
-im_demo.xcworkspace
+*.xcworkspace
 
 ## Build generated
 build/
