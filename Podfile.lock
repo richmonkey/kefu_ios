@@ -46,7 +46,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   gobelieve:
-    :commit: bd579e76a2e7aec32dbf3b1b6ba26aec75a413a1
+    :commit: 83dccb24a188b9e6846ae3351e7fa9ed0f2c6e8c
     :git: git@github.com:GoBelieveIO/im_ios.git
 
 SPEC CHECKSUMS:

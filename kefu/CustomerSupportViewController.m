@@ -67,7 +67,10 @@
 }
 
 - (BOOL)isMessageSending:(IMessage*)msg {
-    return [[IMService instance] isCustomerMessageSending:msg.receiver id:msg.msgLocalID];
+    ICustomerMessage *cm = (ICustomerMessage*)msg;
+    return [[IMService instance] isCustomerSupportMessageSending:msg.msgLocalID
+                                                      customerID:cm.customerID
+                                                   customerAppID:cm.customerAppID];
 }
 
 - (BOOL)isInConversation:(IMessage*)msg {
