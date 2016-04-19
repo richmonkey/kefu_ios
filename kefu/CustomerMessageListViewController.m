@@ -265,14 +265,6 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     }
 }
 
--(void)home:(UIBarButtonItem *)sender {
-
-    [[IMService instance] removeConnectionObserver:self];
-    [[IMService instance] removeCustomerMessageObserver:self];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 
 #pragma mark - Table view data source
 
