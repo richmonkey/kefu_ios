@@ -19,12 +19,14 @@
 #import "CustomerSupportViewController.h"
 #import "MessageConversationCell.h"
 #import "LevelDB.h"
-#import "AppDB.h"
+#import "AFNetworking.h"
 #import "CustomerConversation.h"
 #import <gobelieve/IMHttpAPI.h>
 #import <gobelieve/IMService.h>
-
+#import "AppDB.h"
 #import "SettingViewController.h"
+#import "Token.h"
+#import "Config.h"
 
 //RGB颜色
 #define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
@@ -38,6 +40,9 @@ alpha:(a)]
 
 @interface CustomerMessageListViewController()<UITableViewDelegate, UITableViewDataSource,
 TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegate>
+@property(nonatomic)dispatch_source_t refreshTimer;
+@property(nonatomic)int refreshFailCount;
+
 @property (strong , nonatomic) NSMutableArray *conversations;
 @property (strong , nonatomic) UITableView *tableview;
 @end
@@ -54,6 +59,7 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
 }
 
 -(void)dealloc {
+    NSLog(@"CustomerMessageListViewController dealloc");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -65,26 +71,19 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    LevelDB *ldb = [AppDB instance].db;
-    
-    id object = [ldb objectForKey:@"user_auth"];
-    int64_t uid = [[object objectForKey:@"uid"] longLongValue];
-    NSString *token = [object objectForKey:@"access_token"];
-    int64_t storeID = [[object objectForKey:@"store_id"] longLongValue];
-    
+    Token *token = [Token instance];
     
     NSString *path = [self getDocumentPath];
-    NSString *customerPath = [NSString stringWithFormat:@"%@/%lld/customer", path, uid];
+    NSString *customerPath = [NSString stringWithFormat:@"%@/%lld/customer", path, token.uid];
     [[CustomerSupportMessageDB instance] setDbPath:customerPath];
     
-    [IMHttpAPI instance].accessToken = token;
-    [IMService instance].uid = uid;
-    [IMService instance].token = token;
+    [IMHttpAPI instance].accessToken = token.accessToken;
+    [IMService instance].uid = token.uid;
+    [IMService instance].token = token.accessToken;
     [[IMService instance] start];
     
-    self.currentUID = uid;
-    self.storeID = storeID;
+    self.currentUID = token.uid;
+    self.storeID = token.storeID;
     NSLog(@"store id:%lld uid:%lld", self.storeID, self.currentUID);
     
     CGRect rect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
@@ -105,6 +104,7 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newCustomerMessage:) name:LATEST_CUSTOMER_MESSAGE object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onUserLogout:) name:@"user.logout" object:nil];
     
     id<ConversationIterator> iterator =  [[CustomerSupportMessageDB instance] newConversationIterator];
     Conversation * conversation = [iterator next];
@@ -146,7 +146,86 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
                                                                          target:self
                                                                          action:@selector(rightBarButtonItemClicked:)];
     [self.navigationItem setRightBarButtonItem:barButtonItemRight];
+    
+    __weak CustomerMessageListViewController *wself = self;
+    dispatch_queue_t queue = dispatch_get_main_queue();
+    self.refreshTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
+    dispatch_source_set_event_handler(self.refreshTimer, ^{
+        [wself refreshAccessToken];
+    });
+    
+    [self startRefreshTimer];
 }
+
+
+-(void)prepareTimer {
+    Token *token = [Token instance];
+    int now = (int)time(NULL);
+    if (now >= token.expireTimestamp - 1) {
+        dispatch_time_t w = dispatch_walltime(NULL, 0);
+        dispatch_source_set_timer(self.refreshTimer, w, DISPATCH_TIME_FOREVER, 0);
+    } else {
+        dispatch_time_t w = dispatch_walltime(NULL, (token.expireTimestamp - now - 1)*NSEC_PER_SEC);
+        dispatch_source_set_timer(self.refreshTimer, w, DISPATCH_TIME_FOREVER, 0);
+    }
+}
+
+-(void)startRefreshTimer {
+    [self prepareTimer];
+    dispatch_resume(self.refreshTimer);
+}
+
+-(void)refreshAccessToken {
+    Token *token = [Token instance];
+    if (!token.accessToken) {
+        return;
+    }
+    
+    NSString *base = [NSString stringWithFormat:@"%@/", KEFU_API];
+    NSURL *baseURL = [NSURL URLWithString:base];
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    
+    NSDictionary *dict = @{@"refresh_token":token.refreshToken};
+    
+    [manager POST:@"auth/refresh_token"
+       parameters:dict
+         progress:nil
+          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+              NSLog(@"refresh token success:%@", responseObject);
+              token.accessToken = [responseObject objectForKey:@"access_token"];
+              token.refreshToken = [responseObject objectForKey:@"refresh_token"];
+              token.uid = [[responseObject objectForKey:@"uid"] longLongValue];
+              token.storeID = [[responseObject objectForKey:@"store_id"] longLongValue];
+              token.name = [responseObject objectForKey:@"name"];
+              token.expireTimestamp = (int)time(NULL) + [[responseObject objectForKey:@"expires_in"] intValue];
+              [token save];
+              [self prepareTimer];
+              
+          }
+          failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+              NSLog(@"refresh token failure");
+              
+              self.refreshFailCount = self.refreshFailCount + 1;
+              int64_t timeout;
+              if (self.refreshFailCount > 60) {
+                  timeout = 60*NSEC_PER_SEC;
+              } else {
+                  timeout = (int64_t)self.refreshFailCount*NSEC_PER_SEC;
+              }
+              
+              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeout), dispatch_get_main_queue(), ^{
+                  [self prepareTimer];
+              });
+              
+          }
+     ];
+
+
+}
+
+
+
 
 - (void)rightBarButtonItemClicked:(id)sender{
     SettingViewController *setting = [[SettingViewController alloc] init];
@@ -420,6 +499,11 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
 
 - (void)clearNewOnTarBar {
     
+}
+
+- (void)onUserLogout:(NSNotification*) notification {
+    [[IMService instance] removeConnectionObserver:self];
+    [[IMService instance] removeCustomerMessageObserver:self];
 }
 
 #pragma mark MessageViewControllerUserDelegate

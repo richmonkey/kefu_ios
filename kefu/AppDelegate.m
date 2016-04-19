@@ -15,9 +15,10 @@
 #import <gobelieve/CustomerOutbox.h>
 #import <gobelieve/IMHttpAPI.H>
 #import "CustomerSupportMessageHandler.h"
-
+#import "CustomerMessageListViewController.h"
 #import "LoginViewController.h"
 #import "Config.h"
+#import "Token.h"
 
 @interface AppDelegate ()
 
@@ -41,10 +42,19 @@
     [[IMService instance] startRechabilityNotifier];
 
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
-    
-    LoginViewController *vtr = [[LoginViewController alloc] init];
-    self.window.rootViewController = vtr;
-    [self.window makeKeyAndVisible];
+
+    Token *token = [Token instance];
+    if (token.uid > 0 && token.accessToken.length > 0) {
+        //已经登录
+        CustomerMessageListViewController *ctrl = [[CustomerMessageListViewController alloc] init];
+        UINavigationController *navigationCtrl = [[UINavigationController alloc] initWithRootViewController:ctrl];
+        self.window.rootViewController = navigationCtrl;
+        [self.window makeKeyAndVisible];
+    } else {
+        LoginViewController *ctrl = [[LoginViewController alloc] init];
+        self.window.rootViewController = ctrl;
+        [self.window makeKeyAndVisible];
+    }
     
     return YES;
 }

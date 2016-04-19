@@ -12,6 +12,7 @@
 #import "AppDB.h"
 #import "LoginViewController.h"
 #import <gobelieve/IMService.h>
+#import "Token.h"
 
 @interface SettingViewController () <UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic) int64_t number;
@@ -119,19 +120,27 @@
 
 - (void)logout {
     NSLog(@"quit...");
-    LevelDB *ldb = [AppDB instance].db;
-    [ldb setObject:@{} forKey:@"user_auth"];
+    Token *token = [Token instance];
+    token.uid = 0;
+    token.accessToken = @"";
+    token.refreshToken = @"";
+    token.name = @"";
+    token.storeID = 0;
+    token.expireTimestamp = 0;
+    [token save];
 
     [[IMService instance] stop];
     
     LoginViewController *vtr = [[LoginViewController alloc] init];
     [UIApplication sharedApplication].keyWindow.rootViewController = vtr;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"user.logout" object:nil];
 }
+
 - (void)quitAction{
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"是否退出当前账户" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"退出",nil];
     [alert showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
         if (buttonIndex==1) {
-
             [self logout];
         }
     }];

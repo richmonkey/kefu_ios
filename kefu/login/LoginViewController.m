@@ -16,6 +16,7 @@
 #import <gobelieve/IMService.h>
 #import "AppDB.h"
 #import "Config.h"
+#import "Token.h"
 
 #define kFirstCellOffset    20
 #define kSecondMax      60
@@ -40,6 +41,9 @@
 
 @implementation LoginViewController
 
+- (void)dealloc {
+    NSLog(@"LoginViewControler dealloc");
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.delegate   = self;
@@ -159,12 +163,6 @@
 #pragma mark -- 登录界面Action
 
 - (void)loginSubmitButtonAction:(id)sender{
-//    if (DEBUG) {
-//        CustomerMessageListViewController *ctrl = [[CustomerMessageListViewController alloc] init];
-//        UINavigationController *navigationCtrl = [[UINavigationController alloc] initWithRootViewController:ctrl];
-//        [UIApplication sharedApplication].keyWindow.rootViewController = navigationCtrl;
-//        return;
-//    }
     if (self.loginNumberTextField.text.length == 0){
         [self.view makeToast:@"客服账号不能为空" duration:1.0 position:@"center"];
         return;
@@ -202,7 +200,14 @@
          progress:nil
           success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
               NSLog(@"response:%@", responseObject);
-              [ldb setObject:responseObject forKey:@"user_auth"];
+              Token *token = [Token instance];
+              token.accessToken = [responseObject objectForKey:@"access_token"];
+              token.refreshToken = [responseObject objectForKey:@"refresh_token"];
+              token.uid = [[responseObject objectForKey:@"uid"] longLongValue];
+              token.storeID = [[responseObject objectForKey:@"store_id"] longLongValue];
+              token.name = [responseObject objectForKey:@"name"];
+              token.expireTimestamp = (int)time(NULL) + [[responseObject objectForKey:@"expires_in"] intValue];
+              [token save];
               
               [MBProgressHUD hideHUDForView:self.view animated:YES];
               CustomerMessageListViewController *ctrl = [[CustomerMessageListViewController alloc] init];
@@ -219,8 +224,7 @@
      ];
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     return YES;
 }
 
