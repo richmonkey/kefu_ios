@@ -15,7 +15,7 @@
 #import "CustomerMessageListViewController.h"
 #import <gobelieve/IMService.h>
 #import "AppDB.h"
-
+#import "Config.h"
 
 #define kFirstCellOffset    20
 #define kSecondMax      60
@@ -187,7 +187,8 @@
 - (void)login:(NSString*)username password:(NSString*)password {
     
     LevelDB *ldb = [AppDB instance].db;
-    NSURL *baseURL = [NSURL URLWithString:@"http://192.168.33.10:60001/"];
+    NSString *base = [NSString stringWithFormat:@"%@/", KEFU_API];
+    NSURL *baseURL = [NSURL URLWithString:base];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     

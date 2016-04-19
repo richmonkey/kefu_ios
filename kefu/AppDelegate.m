@@ -17,8 +17,7 @@
 #import "CustomerSupportMessageHandler.h"
 
 #import "LoginViewController.h"
-
-#define APPID 1453
+#import "Config.h"
 
 @interface AppDelegate ()
 
@@ -31,9 +30,8 @@
     
     
     // Override point for customization after application launch.
-    [IMHttpAPI instance].apiURL = @"http://192.168.1.101";
-    [IMService instance].host = @"192.168.1.101";
-
+    [IMHttpAPI instance].apiURL = IM_API;
+    [IMService instance].host = IM_HOST;
     [IMService instance].appID = APPID;
     [IMService instance].deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     NSLog(@"device id:%@", [[[UIDevice currentDevice] identifierForVendor] UUIDString]);

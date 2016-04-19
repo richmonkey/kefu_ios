@@ -90,6 +90,7 @@
 		6D2521A61CC1DF27004C6FBE /* CustomerSupportMessageHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerSupportMessageHandler.m; sourceTree = "<group>"; };
 		6D485DF91CC3612E0082588F /* CustomerSupportOutbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerSupportOutbox.h; sourceTree = "<group>"; };
 		6D485DFA1CC3612E0082588F /* CustomerSupportOutbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerSupportOutbox.m; sourceTree = "<group>"; };
+		6D485DFC1CC616610082588F /* Config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		D5EF4A6AAFD97CBCE3ECDD42 /* libPods-kefu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kefu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD63C0FC9F93DB2C0E44BA29 /* Pods-kefu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kefu.release.xcconfig"; path = "Pods/Target Support Files/Pods-kefu/Pods-kefu.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -192,6 +193,7 @@
 				6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */,
 				6D12EC901CB6061E0003A03B /* CustomerMessageListViewController.h */,
 				6D12EC911CB6061E0003A03B /* CustomerMessageListViewController.m */,
+				6D485DFC1CC616610082588F /* Config.h */,
 				6D12EC701CB517650003A03B /* Assets.xcassets */,
 				6D12EC881CB600C60003A03B /* Info.plist */,
 				6D12EC641CB517650003A03B /* Supporting Files */,
