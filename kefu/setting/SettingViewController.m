@@ -25,18 +25,9 @@
     [super viewDidLoad];
     self.title = @"设置";
     
-    
-    LevelDB *ldb = [AppDB instance].db;
-    
-    id object = [ldb objectForKey:@"user_auth"];
-    int64_t uid = [[object objectForKey:@"uid"] longLongValue];
-    NSString *token = [object objectForKey:@"access_token"];
-    int64_t storeID = [[object objectForKey:@"store_id"] longLongValue];
-    NSString *name = [object objectForKey:@"name"];
-    
-    self.number = uid;
-    self.name = name;
-    
+    Token *token = [Token instance];
+    self.number = token.uid;
+    self.name = token.name ? token.name : @"";
 }
 
 - (void)didReceiveMemoryWarning {

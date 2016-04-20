@@ -38,6 +38,7 @@
 		6D2521A71CC1DF27004C6FBE /* CustomerSupportMessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2521A61CC1DF27004C6FBE /* CustomerSupportMessageHandler.m */; };
 		6D485DFB1CC3612E0082588F /* CustomerSupportOutbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485DFA1CC3612E0082588F /* CustomerSupportOutbox.m */; };
 		6D485E021CC623090082588F /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E011CC623090082588F /* Token.m */; };
+		6D485E051CC71E660082588F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E041CC71E660082588F /* MainViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,6 +95,8 @@
 		6D485DFC1CC616610082588F /* Config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		6D485E001CC623090082588F /* Token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
 		6D485E011CC623090082588F /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
+		6D485E031CC71E660082588F /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		6D485E041CC71E660082588F /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		D5EF4A6AAFD97CBCE3ECDD42 /* libPods-kefu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kefu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD63C0FC9F93DB2C0E44BA29 /* Pods-kefu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kefu.release.xcconfig"; path = "Pods/Target Support Files/Pods-kefu/Pods-kefu.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -198,6 +201,8 @@
 				6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */,
 				6D12EC901CB6061E0003A03B /* CustomerMessageListViewController.h */,
 				6D12EC911CB6061E0003A03B /* CustomerMessageListViewController.m */,
+				6D485E031CC71E660082588F /* MainViewController.h */,
+				6D485E041CC71E660082588F /* MainViewController.m */,
 				6D485DFC1CC616610082588F /* Config.h */,
 				6D12EC701CB517650003A03B /* Assets.xcassets */,
 				6D12EC881CB600C60003A03B /* Info.plist */,
@@ -259,6 +264,7 @@
 				TargetAttributes = {
 					6D12EC601CB517650003A03B = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = V88W3X24CM;
 					};
 				};
 			};
@@ -357,6 +363,7 @@
 				6D25219E1CBFF598004C6FBE /* CustomerSupportViewController.m in Sources */,
 				6D485DFB1CC3612E0082588F /* CustomerSupportOutbox.m in Sources */,
 				4803C80D1CC3B323007550E6 /* LoginViewOneCell.m in Sources */,
+				6D485E051CC71E660082588F /* MainViewController.m in Sources */,
 				487D48C31CC3E350005DE19D /* QuitTableViewCell.m in Sources */,
 				6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */,
 				6D2521A71CC1DF27004C6FBE /* CustomerSupportMessageHandler.m in Sources */,
@@ -488,7 +495,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Dian Li (ZPLSF6KNZ4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dian Li (ZPLSF6KNZ4)";
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -499,6 +507,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "4cb85451-cf91-4b0e-86df-1bf199f2a5e6";
 			};
 			name = Debug;
 		};
@@ -508,7 +517,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Fuzhou Paramecium Information Technology Co., Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Fuzhou Paramecium Information Technology Co., Ltd.";
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",

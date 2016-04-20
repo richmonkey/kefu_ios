@@ -63,24 +63,11 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
--(NSString*)getDocumentPath {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-    return basePath;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     Token *token = [Token instance];
-    
-    NSString *path = [self getDocumentPath];
-    NSString *customerPath = [NSString stringWithFormat:@"%@/%lld/customer", path, token.uid];
-    [[CustomerSupportMessageDB instance] setDbPath:customerPath];
-    
-    [IMHttpAPI instance].accessToken = token.accessToken;
-    [IMService instance].uid = token.uid;
-    [IMService instance].token = token.accessToken;
-    [[IMService instance] start];
+
     
     self.currentUID = token.uid;
     self.storeID = token.storeID;
@@ -146,15 +133,6 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
                                                                          target:self
                                                                          action:@selector(rightBarButtonItemClicked:)];
     [self.navigationItem setRightBarButtonItem:barButtonItemRight];
-    
-    __weak CustomerMessageListViewController *wself = self;
-    dispatch_queue_t queue = dispatch_get_main_queue();
-    self.refreshTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
-    dispatch_source_set_event_handler(self.refreshTimer, ^{
-        [wself refreshAccessToken];
-    });
-    
-    [self startRefreshTimer];
 }
 
 
