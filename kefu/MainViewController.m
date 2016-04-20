@@ -27,8 +27,9 @@
 #import "Config.h"
 
 @interface MainViewController()
-@property(nonatomic)dispatch_source_t refreshTimer;
-@property(nonatomic)int refreshFailCount;
+@property(nonatomic) dispatch_source_t refreshTimer;
+@property(nonatomic) int refreshFailCount;
+@property(nonatomic, copy) NSString *deviceToken;
 @end
 
 @implementation MainViewController
@@ -68,6 +69,8 @@
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRegisterForRemoteNotificationsWithDeviceToken:) name:@"didRegisterForRemoteNotificationsWithDeviceToken" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onUserLogout:) name:@"user.logout" object:nil];
 
     //刷新access token
     __weak MainViewController *wself = self;
@@ -158,6 +161,7 @@
     [IMHttpAPI bindDeviceToken:newToken
                        success:^{
                            NSLog(@"bind device token success");
+                           self.deviceToken = newToken;
                        }
                           fail:^{
                               NSLog(@"bind device token fail");
@@ -165,6 +169,14 @@
 }
 
 
-
+- (void)onUserLogout:(NSNotification*) notification {
+    if (self.deviceToken.length > 0) {
+        [IMHttpAPI unbindDeviceToken:self.deviceToken success:^{
+            NSLog(@"unbind device token success");
+        } fail:^{
+            NSLog(@"unbind device token fail");
+        }];
+    }
+}
 
 @end

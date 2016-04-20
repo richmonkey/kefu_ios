@@ -91,7 +91,7 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newCustomerMessage:) name:LATEST_CUSTOMER_MESSAGE object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onUserLogout:) name:@"user.logout" object:nil];
+
     
     id<ConversationIterator> iterator =  [[CustomerSupportMessageDB instance] newConversationIterator];
     Conversation * conversation = [iterator next];
@@ -472,6 +472,7 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
 }
 
 - (void)onUserLogout:(NSNotification*) notification {
+    [super onUserLogout:notification];
     [[IMService instance] removeConnectionObserver:self];
     [[IMService instance] removeCustomerMessageObserver:self];
 }
