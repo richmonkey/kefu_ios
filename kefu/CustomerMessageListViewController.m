@@ -26,6 +26,7 @@
 #import "AppDB.h"
 #import "SettingViewController.h"
 #import "Token.h"
+#import "User.h"
 #import "Config.h"
 
 //RGB颜色
@@ -39,7 +40,7 @@ alpha:(a)]
 #define kConversationCellHeight         60
 
 @interface CustomerMessageListViewController()<UITableViewDelegate, UITableViewDataSource,
-TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegate>
+TCPConnectionObserver, CustomerMessageObserver>
 @property(nonatomic)dispatch_source_t refreshTimer;
 @property(nonatomic)int refreshFailCount;
 
@@ -53,7 +54,6 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     self = [super init];
     if (self) {
         self.conversations = [[NSMutableArray alloc] init];
-        self.userDelegate = self;
     }
     return self;
 }
@@ -98,6 +98,9 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     while (conversation) {
         [self.conversations addObject:conversation];
         conversation = [iterator next];
+        
+        CustomerConversation *cc = (CustomerConversation*)conversation;
+        NSLog(@"customer id:%lld appid:%lld", cc.customerID, cc.customerAppID);
     }
     
     for (Conversation *conv in self.conversations) {
@@ -227,15 +230,17 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
 
 -(void)updateConversationName:(Conversation*)conversation {
     if (conversation.type == CONVERSATION_CUSTOMER_SERVICE) {
-        IUser *u = [self.userDelegate getUser:conversation.cid];
+        CustomerConversation *cc = (CustomerConversation*)conversation;
+        IUser *u = [self getUser:cc.customerID appID:cc.customerAppID];
         if (u.name.length > 0) {
             conversation.name = u.name;
             conversation.avatarURL = u.avatarURL;
         } else {
             conversation.name = u.identifier;
             conversation.avatarURL = u.avatarURL;
+
             
-            [self.userDelegate asyncGetUser:conversation.cid cb:^(IUser *u) {
+            [self asyncGetUser:cc.customerID appID:cc.customerAppID cb:^(IUser *u) {
                 conversation.name = u.name;
                 conversation.avatarURL = u.avatarURL;
             }];
@@ -310,10 +315,9 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
     CustomerConversation *con = [self.conversations objectAtIndex:indexPath.row];
     if (con.type == CONVERSATION_CUSTOMER_SERVICE) {
         CustomerSupportViewController *msgController = [[CustomerSupportViewController alloc] init];
-        msgController.userDelegate = self.userDelegate;
         msgController.customerAppID = con.customerAppID;
         msgController.customerID = con.customerID;
-        msgController.customerName = @"";
+        msgController.customerName = con.name;
         msgController.currentUID = self.currentUID;
         msgController.storeID = self.storeID;
         msgController.isShowUserName = NO;
@@ -479,17 +483,56 @@ TCPConnectionObserver, CustomerMessageObserver, MessageViewControllerUserDelegat
 
 #pragma mark MessageViewControllerUserDelegate
 //从本地获取用户信息, IUser的name字段为空时，显示identifier字段
-- (IUser*)getUser:(int64_t)uid {
+- (IUser*)getUser:(int64_t)uid appID:(int64_t)appID {
+    User *user = [User load:uid appID:appID];
+
     IUser *u = [[IUser alloc] init];
     u.uid = uid;
-    u.name = [NSString stringWithFormat:@"uid:%lld", uid];
-    u.identifier = u.name;
+    if (user.name.length > 0) {
+        u.name = user.name;
+    }
+    u.identifier = [NSString stringWithFormat:@"匿名(%lld)", uid];
     return u;
 }
 
 //从服务器获取用户信息
-- (void)asyncGetUser:(int64_t)uid cb:(void(^)(IUser*))cb {
-    
+- (void)asyncGetUser:(int64_t)uid appID:(int64_t)appID cb:(void(^)(IUser*))cb {
+    NSString *base = [NSString stringWithFormat:@"%@/", KEFU_API];
+    NSURL *baseURL = [NSURL URLWithString:base];
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+
+    NSString *auth = [NSString stringWithFormat:@"Bearer %@", [Token instance].accessToken];
+    [manager.requestSerializer setValue:auth forHTTPHeaderField:@"Authorization"];
+     
+    NSString *url = [NSString stringWithFormat:@"customers/%lld/%lld", appID, uid];
+    [manager GET:url
+       parameters:nil
+        progress:nil
+          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+              NSLog(@"response:%@", responseObject);
+              NSString *name = [responseObject objectForKey:@"name"];
+              if (name.length > 0) {
+                  User *user = [[User alloc] init];
+                  user.appID = appID;
+                  user.uid = uid;
+                  user.name = name;
+                  [User save:user];
+                  
+                  IUser *u = [[IUser alloc] init];
+                  u.uid = uid;
+                  if (user.name.length > 0) {
+                      u.name = user.name;
+                  }
+                  u.identifier = [NSString stringWithFormat:@"匿名(%lld)", uid];
+                  cb(u);
+              }
+          }
+          failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+              NSLog(@"failure");
+          }
+     ];
 }
+
 
 @end

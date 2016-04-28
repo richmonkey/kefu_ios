@@ -14,6 +14,5 @@
 @interface CustomerMessageListViewController : MainViewController
 @property(nonatomic, assign) int64_t currentUID;
 @property(nonatomic, assign) int64_t storeID;
-@property(nonatomic, weak) id<MessageViewControllerUserDelegate> userDelegate;
 
 @end
