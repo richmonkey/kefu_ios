@@ -91,8 +91,12 @@
     [self removeObserver];
     [self stopPlayer];
     
+    id obj = @{
+        @"uid": [NSNumber numberWithLongLong:self.customerID],
+        @"appid": [NSNumber numberWithLongLong:self.customerAppID]
+    };
     NSNotification* notification = [[NSNotification alloc] initWithName:CLEAR_CUSTOMER_NEW_MESSAGE
-                                                                 object:[NSNumber numberWithLongLong:self.customerID]
+                                                                 object:obj
                                                                userInfo:nil];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
     

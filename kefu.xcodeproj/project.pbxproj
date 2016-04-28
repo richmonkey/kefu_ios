@@ -40,6 +40,7 @@
 		6D485E021CC623090082588F /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E011CC623090082588F /* Token.m */; };
 		6D485E051CC71E660082588F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E041CC71E660082588F /* MainViewController.m */; };
 		6D485E0D1CD1F4180082588F /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E0C1CD1F4180082588F /* User.m */; };
+		6D485E101CD1FEAB0082588F /* NewCount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E0F1CD1FEAB0082588F /* NewCount.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +101,8 @@
 		6D485E041CC71E660082588F /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		6D485E0B1CD1F4180082588F /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		6D485E0C1CD1F4180082588F /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		6D485E0E1CD1FEAB0082588F /* NewCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCount.h; sourceTree = "<group>"; };
+		6D485E0F1CD1FEAB0082588F /* NewCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCount.m; sourceTree = "<group>"; };
 		D5EF4A6AAFD97CBCE3ECDD42 /* libPods-kefu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kefu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD63C0FC9F93DB2C0E44BA29 /* Pods-kefu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kefu.release.xcconfig"; path = "Pods/Target Support Files/Pods-kefu/Pods-kefu.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -187,6 +190,8 @@
 				6D485E011CC623090082588F /* Token.m */,
 				6D485E0B1CD1F4180082588F /* User.h */,
 				6D485E0C1CD1F4180082588F /* User.m */,
+				6D485E0E1CD1FEAB0082588F /* NewCount.h */,
+				6D485E0F1CD1FEAB0082588F /* NewCount.m */,
 				6D12EC671CB517650003A03B /* AppDelegate.h */,
 				6D12EC681CB517650003A03B /* AppDelegate.m */,
 				487D48AE1CC3D9EE005DE19D /* BaseViewController.h */,
@@ -369,6 +374,7 @@
 				6D485DFB1CC3612E0082588F /* CustomerSupportOutbox.m in Sources */,
 				4803C80D1CC3B323007550E6 /* LoginViewOneCell.m in Sources */,
 				6D485E051CC71E660082588F /* MainViewController.m in Sources */,
+				6D485E101CD1FEAB0082588F /* NewCount.m in Sources */,
 				487D48C31CC3E350005DE19D /* QuitTableViewCell.m in Sources */,
 				6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */,
 				6D2521A71CC1DF27004C6FBE /* CustomerSupportMessageHandler.m in Sources */,

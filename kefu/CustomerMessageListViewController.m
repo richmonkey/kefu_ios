@@ -27,6 +27,7 @@
 #import "SettingViewController.h"
 #import "Token.h"
 #import "User.h"
+#import "NewCount.h"
 #import "Config.h"
 
 //RGB颜色
@@ -73,6 +74,7 @@ TCPConnectionObserver, CustomerMessageObserver>
     self.storeID = token.storeID;
     NSLog(@"store id:%lld uid:%lld", self.storeID, self.currentUID);
     
+
     CGRect rect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     self.tableview = [[UITableView alloc]initWithFrame:rect style:UITableViewStylePlain];
     self.tableview.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -89,25 +91,34 @@ TCPConnectionObserver, CustomerMessageObserver>
     [[IMService instance] addConnectionObserver:self];
     [[IMService instance] addCustomerMessageObserver:self];
     
-    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newCustomerMessage:) name:LATEST_CUSTOMER_MESSAGE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newCustomerMessage:)
+                                                 name:LATEST_CUSTOMER_MESSAGE
+                                               object:nil];
     
-
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearCustomerNewState:)
+                                                 name:CLEAR_CUSTOMER_NEW_MESSAGE
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
+    
     
     id<ConversationIterator> iterator =  [[CustomerSupportMessageDB instance] newConversationIterator];
     Conversation * conversation = [iterator next];
     while (conversation) {
         [self.conversations addObject:conversation];
         conversation = [iterator next];
-        
-        CustomerConversation *cc = (CustomerConversation*)conversation;
-        NSLog(@"customer id:%lld appid:%lld", cc.customerID, cc.customerAppID);
     }
     
     for (Conversation *conv in self.conversations) {
         [self updateConversationName:conv];
         [self updateConversationDetail:conv];
+        
+        CustomerConversation *cc = (CustomerConversation*)conv;
+        conv.newMsgCount = [NewCount getNewCount:cc.customerID appID:cc.customerAppID];
     }
-
+    
     NSArray *sortedArray = [self.conversations sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         Conversation *c1 = obj1;
         Conversation *c2 = obj2;
@@ -125,6 +136,7 @@ TCPConnectionObserver, CustomerMessageObserver>
     }];
     
     self.conversations = [NSMutableArray arrayWithArray:sortedArray];
+    
     
     self.navigationItem.title = @"对话";
     if ([[IMService instance] connectState] == STATE_CONNECTING) {
@@ -388,6 +400,7 @@ TCPConnectionObserver, CustomerMessageObserver>
     
     if (msg.isIncomming) {
         con.newMsgCount += 1;
+        [NewCount setNewCount:con.newMsgCount uid:con.customerID appID:con.customerAppID];
         [self setNewOnTabBar];
     }
     
@@ -410,9 +423,10 @@ TCPConnectionObserver, CustomerMessageObserver>
     
     [self updateConversationName:con];
     [self updateConversationDetail:con];
-    
-    if (self.currentUID == msg.receiver) {
+
+    if (msg.isIncomming) {
         con.newMsgCount += 1;
+        [NewCount setNewCount:con.newMsgCount uid:con.customerID appID:con.customerAppID];
         [self setNewOnTabBar];
     }
     
@@ -437,7 +451,22 @@ TCPConnectionObserver, CustomerMessageObserver>
     [self onNewCustomerMessage:msg];
 }
 
-
+- (void)clearCustomerNewState:(NSNotification*) notification {
+    id obj = notification.object;
+    int64_t uid = [[obj objectForKey:@"uid"] longLongValue];
+    int64_t appid = [[obj objectForKey:@"appid"] longLongValue];
+    
+    for (int i = 0; i < [self.conversations count]; i++) {
+        CustomerConversation *con = [self.conversations objectAtIndex:i];
+        if (con.type == CONVERSATION_CUSTOMER_SERVICE &&
+            con.customerID == uid &&
+            con.customerAppID == appid) {
+            con.newMsgCount = 0;
+            [NewCount setNewCount:0 uid:con.customerID appID:con.customerAppID];
+            break;
+        }
+    }
+}
 
 //同IM服务器连接的状态变更通知
 -(void)onConnectState:(int)state {
@@ -474,6 +503,19 @@ TCPConnectionObserver, CustomerMessageObserver>
 - (void)clearNewOnTarBar {
     
 }
+
+
+- (void)appWillResignActive {
+    NSLog(@"app will resign active");
+    int c = 0;
+    for (Conversation *conv in self.conversations) {
+        c += conv.newMsgCount;
+    }
+    NSLog(@"unread count:%d", c);
+    [[IMService instance] sendUnreadCount:c];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:c];
+}
+
 
 - (void)onUserLogout:(NSNotification*) notification {
     [super onUserLogout:notification];

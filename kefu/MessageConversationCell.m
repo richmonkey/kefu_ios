@@ -8,6 +8,7 @@
 
 #import "MessageConversationCell.h"
 #import <gobelieve/IMessage.h>
+#import "JSBadgeView.h"
 
 #define kCatchWidth 74.0f
 
@@ -44,23 +45,23 @@
     // Configure the view for the selected state
 }
 
--(void) showNewMessage:(int)count{
-//    JSBadgeView *badgeView = [[JSBadgeView alloc] initWithParentView:self.messageContent alignment:JSBadgeViewAlignmentCenterRight];
-//    [badgeView setBadgeTextFont:[UIFont systemFontOfSize:14.0f]];
-//    [self.messageContent bringSubviewToFront:badgeView];
-//    if (count > 99) {
-//       badgeView.badgeText = @"99+";
-//    }else{
-//        badgeView.badgeText = [NSString stringWithFormat:@"%d",count];
-//    }
+- (void)showNewMessage:(int)count{
+    JSBadgeView *badgeView = [[JSBadgeView alloc] initWithParentView:self.messageContent alignment:JSBadgeViewAlignmentCenterRight];
+    [badgeView setBadgeTextFont:[UIFont systemFontOfSize:14.0f]];
+    [self.messageContent bringSubviewToFront:badgeView];
+    if (count > 99) {
+       badgeView.badgeText = @"99+";
+    }else{
+        badgeView.badgeText = [NSString stringWithFormat:@"%d",count];
+    }
 }
 
--(void) clearNewMessage{
-//    for (UIView *vi in [self.messageContent subviews]) {
-//        if ([vi isKindOfClass:[JSBadgeView class]]) {
-//            [vi removeFromSuperview];
-//        }
-//    }
+- (void)clearNewMessage{
+    for (UIView *vi in [self.messageContent subviews]) {
+        if ([vi isKindOfClass:[JSBadgeView class]]) {
+            [vi removeFromSuperview];
+        }
+    }
 }
 
 - (void)dealloc {
