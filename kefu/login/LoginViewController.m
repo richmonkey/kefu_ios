@@ -44,11 +44,18 @@
 - (void)dealloc {
     NSLog(@"LoginViewControler dealloc");
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.delegate   = self;
     self.tableView.dataSource = self;
     self.tableView.showsVerticalScrollIndicator = NO;
+    
+    if (self.hint) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"你的账号在其它设备上登录"
+                                                       delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -188,7 +195,19 @@
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     
-    NSDictionary *dict = @{@"username":username, @"password":password};
+#define  PLATFORM_IOS 1
+    
+    NSString *name = [[UIDevice currentDevice] name];
+    NSString *model = [[UIDevice currentDevice] model];
+#if TARGET_IPHONE_SIMULATOR
+    NSString *deviceID = @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61";
+#else
+    NSString *deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+#endif
+    
+    NSDictionary *dict = @{@"username":username, @"password":password,
+                           @"device_name":name, @"device_model":model,
+                           @"device_id":deviceID, @"platform":@PLATFORM_IOS};
     
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText = NSLocalizedString(@"login.doing", @"登录中...");
@@ -205,6 +224,7 @@
               token.storeID = [[responseObject objectForKey:@"store_id"] longLongValue];
               token.name = [responseObject objectForKey:@"name"];
               token.expireTimestamp = (int)time(NULL) + [[responseObject objectForKey:@"expires_in"] intValue];
+              token.loginTimestamp = (int)time(NULL);
               [token save];
               
               [MBProgressHUD hideHUDForView:self.view animated:YES];

@@ -8,5 +8,5 @@
 
 
 @interface LoginViewController : BaseViewController <UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>
-
+@property(nonatomic) BOOL hint;//下线提示
 @end

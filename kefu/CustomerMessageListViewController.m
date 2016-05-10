@@ -28,6 +28,7 @@
 #import "Token.h"
 #import "User.h"
 #import "NewCount.h"
+#import "LoginViewController.h"
 #import "Config.h"
 
 //RGB颜色
@@ -41,7 +42,7 @@ alpha:(a)]
 #define kConversationCellHeight         60
 
 @interface CustomerMessageListViewController()<UITableViewDelegate, UITableViewDataSource,
-TCPConnectionObserver, CustomerMessageObserver>
+TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
 @property(nonatomic)dispatch_source_t refreshTimer;
 @property(nonatomic)int refreshFailCount;
 
@@ -90,6 +91,7 @@ TCPConnectionObserver, CustomerMessageObserver>
 
     [[IMService instance] addConnectionObserver:self];
     [[IMService instance] addCustomerMessageObserver:self];
+    [[IMService instance] addSystemMessageObserver:self];
     
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newCustomerMessage:)
                                                  name:LATEST_CUSTOMER_MESSAGE
@@ -213,11 +215,7 @@ TCPConnectionObserver, CustomerMessageObserver>
               
           }
      ];
-
-
 }
-
-
 
 
 - (void)rightBarButtonItemClicked:(id)sender{
@@ -480,6 +478,62 @@ TCPConnectionObserver, CustomerMessageObserver>
         
     }
 }
+
+#pragma mark SystemMessageObserver
+-(void)onSystemMessage:(NSString*)sm {
+    NSLog(@"system message:%@", sm);
+    
+    const char *utf8 = [sm UTF8String];
+    NSData *data = [NSData dataWithBytes:utf8 length:strlen(utf8)];
+    NSDictionary *d = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+
+    NSDictionary *dict = [d objectForKey:@"login"];
+    if (!dict) {
+        return;
+    }
+
+    Token *t = [Token instance];
+
+#if TARGET_IPHONE_SIMULATOR
+    NSString *deviceID = @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61";
+#else
+    NSString *deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+#endif
+    
+    int platform = [[dict objectForKey:@"platform"] intValue];
+    if (platform == PLATFORM_IOS && [[dict objectForKey:@"device_id"] isEqualToString:deviceID]) {
+        return;
+    }
+    
+    int timestamp = [[dict objectForKey:@"timestamp"] intValue];
+    if (t.loginTimestamp > timestamp) {
+        return;
+    }
+    
+    NSLog(@"login another place");
+    [self logout];
+}
+
+- (void)logout {
+    NSLog(@"quit...");
+    Token *token = [Token instance];
+    token.uid = 0;
+    token.accessToken = @"";
+    token.refreshToken = @"";
+    token.name = @"";
+    token.storeID = 0;
+    token.expireTimestamp = 0;
+    [token save];
+    
+    [[IMService instance] stop];
+    
+    LoginViewController *ctrl = [[LoginViewController alloc] init];
+    ctrl.hint = YES;
+    [UIApplication sharedApplication].keyWindow.rootViewController = ctrl;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"user.logout" object:nil];
+}
+
 #pragma mark - function
 -(void) resetConversationsViewControllerNewState{
     BOOL shouldClearNewCount = YES;
@@ -521,6 +575,7 @@ TCPConnectionObserver, CustomerMessageObserver>
     [super onUserLogout:notification];
     [[IMService instance] removeConnectionObserver:self];
     [[IMService instance] removeCustomerMessageObserver:self];
+    [[IMService instance] removeSystemMessageObserver:self];
 }
 
 #pragma mark MessageViewControllerUserDelegate

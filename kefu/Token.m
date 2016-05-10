@@ -41,6 +41,7 @@
     self.storeID = [[db objectForKey:@"token_store_id"] longLongValue];
     self.name = [db objectForKey:@"token_name"];
     self.expireTimestamp = [[db objectForKey:@"token_expire"] intValue];
+    self.loginTimestamp = [[db objectForKey:@"token_login"] intValue];
 }
 
 -(void)save {
@@ -59,6 +60,7 @@
     [db setObject:[NSNumber numberWithLongLong:self.storeID] forKey:@"token_store_id"];
     [db setObject:[NSNumber numberWithLongLong:self.uid] forKey:@"token_uid"];
     [db setObject:[NSNumber numberWithInt:self.expireTimestamp] forKey:@"token_expire"];
+    [db setObject:[NSNumber numberWithInt:self.loginTimestamp] forKey:@"token_login"];
 }
 
 @end
