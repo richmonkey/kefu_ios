@@ -198,7 +198,6 @@
 #define  PLATFORM_IOS 1
     
     NSString *name = [[UIDevice currentDevice] name];
-    NSString *model = [[UIDevice currentDevice] model];
 #if TARGET_IPHONE_SIMULATOR
     NSString *deviceID = @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61";
 #else
@@ -206,8 +205,8 @@
 #endif
     
     NSDictionary *dict = @{@"username":username, @"password":password,
-                           @"device_name":name, @"device_model":model,
-                           @"device_id":deviceID, @"platform":@PLATFORM_IOS};
+                           @"device_name":name,  @"device_id":deviceID,
+                           @"platform":@PLATFORM_IOS};
     
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.labelText = NSLocalizedString(@"login.doing", @"登录中...");
