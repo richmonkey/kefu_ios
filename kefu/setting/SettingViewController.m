@@ -111,6 +111,8 @@
 
 - (void)logout {
     NSLog(@"quit...");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"user.logout" object:nil];
+    
     Token *token = [Token instance];
     token.uid = 0;
     token.accessToken = @"";
@@ -119,13 +121,14 @@
     token.storeID = 0;
     token.expireTimestamp = 0;
     [token save];
-
+    
+    [[IMService instance] sendUnreadCount:0];
     [[IMService instance] stop];
     
-    LoginViewController *vtr = [[LoginViewController alloc] init];
-    [UIApplication sharedApplication].keyWindow.rootViewController = vtr;
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"user.logout" object:nil];
+    LoginViewController *ctrl = [[LoginViewController alloc] init];
+    [UIApplication sharedApplication].keyWindow.rootViewController = ctrl;
 }
 
 - (void)quitAction{
