@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.requires_arc     = true
   s.preserve_paths   = 'gobelieve/imkit/imkit/amr/libopencore-amrnb.a'
   s.library          = 'opencore-amrnb'
-  s.xcconfig         = { 'LIBRARY_SEARCH_PATHS' => '"${SRCROOT}/imkit/imkit/amr"' }
+  s.xcconfig         = { 'LIBRARY_SEARCH_PATHS' => '"${SRCROOT}/gobelieve/imkit/imkit/amr"' }
 
   s.subspec 'imsdk' do |sp|
     sp.public_header_files = 'gobelieve/imsdk/imsdk/*.h'
