@@ -26,7 +26,6 @@
 		6D12EC691CB517650003A03B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC681CB517650003A03B /* AppDelegate.m */; };
 		6D12EC711CB517650003A03B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC701CB517650003A03B /* Assets.xcassets */; };
 		6D12EC801CB5FFC70003A03B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC821CB5FFC70003A03B /* Localizable.strings */; };
-		6D12EC891CB600C60003A03B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC881CB600C60003A03B /* Info.plist */; };
 		6D12EC8C1CB604010003A03B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC8E1CB604010003A03B /* InfoPlist.strings */; };
 		6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC911CB6061E0003A03B /* CustomerMessageListViewController.m */; };
 		6D12EC961CB606390003A03B /* MessageConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC941CB606390003A03B /* MessageConversationCell.m */; };
@@ -41,6 +40,7 @@
 		6D485E051CC71E660082588F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E041CC71E660082588F /* MainViewController.m */; };
 		6D485E0D1CD1F4180082588F /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E0C1CD1F4180082588F /* User.m */; };
 		6D485E101CD1FEAB0082588F /* NewCount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E0F1CD1FEAB0082588F /* NewCount.m */; };
+		6D485E131CE17ED90082588F /* RobotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E121CE17ED90082588F /* RobotViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -103,6 +103,8 @@
 		6D485E0C1CD1F4180082588F /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		6D485E0E1CD1FEAB0082588F /* NewCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCount.h; sourceTree = "<group>"; };
 		6D485E0F1CD1FEAB0082588F /* NewCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCount.m; sourceTree = "<group>"; };
+		6D485E111CE17ED90082588F /* RobotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotViewController.h; sourceTree = "<group>"; };
+		6D485E121CE17ED90082588F /* RobotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotViewController.m; sourceTree = "<group>"; };
 		D5EF4A6AAFD97CBCE3ECDD42 /* libPods-kefu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kefu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD63C0FC9F93DB2C0E44BA29 /* Pods-kefu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kefu.release.xcconfig"; path = "Pods/Target Support Files/Pods-kefu/Pods-kefu.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -211,6 +213,8 @@
 				6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */,
 				6D12EC901CB6061E0003A03B /* CustomerMessageListViewController.h */,
 				6D12EC911CB6061E0003A03B /* CustomerMessageListViewController.m */,
+				6D485E111CE17ED90082588F /* RobotViewController.h */,
+				6D485E121CE17ED90082588F /* RobotViewController.m */,
 				6D485E031CC71E660082588F /* MainViewController.h */,
 				6D485E041CC71E660082588F /* MainViewController.m */,
 				6D485DFC1CC616610082588F /* Config.h */,
@@ -307,7 +311,6 @@
 				4803C80E1CC3B323007550E6 /* LoginViewOneCell.xib in Resources */,
 				6D12EC801CB5FFC70003A03B /* Localizable.strings in Resources */,
 				6D12EC711CB517650003A03B /* Assets.xcassets in Resources */,
-				6D12EC891CB600C60003A03B /* Info.plist in Resources */,
 				4803C8121CC3B323007550E6 /* LoginViewTwoCell.xib in Resources */,
 				6D12EC971CB606390003A03B /* MessageConversationCell.xib in Resources */,
 				487D48CB1CC3E365005DE19D /* SettingInforTableViewCell.xib in Resources */,
@@ -390,6 +393,7 @@
 				6D2521A11CC1D58F004C6FBE /* CustomerSupportMessageDB.m in Sources */,
 				4803C80B1CC3B323007550E6 /* LoginViewController.m in Sources */,
 				487D48CA1CC3E365005DE19D /* SettingInforTableViewCell.m in Sources */,
+				6D485E131CE17ED90082588F /* RobotViewController.m in Sources */,
 				487D48C51CC3E350005DE19D /* SettingViewController.m in Sources */,
 				487D48CE1CC3EAD4005DE19D /* UIAlertView+XPAlertView.m in Sources */,
 			);
@@ -516,6 +520,7 @@
 					MAS_SHORTHAND,
 				);
 				INFOPLIST_FILE = kefu/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -538,6 +543,7 @@
 					MAS_SHORTHAND,
 				);
 				INFOPLIST_FILE = kefu/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu;
 				PRODUCT_NAME = "$(TARGET_NAME)";

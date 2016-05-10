@@ -14,9 +14,13 @@
 #import "FileCache.h"
 #import "UIImage+Resize.h"
 
+#import <gobelieve/EaseChatToolbar.h>
+#import "RobotViewController.h"
+
 #define PAGE_COUNT 10
 
-@interface CustomerSupportViewController ()<OutboxObserver, CustomerMessageObserver, AudioDownloaderObserver>
+@interface CustomerSupportViewController ()<OutboxObserver, CustomerMessageObserver,
+                                            AudioDownloaderObserver, RobotViewControllerDelegate>
 
 @end
 
@@ -604,12 +608,33 @@
 }
 
 
--(void)resendMessage:(IMessage*)message {
+- (void)resendMessage:(IMessage*)message {
     message.flags = message.flags & (~MESSAGE_FLAG_FAILURE);
     [self eraseMessageFailure:message];
     [self sendMessage:message];
 }
 
+- (void)moreViewRobotAction:(EaseChatBarMoreView *)moreView {
+    NSLog(@"robot action...");
+    RobotViewController *ctrl = [[RobotViewController alloc] init];
+    ctrl.delegate = self;
+    
+    int index = (int)self.messages.count - 1;
+    for (; index >= 0; index--) {
+        IMessage *m = [self.messages objectAtIndex:index];
+        if (m.isIncomming && m.type == MESSAGE_TEXT) {
+            ctrl.question = m.textContent.text;
+            break;
+        }
+    }
 
+    [self.navigationController pushViewController:ctrl animated:YES];
+}
+
+#pragma mark - RobotViewControllerDelegate
+-(void)sendRobotAnswer:(NSString*)answer {
+    NSLog(@"send robot answer...");
+    [self sendTextMessage:answer];
+}
 
 @end

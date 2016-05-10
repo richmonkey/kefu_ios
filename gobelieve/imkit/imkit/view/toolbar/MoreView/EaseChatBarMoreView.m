@@ -12,7 +12,7 @@
 
 #import "EaseChatBarMoreView.h"
 
-#define CHAT_BUTTON_SIZE 50
+#define CHAT_BUTTON_SIZE 62
 #define INSETS 10
 #define MOREVIEW_COL 4
 #define MOREVIEW_ROW 2
@@ -41,6 +41,8 @@
 @property (nonatomic, strong) UIButton *photoButton;
 @property (nonatomic, strong) UIButton *takePicButton;
 @property (nonatomic, strong) UIButton *locationButton;
+@property (nonatomic, strong) UIButton *robotButton;
+
 @property (nonatomic, strong) UIButton *videoButton;
 @property (nonatomic, strong) UIButton *audioCallButton;
 @property (nonatomic, strong) UIButton *videoCallButton;
@@ -93,6 +95,12 @@
     _photoButton.tag = MOREVIEW_BUTTON_TAG;
     [_scrollview addSubview:_photoButton];
     
+    CGRect f = CGRectMake(insets, 10 + CHAT_BUTTON_SIZE + 4, CHAT_BUTTON_SIZE, 24);
+    UILabel *label = [[UILabel alloc] initWithFrame:f];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.text = NSLocalizedString(@"message.photo", @"photo");
+    [_scrollview addSubview:label];
+    
     _locationButton =[UIButton buttonWithType:UIButtonTypeCustom];
     [_locationButton setFrame:CGRectMake(insets * 2 + CHAT_BUTTON_SIZE, 10, CHAT_BUTTON_SIZE , CHAT_BUTTON_SIZE)];
     [_locationButton setImage:[UIImage imageNamed:@"chatBar_colorMore_location"] forState:UIControlStateNormal];
@@ -101,15 +109,43 @@
     _locationButton.tag = MOREVIEW_BUTTON_TAG + 1;
     [_scrollview addSubview:_locationButton];
     
+    f = CGRectMake(insets*2 + CHAT_BUTTON_SIZE, 10 + CHAT_BUTTON_SIZE + 4, CHAT_BUTTON_SIZE, 24);
+    label = [[UILabel alloc] initWithFrame:f];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.text = NSLocalizedString(@"message.location", @"location");
+    [_scrollview addSubview:label];
+    
+    
     _takePicButton =[UIButton buttonWithType:UIButtonTypeCustom];
     [_takePicButton setFrame:CGRectMake(insets * 3 + CHAT_BUTTON_SIZE * 2, 10, CHAT_BUTTON_SIZE , CHAT_BUTTON_SIZE)];
     [_takePicButton setImage:[UIImage imageNamed:@"chatBar_colorMore_camera"] forState:UIControlStateNormal];
     [_takePicButton setImage:[UIImage imageNamed:@"chatBar_colorMore_cameraSelected"] forState:UIControlStateHighlighted];
     [_takePicButton addTarget:self action:@selector(takePicAction) forControlEvents:UIControlEventTouchUpInside];
     _takePicButton.tag = MOREVIEW_BUTTON_TAG + 2;
-    _maxIndex = 2;
     [_scrollview addSubview:_takePicButton];
 
+    f = CGRectMake(insets*3 + CHAT_BUTTON_SIZE*2, 10 + CHAT_BUTTON_SIZE + 4, CHAT_BUTTON_SIZE, 24);
+    label = [[UILabel alloc] initWithFrame:f];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.text = NSLocalizedString(@"message.camera", @"camera");
+    [_scrollview addSubview:label];
+    
+    self.robotButton =[UIButton buttonWithType:UIButtonTypeCustom];
+    [self.robotButton setFrame:CGRectMake(insets * 4 + CHAT_BUTTON_SIZE * 3, 10, CHAT_BUTTON_SIZE , CHAT_BUTTON_SIZE)];
+    [self.robotButton setImage:[UIImage imageNamed:@"chatBar_colorMore_robot"] forState:UIControlStateNormal];
+    [self.robotButton setImage:[UIImage imageNamed:@"chatBar_colorMore_robotSelected"] forState:UIControlStateHighlighted];
+    [self.robotButton addTarget:self action:@selector(robotAction) forControlEvents:UIControlEventTouchUpInside];
+    self.robotButton.tag = MOREVIEW_BUTTON_TAG + 3;
+    [_scrollview addSubview:self.robotButton];
+    _maxIndex = 3;
+    
+    f = CGRectMake(insets*4 + CHAT_BUTTON_SIZE*3, 10 + CHAT_BUTTON_SIZE + 4, CHAT_BUTTON_SIZE, 24);
+    label = [[UILabel alloc] initWithFrame:f];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.text = NSLocalizedString(@"message.robot", @"robot");
+    [_scrollview addSubview:label];
+    
+    
     CGRect frame = self.frame;
     //frame.size.height = 80;
     //self.frame = frame;
@@ -196,22 +232,6 @@
 }
 
 #pragma setter
-//- (void)setMoreViewColumn:(NSInteger)moreViewColumn
-//{
-//    if (_moreViewColumn != moreViewColumn) {
-//        _moreViewColumn = moreViewColumn;
-//        [self setupSubviewsForType:_type];
-//    }
-//}
-//
-//- (void)setMoreViewNumber:(NSInteger)moreViewNumber
-//{
-//    if (_moreViewNumber != moreViewNumber) {
-//        _moreViewNumber = moreViewNumber;
-//        [self setupSubviewsForType:_type];
-//    }
-//}
-
 - (void)setMoreViewBackgroundColor:(UIColor *)moreViewBackgroundColor
 {
     _moreViewBackgroundColor = moreViewBackgroundColor;
@@ -220,38 +240,7 @@
     }
 }
 
-/*
-- (void)setMoreViewButtonImages:(NSArray *)moreViewButtonImages
-{
-    _moreViewButtonImages = moreViewButtonImages;
-    if ([_moreViewButtonImages count] > 0) {
-        for (UIView *view in self.subviews) {
-            if ([view isKindOfClass:[UIButton class]]) {
-                UIButton *button = (UIButton *)view;
-                if (button.tag < [_moreViewButtonImages count]) {
-                    NSString *imageName = [_moreViewButtonImages objectAtIndex:button.tag];
-                    [button setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-                }
-            }
-        }
-    }
-}
 
-- (void)setMoreViewButtonHignlightImages:(NSArray *)moreViewButtonHignlightImages
-{
-    _moreViewButtonHignlightImages = moreViewButtonHignlightImages;
-    if ([_moreViewButtonHignlightImages count] > 0) {
-        for (UIView *view in self.subviews) {
-            if ([view isKindOfClass:[UIButton class]]) {
-                UIButton *button = (UIButton *)view;
-                if (button.tag < [_moreViewButtonHignlightImages count]) {
-                    NSString *imageName = [_moreViewButtonHignlightImages objectAtIndex:button.tag];
-                    [button setImage:[UIImage imageNamed:imageName] forState:UIControlStateHighlighted];
-                }
-            }
-        }
-    }
-}*/
 
 #pragma mark - UIScrollViewDelegate
 
@@ -281,10 +270,15 @@
     }
 }
 
-- (void)locationAction
-{
+- (void)locationAction {
     if (_delegate && [_delegate respondsToSelector:@selector(moreViewLocationAction:)]) {
         [_delegate moreViewLocationAction:self];
+    }
+}
+
+- (void)robotAction {
+    if (_delegate && [_delegate respondsToSelector:@selector(moreViewRobotAction:)]) {
+        [_delegate moreViewRobotAction:self];
     }
 }
 

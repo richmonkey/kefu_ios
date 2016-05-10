@@ -183,8 +183,6 @@
 
 
 - (void)login:(NSString*)username password:(NSString*)password {
-    
-    LevelDB *ldb = [AppDB instance].db;
     NSString *base = [NSString stringWithFormat:@"%@/", KEFU_API];
     NSURL *baseURL = [NSURL URLWithString:base];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
