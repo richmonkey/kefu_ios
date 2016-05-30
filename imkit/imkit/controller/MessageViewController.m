@@ -23,6 +23,7 @@
 #import "MessageViewCell.h"
 #import "MessageNotificationView.h"
 #import "MessageTimeBaseView.h"
+#import "MessageGoodsView.h"
 
 #import "MEESImageViewController.h"
 
@@ -36,6 +37,7 @@
 #import "EaseChatToolbar.h"
 #import "EaseEmoji.h"
 #import "EaseEmotionManager.h"
+#import "IMHttpAPI.h"
 
 #define INPUT_HEIGHT 52.0f
 
@@ -522,6 +524,23 @@
     [self.navigationController pushViewController:ctl animated:YES];
 }
 
+- (void) handleTapGoodsView:(UITapGestureRecognizer*)tap {
+    int row = tap.view.tag & 0xffff;
+    int section = (int)(tap.view.tag >> 16);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+    IMessage *message = [self messageForRowAtIndexPath:indexPath];
+    if (message == nil) {
+        return;
+    }
+    NSLog(@"click link");
+    if (message.goodsContent.url.length > 0) {
+        WebViewController *ctl = [[WebViewController alloc] init];
+        ctl.url = message.goodsContent.url;
+        [self.navigationController pushViewController:ctl animated:YES];
+    }
+}
+
+
 - (void) handleTapLocationView:(UITapGestureRecognizer*)tap {
     int row = tap.view.tag & 0xffff;
     int section = (int)(tap.view.tag >> 16);
@@ -570,6 +589,11 @@
             [tap setNumberOfTouchesRequired: 1];
             MessageLinkView *linkView = (MessageLinkView*)cell.bubbleView;
             [linkView addGestureRecognizer:tap];
+        } else if (message.type == MESSAGE_GOODS) {
+            UITapGestureRecognizer *tap  = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGoodsView:)];
+            [tap setNumberOfTouchesRequired: 1];
+            MessageGoodsView *goodsView = (MessageGoodsView*)cell.bubbleView;
+            [goodsView addGestureRecognizer:tap];
         } else if(message.type == MESSAGE_TEXT){
             
         }
@@ -610,6 +634,9 @@
     } else if (message.type == MESSAGE_LINK) {
         MessageLinkView *linkView = (MessageLinkView*)cell.bubbleView;
         linkView.tag = indexPath.section<<16 | indexPath.row;
+    } else if (message.type == MESSAGE_GOODS) {
+        MessageGoodsView *goodsView = (MessageGoodsView*)cell.bubbleView;
+        goodsView.tag = indexPath.section<<16 | indexPath.row;
     }
     
     cell.tag = indexPath.section<<16 | indexPath.row;
@@ -644,7 +671,7 @@
     switch (msg.type) {
         case MESSAGE_TEXT: {
             MessageTextContent *content = msg.textContent;
-            int h = [MessageTextView cellHeightForText:content.text];
+            int h = [MessageTextView cellHeightForText:content.text translation:msg.translation];
             h = MAX(40, h);
             return  h + nameHeight;
         }
@@ -662,6 +689,8 @@
             return kMessageLinkViewHeight + nameHeight;
         case MESSAGE_TIME_BASE:
             return kMessageTimeBaseViewHeight;
+        case MESSAGE_GOODS:
+            return kMessageGoodViewHeight + nameHeight;
         default:
             return 0;
     }
@@ -776,8 +805,7 @@
   
 }
 
-- (void)copyText:(id)sender
-{
+- (void)copyText:(id)sender {
     if (self.selectedMessage.type != MESSAGE_TEXT) {
         return;
     }
@@ -785,6 +813,37 @@
 
     MessageTextContent *content = self.selectedMessage.textContent;
     [[UIPasteboard generalPasteboard] setString:content.text];
+    [self resignFirstResponder];
+}
+
+- (void)translateText:(id)sender {
+    if (self.selectedMessage.type != MESSAGE_TEXT) {
+        return;
+    }
+    NSLog(@"translate...");
+    IMessage *msg = self.selectedMessage;
+    NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+    NSLog(@"language:%@", language);
+    MessageTextContent *content = self.selectedMessage.textContent;
+    
+    [IMHttpAPI translate:content.text to:language
+                 success:^(NSString *translation) {
+                     NSLog(@"translation:%@", translation);
+                     if (translation.length > 0) {
+                         [self saveMessageAttachment:msg translation:translation];
+                         msg.translation = translation;
+                         int pos = [self findMessage:msg.msgLocalID];
+                         if (pos == -1) {
+                             return;
+                         }
+                         NSArray *array = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:pos inSection:0]];
+                         [self.tableView reloadRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationAutomatic];
+                     }
+                 }
+                    fail:^{
+
+                    }];
+
     [self resignFirstResponder];
 }
 
@@ -813,13 +872,22 @@
 
 
     if (message.type == MESSAGE_TEXT) {
-        UIMenuItem *item = [[UIMenuItem alloc] initWithTitle:@"拷贝" action:@selector(copyText:)];
+        NSString *title = NSLocalizedString(@"message.copy", @"copy a message");
+        UIMenuItem *item = [[UIMenuItem alloc] initWithTitle:title action:@selector(copyText:)];
+        [menuItems addObject:item];
+        
+        title = NSLocalizedString(@"message.translate", @"translate a message");
+        item = [[UIMenuItem alloc] initWithTitle:title action:@selector(translateText:)];
         [menuItems addObject:item];
     }
     if (message.isFailure) {
-        UIMenuItem *item = [[UIMenuItem alloc] initWithTitle:@"重发" action:@selector(resend:)];
+        
+        NSString *title = NSLocalizedString(@"message.resend", @"resend a message");
+        
+        UIMenuItem *item = [[UIMenuItem alloc] initWithTitle:title action:@selector(resend:)];
         [menuItems addObject:item];
     }
+
     if ([menuItems count] == 0) {
         return;
     }
@@ -874,6 +942,9 @@
         if (content.address.length == 0) {
             [self reverseGeocodeLocation:msg];
         }
+    } else if (msg.type == MESSAGE_TEXT) {
+        MessageAttachmentContent *attachment = [self.attachments objectForKey:[NSNumber numberWithInt:msg.msgLocalID]];
+        msg.translation = attachment.translation;
     } else if (msg.type == MESSAGE_IMAGE) {
         NSLog(@"image url:%@", msg.imageContent.imageURL);
     }
@@ -944,6 +1015,10 @@
         msg.downloading = NO;
     }];
 
+}
+
+-(void)saveMessageAttachment:(IMessage*)msg translation:(NSString*)translation {
+    NSAssert(NO, @"not implement");
 }
 
 -(void)saveMessageAttachment:(IMessage*)msg address:(NSString*)address {

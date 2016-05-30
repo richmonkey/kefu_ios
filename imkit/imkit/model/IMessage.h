@@ -19,6 +19,7 @@
 #define MESSAGE_GROUP_NOTIFICATION 5 //群通知
 #define MESSAGE_LINK 6
 
+#define MESSAGE_GOODS      253
 #define MESSAGE_TIME_BASE  254 //虚拟的消息，不会存入磁盘
 #define MESSAGE_ATTACHMENT 255 //消息附件， 只存在本地磁盘
 
@@ -80,6 +81,13 @@
 @property(nonatomic, readonly) NSString *content;
 @end
 
+@interface MessageGoodsContent : MessageContent
+@property(nonatomic, readonly) NSString *imageURL;
+@property(nonatomic, readonly) NSString *url;
+@property(nonatomic, readonly) NSString *title;
+@property(nonatomic, readonly) NSString *content;
+@end
+
 @interface MessageLocationContent : MessageContent
 - (id)initWithLocation:(CLLocationCoordinate2D)location;
 
@@ -121,7 +129,11 @@
 
 @property(nonatomic) NSString *address;
 
+@property(nonatomic) NSString *translation;
+
 - (id)initWithAttachment:(int)msgLocalID address:(NSString*)address;
+
+- (id)initWithAttachment:(int)msgLocalID translation:(NSString *)translation;
 
 @end
 
@@ -150,6 +162,7 @@
 @property(nonatomic, readonly) MessageLinkContent *linkContent;
 @property(nonatomic, readonly) MessageAttachmentContent *attachmentContent;
 @property(nonatomic, readonly) MessageTimeBaseContent *timeBaseContent;
+@property(nonatomic, readonly) MessageGoodsContent *goodsContent;
 
 @property(nonatomic) int timestamp;
 @property(nonatomic, readonly) BOOL isACK;
@@ -168,6 +181,8 @@
 @property(nonatomic) BOOL geocoding;
 
 @property(nonatomic) IUser *senderInfo;
+
+@property(nonatomic, copy) NSString *translation;//译文
 
 @end
 
