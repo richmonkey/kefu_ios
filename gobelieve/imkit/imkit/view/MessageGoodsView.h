@@ -9,9 +9,18 @@
 
 #import <UIKit/UIKit.h>
 #import "BubbleView.h"
+#import "IMessage.h"
 
-@interface MessageTextView : BubbleView
-+ (CGFloat)cellHeightForText:(NSString *)txt;
-+ (CGFloat)cellHeightForText:(NSString *)txt translation:(NSString*)translation;
+#define kLinkWidth  224
+#define kLinkHeight 110
+#define  kMessageGoodViewHeight (kLinkHeight + kMarginTop + kMarginBottom + kPaddingTop + kPaddingBottom)
+
+@interface MessageGoodsView : BubbleView
+@property (nonatomic) UIImageView *imageView;
+
+
+@property (nonatomic) UIActivityIndicatorView *downloadIndicatorView;
+@property (nonatomic) UIActivityIndicatorView *uploadIndicatorView;
+
 
 @end
