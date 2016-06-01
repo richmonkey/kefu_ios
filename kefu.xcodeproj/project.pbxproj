@@ -278,7 +278,6 @@
 				TargetAttributes = {
 					6D12EC601CB517650003A03B = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = V88W3X24CM;
 					};
 				};
 			};
@@ -511,8 +510,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dian Li (ZPLSF6KNZ4)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dian Li (ZPLSF6KNZ4)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: shangjin chi (QL5W37X6Y2)";
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -524,7 +523,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "4cb85451-cf91-4b0e-86df-1bf199f2a5e6";
+				PROVISIONING_PROFILE = "01d4cc75-cc09-4488-807a-f0b13deb3ea9";
 			};
 			name = Debug;
 		};
@@ -534,8 +533,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Fuzhou Paramecium Information Technology Co., Ltd.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Fuzhou Paramecium Information Technology Co., Ltd.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Fuzhou Paramecium Information Technology Co., Ltd. (R79R483WU9)";
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -547,7 +546,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c85e68aa-0529-4178-8645-ccc32044f3da";
+				PROVISIONING_PROFILE = "473bd2f3-cd7f-47e5-8c56-cb525fd11b17";
 			};
 			name = Release;
 		};
