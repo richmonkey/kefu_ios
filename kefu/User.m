@@ -36,6 +36,9 @@
     }
     key = [NSString stringWithFormat:@"%@_avatar", keyPrefix];
     [db setObject:avatarURL forKey:key];
+    
+    key = [NSString stringWithFormat:@"%@_timestamp", keyPrefix];
+    [db setObject:[NSNumber numberWithInt:u.timestamp] forKey:key];
 }
 
 +(User*)load:(int64_t)uid appID:(int64_t)appID {
@@ -54,6 +57,9 @@
     
     key = [NSString stringWithFormat:@"%@_avatar", keyPrefix];
     u.avatarURL = [db objectForKey:key];
+    
+    key = [NSString stringWithFormat:@"%@_timestamp", keyPrefix];
+    u.timestamp = [[db objectForKey:key] intValue];
     
     return u;
 }

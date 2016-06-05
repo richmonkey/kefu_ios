@@ -199,6 +199,8 @@
 
 //name为nil时，界面显示identifier字段
 @property(nonatomic, copy) NSString *identifier;
+
+@property(nonatomic, assign) int timestamp;
 @end
 
 @interface IGroup : NSObject

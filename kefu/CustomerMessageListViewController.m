@@ -248,8 +248,11 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
         } else {
             conversation.name = u.identifier;
             conversation.avatarURL = u.avatarURL;
-
-            
+        }
+        
+        //24hour refresh name
+        int now = (int)time(NULL);
+        if (now - u.timestamp > 24*3600) {
             [self asyncGetUser:cc.customerID appID:cc.customerAppID cb:^(IUser *u) {
                 conversation.name = u.name;
                 conversation.avatarURL = u.avatarURL;
@@ -592,6 +595,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
         u.name = user.name;
     }
     u.identifier = [NSString stringWithFormat:@"匿名(%lld)", uid];
+    u.timestamp = user.timestamp;
     return u;
 }
 
@@ -617,6 +621,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
                   user.appID = appID;
                   user.uid = uid;
                   user.name = name;
+                  user.timestamp = (int)time(NULL);
                   [User save:user];
                   
                   IUser *u = [[IUser alloc] init];
