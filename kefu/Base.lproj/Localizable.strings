@@ -17,6 +17,8 @@
 "message.photo" = "photo";
 "message.camera" = "camera";
 "message.robot" = "robot";
+"message.translate" = "translate";
+"message.copy" = "copy";
 
 "message.image" = "image";
 "message.location" = "location";
