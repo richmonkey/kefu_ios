@@ -13,6 +13,7 @@
 @property(nonatomic) int64_t uid;
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic, copy) NSString *avatarURL;
+@property(nonatomic, assign) int timestamp;
 
 +(void)save:(User*)u;
 +(User*)load:(int64_t)uid appID:(int64_t)appID;
