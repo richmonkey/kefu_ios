@@ -228,13 +228,16 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     conv.timestamp = conv.message.timestamp;
     if (conv.message.type == MESSAGE_IMAGE) {
         conv.detail = @"一张图片";
-    }else if(conv.message.type == MESSAGE_TEXT){
+    } else if(conv.message.type == MESSAGE_TEXT){
         MessageTextContent *content = conv.message.textContent;
         conv.detail = content.text;
-    }else if(conv.message.type == MESSAGE_LOCATION){
+    } else if(conv.message.type == MESSAGE_LOCATION){
         conv.detail = @"一个地理位置";
-    }else if (conv.message.type == MESSAGE_AUDIO){
+    } else if (conv.message.type == MESSAGE_AUDIO){
         conv.detail = @"一个音频";
+    } else if (conv.message.type == MESSAGE_GOODS) {
+        MessageGoodsContent *content = conv.message.goodsContent;
+        conv.detail = content.title;
     }
 }
 
