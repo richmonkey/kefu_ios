@@ -232,8 +232,20 @@
               [UIApplication sharedApplication].keyWindow.rootViewController = navigationCtrl;
           }
           failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-              NSLog(@"failure");
-              hud.labelText = NSLocalizedString(@"login.failure", @"登录失败");
+              NSHTTPURLResponse* r = (NSHTTPURLResponse*)task.response;
+              NSData *errorData = error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
+              if (errorData) {
+                  NSDictionary *serializedData = [NSJSONSerialization JSONObjectWithData: errorData options:kNilOptions error:nil];
+                  NSLog(@"failure:%@ %@ %zd", error, [serializedData objectForKey:@"error"], r.statusCode);
+                  NSString *e = [serializedData objectForKey:@"error"];
+                  if (e.length > 0) {
+                      hud.labelText = e;
+                  } else {
+                      hud.labelText = NSLocalizedString(@"login.failure", @"登录失败");
+                  }
+              } else {
+                  hud.labelText = NSLocalizedString(@"login.failure", @"登录失败");
+              }
               dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                   [MBProgressHUD hideHUDForView:self.view animated:YES];
               });
