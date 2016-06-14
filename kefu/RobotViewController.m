@@ -127,7 +127,19 @@
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 60;
+
+    UIFont *font = [UIFont systemFontOfSize:14];
+
+    Question *q = [self.questions objectAtIndex:indexPath.row];
+    
+    CGSize size = self.view.frame.size;
+    NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:q.answer
+                                                                         attributes:@{NSFontAttributeName: font}];
+    CGRect rect = [attributedText boundingRectWithSize:(CGSize){size.width - 20, CGFLOAT_MAX}
+                                               options:NSStringDrawingUsesLineFragmentOrigin
+                                               context:nil];
+    CGSize s = rect.size;
+    return 30 + s.height;
 }
 
 
@@ -135,7 +147,8 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"robot_cell"];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"robot_cell"];
-
+        cell.detailTextLabel.numberOfLines = 0;
+        cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
     Question *q = [self.questions objectAtIndex:indexPath.row];
     [cell.textLabel setText:q.question];
