@@ -16,7 +16,6 @@
 
 @interface TCPConnection()
 
-@property(atomic, copy) NSString *hostIP;
 @property(atomic, assign) time_t timestmap;
 
 @property(nonatomic, assign)BOOL stopped;

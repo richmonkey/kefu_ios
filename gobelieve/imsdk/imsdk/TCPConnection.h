@@ -26,6 +26,7 @@
 //public
 @property(nonatomic, assign)int connectState;
 @property(nonatomic, copy) NSString *host;
+@property(atomic, copy) NSString *hostIP;
 
 //protect
 @property(nonatomic)int port;

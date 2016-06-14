@@ -41,6 +41,8 @@
 		6D485E0D1CD1F4180082588F /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E0C1CD1F4180082588F /* User.m */; };
 		6D485E101CD1FEAB0082588F /* NewCount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E0F1CD1FEAB0082588F /* NewCount.m */; };
 		6D485E131CE17ED90082588F /* RobotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E121CE17ED90082588F /* RobotViewController.m */; };
+		6D76AFC21D0FC19100C9E89A /* ResolveUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D76AFC11D0FC19100C9E89A /* ResolveUtil.m */; };
+		6D76AFC41D0FC1F100C9E89A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D76AFC31D0FC1F100C9E89A /* libresolv.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -105,6 +107,9 @@
 		6D485E0F1CD1FEAB0082588F /* NewCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCount.m; sourceTree = "<group>"; };
 		6D485E111CE17ED90082588F /* RobotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotViewController.h; sourceTree = "<group>"; };
 		6D485E121CE17ED90082588F /* RobotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotViewController.m; sourceTree = "<group>"; };
+		6D76AFC01D0FC19100C9E89A /* ResolveUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResolveUtil.h; sourceTree = "<group>"; };
+		6D76AFC11D0FC19100C9E89A /* ResolveUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResolveUtil.m; sourceTree = "<group>"; };
+		6D76AFC31D0FC1F100C9E89A /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		D5EF4A6AAFD97CBCE3ECDD42 /* libPods-kefu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kefu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD63C0FC9F93DB2C0E44BA29 /* Pods-kefu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kefu.release.xcconfig"; path = "Pods/Target Support Files/Pods-kefu/Pods-kefu.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,6 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D76AFC41D0FC1F100C9E89A /* libresolv.tbd in Frameworks */,
 				4BF5438D56AB7BB7A5CEAE96 /* libPods-kefu.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -124,6 +130,7 @@
 		41493CA340133906C8067453 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6D76AFC31D0FC1F100C9E89A /* libresolv.tbd */,
 				D5EF4A6AAFD97CBCE3ECDD42 /* libPods-kefu.a */,
 			);
 			name = Frameworks;
@@ -182,6 +189,8 @@
 		6D12EC631CB517650003A03B /* kefu */ = {
 			isa = PBXGroup;
 			children = (
+				6D76AFC01D0FC19100C9E89A /* ResolveUtil.h */,
+				6D76AFC11D0FC19100C9E89A /* ResolveUtil.m */,
 				487D48CC1CC3EAD4005DE19D /* UIAlertView+XPAlertView.h */,
 				487D48CD1CC3EAD4005DE19D /* UIAlertView+XPAlertView.m */,
 				487D48BC1CC3E350005DE19D /* setting */,
@@ -379,6 +388,7 @@
 				6D485E051CC71E660082588F /* MainViewController.m in Sources */,
 				6D485E101CD1FEAB0082588F /* NewCount.m in Sources */,
 				487D48C31CC3E350005DE19D /* QuitTableViewCell.m in Sources */,
+				6D76AFC21D0FC19100C9E89A /* ResolveUtil.m in Sources */,
 				6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */,
 				6D2521A71CC1DF27004C6FBE /* CustomerSupportMessageHandler.m in Sources */,
 				487D48B01CC3D9EE005DE19D /* BaseViewController.m in Sources */,

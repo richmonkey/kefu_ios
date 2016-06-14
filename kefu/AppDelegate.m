@@ -7,6 +7,10 @@
 //
 
 #import "AppDelegate.h"
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+
 #import <gobelieve/IMService.h>
 #import <gobelieve/PeerMessageHandler.h>
 #import <gobelieve/GroupMessageHandler.h>
@@ -19,6 +23,7 @@
 #import "LoginViewController.h"
 #import "Config.h"
 #import "Token.h"
+#import "ResolveUtil.h"
 
 @interface AppDelegate ()
 
@@ -63,8 +68,7 @@
         [self.window makeKeyAndVisible];
     }
     
-    
-
+    [self refreshHostIP];
     return YES;
 }
 
@@ -84,6 +88,8 @@
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     
     [[IMService instance] enterForeground];
+    
+    [self refreshHostIP];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -122,4 +128,75 @@
     }
 }
 
+
+- (void)refreshHostIP {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSLog(@"refresh host ip...");
+        for (int i = 0; i < 10; i++) {
+            NSString *host = @"imnode.gobelieve.io";
+            NSString *ip = [self resolveIP:host];
+            
+            NSString *apiHost = @"api.gobelieve.io";
+            NSString *apiIP = [self resolveIP:apiHost];
+            
+            NSString *kapiHost = @"api.kefu.gobelieve.io";
+            NSString *kapiIP = [self resolveIP:kapiHost];
+            
+            NSLog(@"host:%@ ip:%@", host, ip);
+            NSLog(@"api host:%@ ip:%@", apiHost, apiIP);
+            NSLog(@"kefu api host:%@ ip:%@", kapiHost, kapiIP);
+            if (ip.length == 0 || apiIP.length == 0 || kapiIP.length == 0) {
+                continue;
+            } else {
+                break;
+            }
+        }
+        
+        NSString *hostIP = [ResolveUtil resolveHost:IM_HOST usingDNSServer:@"223.5.5.5"];//ali dns
+        if (hostIP.length > 0) {
+            NSLog(@"set im host ip:%@ %@", IM_HOST, hostIP);
+            [IMService instance].hostIP = hostIP;
+        }
+    });
+}
+
+
+-(NSString*)IP2String:(struct in_addr)addr {
+    char buf[64] = {0};
+    const char *p = inet_ntop(AF_INET, &addr, buf, 64);
+    if (p) {
+        return [NSString stringWithUTF8String:p];
+    }
+    return nil;
+    
+}
+
+-(NSString*)resolveIP:(NSString*)host {
+    struct addrinfo hints;
+    struct addrinfo *result, *rp;
+    int s;
+    
+    char buf[32];
+    snprintf(buf, 32, "%d", 0);
+    
+    memset(&hints, 0, sizeof(struct addrinfo));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+    hints.ai_flags = 0;
+    
+    s = getaddrinfo([host UTF8String], buf, &hints, &result);
+    if (s != 0) {
+        NSLog(@"get addr info error:%s", gai_strerror(s));
+        return nil;
+    }
+    NSString *ip = nil;
+    rp = result;
+    if (rp != NULL) {
+        struct sockaddr_in *addr = (struct sockaddr_in*)rp->ai_addr;
+        ip = [self IP2String:addr->sin_addr];
+    }
+    freeaddrinfo(result);
+    return ip;
+}
 @end
