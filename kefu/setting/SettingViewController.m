@@ -28,7 +28,6 @@
     Token *token = [Token instance];
     self.number = token.uid;
     self.name = token.name ? token.name : @"";
-    self.name = @"loome@gmail.com";
 }
 
 - (void)didReceiveMemoryWarning {
