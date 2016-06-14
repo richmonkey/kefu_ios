@@ -7,7 +7,6 @@
 
 #import "LoginViewOneCell.h"
 #import "LoginViewTwoCell.h"
-#import "RegisterView.h"
 
 #import "Masonry.h"
 #import "AFNetworking.h"
