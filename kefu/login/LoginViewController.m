@@ -7,6 +7,7 @@
 
 #import "LoginViewOneCell.h"
 #import "LoginViewTwoCell.h"
+#import "RegisterView.h"
 
 #import "Masonry.h"
 #import "AFNetworking.h"
@@ -30,6 +31,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableVIewTop;
 @property (strong, nonatomic) UITextField *loginNumberTextField;
 @property (strong, nonatomic) UITextField *loginPasswordTextField;
+@property (weak, nonatomic) IBOutlet UIButton *registerBtn;
 
 @property (strong,nonatomic) LoginViewOneCell *headCell;
 
@@ -50,6 +52,14 @@
     self.tableView.delegate   = self;
     self.tableView.dataSource = self;
     self.tableView.showsVerticalScrollIndicator = NO;
+    
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"注册"];
+    NSRange strRange = {0,[str length]};
+    [str addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:strRange];
+    [str addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:0.0/255.0 green:122.0/255.0 blue:255.0/255.0 alpha:1.0f] range:strRange];
+    [self.registerBtn setAttributedTitle:str forState:UIControlStateNormal];
+    [self.registerBtn setBackgroundColor:[UIColor colorWithRed:238.0/255.0 green:239.0/255.0 blue:244.0/255.0 alpha:1.0f]];
+    [self.registerBtn addTarget:self action:@selector(registerAction) forControlEvents:UIControlEventTouchUpInside];
     
     if (self.hint) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"你的账号在其它设备上登录"
@@ -255,6 +265,16 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     return YES;
+}
+
+
+-(void)registerAction{
+    
+    NSURL *url = [NSURL URLWithString: REGISTER_URL];
+    if ([[UIApplication sharedApplication] canOpenURL:url]) {
+        [[UIApplication sharedApplication] openURL:url];
+    }
+    
 }
 
 @end

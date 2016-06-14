@@ -13,6 +13,12 @@
 #import "Token.h"
 #import "UIAlertView+XPAlertView.h"
 
+//RGB颜色
+#define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
+//RGB颜色和不透明度
+#define RGBACOLOR(r,g,b,a) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f \
+alpha:(a)]
+
 @interface Question: NSObject
 @property(nonatomic, assign) int64_t id;
 @property(nonatomic, copy) NSString *question;
@@ -33,7 +39,9 @@
     
     self.questions = [NSArray array];
     
-    //self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = RGBACOLOR(235, 235, 237, 1);
+    self.tableView.separatorColor = RGBCOLOR(208, 208, 208);
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -147,9 +155,31 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"robot_cell"];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"robot_cell"];
+        
         cell.detailTextLabel.numberOfLines = 0;
         cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        [cell.detailTextLabel setBackgroundColor:[UIColor clearColor]];
+    
+        [cell.textLabel setBackgroundColor:[UIColor clearColor]];
+        
+        [cell setBackgroundColor:RGBCOLOR(253, 253, 253)];
+        [cell.contentView setBackgroundColor:RGBCOLOR(250, 250, 250)];
+        
+        UIView *line = [[UIView alloc] init];
+        [line setBackgroundColor:RGBACOLOR(170, 170, 170,0.35f)];
+        [line setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin];
+        [cell addSubview:line];
+        line.tag = (indexPath.row+1)*10001;
     }
+    
+    UIView *tmp = [cell viewWithTag:10001];
+    if (tmp) {
+        [tmp setFrame:CGRectMake(8, cell.bounds.size.height - 1 , cell.bounds.size.width - 16, 1)];
+    }
+    
+
+    
+    
     Question *q = [self.questions objectAtIndex:indexPath.row];
     [cell.textLabel setText:q.question];
     [cell.detailTextLabel setText:q.answer];

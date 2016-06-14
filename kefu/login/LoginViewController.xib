@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginViewController">
             <connections>
+                <outlet property="registerBtn" destination="Sg3-Xo-UML" id="Yvy-nf-uqY"/>
                 <outlet property="tableVIewTop" destination="nHf-Ww-TE4" id="uZi-kx-e7i"/>
                 <outlet property="tableView" destination="RGs-yl-UOZ" id="Rj8-x7-Iri"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -18,15 +19,30 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="RGs-yl-UOZ">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="488"/>
                     <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
-                    <color key="sectionIndexBackgroundColor" white="0.78758081899999999" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sg3-Xo-UML">
+                    <rect key="frame" x="0.0" y="488" width="320" height="80"/>
+                    <color key="backgroundColor" red="0.93333333333333335" green="0.93725490196078431" blue="0.95686274509803915" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="1z1-Fn-7LO"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                    <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <state key="normal" title="注册">
+                        <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                </button>
             </subviews>
-            <color key="backgroundColor" red="0.78823529411764703" green="0.78823529411764703" blue="0.78823529411764703" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="Sg3-Xo-UML" secondAttribute="bottom" id="SqK-0U-9I7"/>
                 <constraint firstAttribute="trailing" secondItem="RGs-yl-UOZ" secondAttribute="trailing" id="WkE-vP-gmv"/>
-                <constraint firstAttribute="bottom" secondItem="RGs-yl-UOZ" secondAttribute="bottom" id="bR0-Nj-mna"/>
+                <constraint firstItem="Sg3-Xo-UML" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Y1n-9m-Dcm"/>
+                <constraint firstItem="Sg3-Xo-UML" firstAttribute="top" secondItem="RGs-yl-UOZ" secondAttribute="bottom" id="bo9-iD-ry7"/>
+                <constraint firstAttribute="trailing" secondItem="Sg3-Xo-UML" secondAttribute="trailing" id="eZD-Yp-LdV"/>
                 <constraint firstItem="RGs-yl-UOZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="nHf-Ww-TE4"/>
                 <constraint firstItem="RGs-yl-UOZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="zp4-XZ-2PC"/>
             </constraints>

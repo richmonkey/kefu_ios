@@ -13,6 +13,8 @@
 		4803C80E1CC3B323007550E6 /* LoginViewOneCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4803C7FB1CC3B323007550E6 /* LoginViewOneCell.xib */; };
 		4803C8111CC3B323007550E6 /* LoginViewTwoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4803C8001CC3B323007550E6 /* LoginViewTwoCell.m */; };
 		4803C8121CC3B323007550E6 /* LoginViewTwoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4803C8011CC3B323007550E6 /* LoginViewTwoCell.xib */; };
+		4832BE171D10347600E8113A /* RegisterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4832BE161D10347600E8113A /* RegisterView.m */; };
+		4832BE191D10348200E8113A /* RegisterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4832BE181D10348200E8113A /* RegisterView.xib */; };
 		487D48B01CC3D9EE005DE19D /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 487D48AF1CC3D9EE005DE19D /* BaseViewController.m */; };
 		487D48C31CC3E350005DE19D /* QuitTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 487D48BE1CC3E350005DE19D /* QuitTableViewCell.m */; };
 		487D48C41CC3E350005DE19D /* QuitTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 487D48BF1CC3E350005DE19D /* QuitTableViewCell.xib */; };
@@ -56,6 +58,9 @@
 		4803C7FF1CC3B323007550E6 /* LoginViewTwoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewTwoCell.h; sourceTree = "<group>"; };
 		4803C8001CC3B323007550E6 /* LoginViewTwoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewTwoCell.m; sourceTree = "<group>"; };
 		4803C8011CC3B323007550E6 /* LoginViewTwoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewTwoCell.xib; sourceTree = "<group>"; };
+		4832BE151D10347600E8113A /* RegisterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterView.h; sourceTree = "<group>"; };
+		4832BE161D10347600E8113A /* RegisterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterView.m; sourceTree = "<group>"; };
+		4832BE181D10348200E8113A /* RegisterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RegisterView.xib; sourceTree = "<group>"; };
 		487D48AE1CC3D9EE005DE19D /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
 		487D48AF1CC3D9EE005DE19D /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		487D48BD1CC3E350005DE19D /* QuitTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuitTableViewCell.h; sourceTree = "<group>"; };
@@ -148,6 +153,9 @@
 				4803C7FF1CC3B323007550E6 /* LoginViewTwoCell.h */,
 				4803C8001CC3B323007550E6 /* LoginViewTwoCell.m */,
 				4803C8011CC3B323007550E6 /* LoginViewTwoCell.xib */,
+				4832BE151D10347600E8113A /* RegisterView.h */,
+				4832BE161D10347600E8113A /* RegisterView.m */,
+				4832BE181D10348200E8113A /* RegisterView.xib */,
 			);
 			path = login;
 			sourceTree = "<group>";
@@ -314,6 +322,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4832BE191D10348200E8113A /* RegisterView.xib in Resources */,
 				4803C80C1CC3B323007550E6 /* LoginViewController.xib in Resources */,
 				487D48C61CC3E350005DE19D /* SettingViewController.xib in Resources */,
 				6D12EC8C1CB604010003A03B /* InfoPlist.strings in Resources */,
@@ -391,6 +400,7 @@
 				6D76AFC21D0FC19100C9E89A /* ResolveUtil.m in Sources */,
 				6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */,
 				6D2521A71CC1DF27004C6FBE /* CustomerSupportMessageHandler.m in Sources */,
+				4832BE171D10347600E8113A /* RegisterView.m in Sources */,
 				487D48B01CC3D9EE005DE19D /* BaseViewController.m in Sources */,
 				6D485E0D1CD1F4180082588F /* User.m in Sources */,
 				6D12EC691CB517650003A03B /* AppDelegate.m in Sources */,
