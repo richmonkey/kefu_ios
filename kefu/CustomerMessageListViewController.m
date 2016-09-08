@@ -599,45 +599,66 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     return u;
 }
 
-//从服务器获取用户信息
-- (void)asyncGetUser:(int64_t)uid appID:(int64_t)appID cb:(void(^)(IUser*))cb {
+- (void)_asyncGetUser:(int64_t)uid appID:(int64_t)appID cb:(void(^)(IUser*))cb {
+    
     NSString *base = [NSString stringWithFormat:@"%@/", KEFU_API];
     NSURL *baseURL = [NSURL URLWithString:base];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
-
+    
     NSString *auth = [NSString stringWithFormat:@"Bearer %@", [Token instance].accessToken];
     [manager.requestSerializer setValue:auth forHTTPHeaderField:@"Authorization"];
-     
+    
     NSString *url = [NSString stringWithFormat:@"customers/%lld/%lld", appID, uid];
     [manager GET:url
-       parameters:nil
+      parameters:nil
         progress:nil
-          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-              NSLog(@"response:%@", responseObject);
-              NSString *name = [responseObject objectForKey:@"name"];
-              if (name.length > 0) {
-                  User *user = [[User alloc] init];
-                  user.appID = appID;
-                  user.uid = uid;
-                  user.name = name;
-                  user.timestamp = (int)time(NULL);
-                  [User save:user];
-                  
-                  IUser *u = [[IUser alloc] init];
-                  u.uid = uid;
-                  if (user.name.length > 0) {
-                      u.name = user.name;
-                  }
-                  u.identifier = [NSString stringWithFormat:@"匿名(%lld)", uid];
-                  cb(u);
-              }
-          }
-          failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-              NSLog(@"failure");
-          }
+         success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+             NSLog(@"response:%@", responseObject);
+             NSString *name = [responseObject objectForKey:@"name"];
+             if (name.length > 0) {
+                 User *user = [[User alloc] init];
+                 user.appID = appID;
+                 user.uid = uid;
+                 user.name = name;
+                 user.timestamp = (int)time(NULL);
+                 [User save:user];
+                 
+                 IUser *u = [[IUser alloc] init];
+                 u.uid = uid;
+                 if (user.name.length > 0) {
+                     u.name = user.name;
+                 }
+                 u.identifier = [NSString stringWithFormat:@"匿名(%lld)", uid];
+                 cb(u);
+             }
+         }
+         failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+             NSLog(@"failure");
+         }
      ];
+
 }
+//从服务器获取用户信息
+- (void)asyncGetUser:(int64_t)uid appID:(int64_t)appID cb:(void(^)(IUser*))cb {
+    int now = (int)time(NULL);
+    if (now > [Token instance].expireTimestamp) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2ull * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            int now2 = (int)time(NULL);
+            if (now2 > [Token instance].expireTimestamp) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10ull * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                    [self _asyncGetUser:uid appID:appID cb:cb];
+                });
+            } else {
+                [self _asyncGetUser:uid appID:appID cb:cb];
+            }
+        });
+    } else {
+        [self _asyncGetUser:uid appID:appID cb:cb];
+    }
+}
+
+
 
 
 @end
