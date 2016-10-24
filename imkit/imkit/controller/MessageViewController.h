@@ -33,11 +33,11 @@
 - (void)disableSend;
 - (void)enableSend;
 
-- (void)addObserver;
-- (void)removeObserver;
-
 - (void)downloadMessageContent:(IMessage*)message;
 - (void)downloadMessageContent:(NSArray*)messages count:(int)count;
+
+- (void)loadSenderInfo:(IMessage*)msg;
+- (void)loadSenderInfo:(NSArray*)messages count:(int)count;
 
 - (void)stopPlayer;
 
