@@ -9,6 +9,7 @@
 #import "MessageConversationCell.h"
 #import <gobelieve/IMessage.h>
 #import "JSBadgeView.h"
+#import "CustomerConversation.h"
 
 #define kCatchWidth 74.0f
 
@@ -116,7 +117,6 @@
     
     _conversation = conversation;
     
-    
     Conversation *conv = self.conversation;
     if(conv.type == CONVERSATION_PEER){
         [self.headView sd_setImageWithURL: [NSURL URLWithString:conv.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
@@ -125,7 +125,13 @@
     } else if (self.conversation.type == CONVERSATION_SYSTEM) {
         //todo
     } else if (self.conversation.type == CONVERSATION_CUSTOMER_SERVICE) {
-        [self.headView sd_setImageWithURL: [NSURL URLWithString:conv.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
+        CustomerConversation *cc = (CustomerConversation*)self.conversation;
+        if (cc.isXiaoWei) {
+            self.headView.image = [UIImage imageNamed:@"icon"];
+        } else {
+            [self.headView sd_setImageWithURL: [NSURL URLWithString:conv.avatarURL]
+                             placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
+        }
     }
     
     self.messageContent.text = self.conversation.detail;

@@ -128,6 +128,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
         
         CustomerConversation *cc = (CustomerConversation*)conv;
         conv.newMsgCount = [NewCount getNewCount:cc.customerID appID:cc.customerAppID];
+        cc.isXiaoWei = (cc.customerID == self.currentUID && APPID == cc.customerAppID);
     }
     
     NSArray *sortedArray = [self.conversations sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
@@ -250,22 +251,27 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
 -(void)updateConversationName:(Conversation*)conversation {
     if (conversation.type == CONVERSATION_CUSTOMER_SERVICE) {
         CustomerConversation *cc = (CustomerConversation*)conversation;
-        IUser *u = [self getUser:cc.customerID appID:cc.customerAppID];
-        if (u.name.length > 0) {
-            conversation.name = u.name;
-            conversation.avatarURL = u.avatarURL;
+        if (cc.isXiaoWei) {
+            conversation.name = @"小微团队";
+            conversation.avatarURL = @"";
         } else {
-            conversation.name = u.identifier;
-            conversation.avatarURL = u.avatarURL;
-        }
-        
-        //24hour refresh name
-        int now = (int)time(NULL);
-        if (now - u.timestamp > 24*3600) {
-            [self asyncGetUser:cc.customerID appID:cc.customerAppID cb:^(IUser *u) {
+            IUser *u = [self getUser:cc.customerID appID:cc.customerAppID];
+            if (u.name.length > 0) {
                 conversation.name = u.name;
                 conversation.avatarURL = u.avatarURL;
-            }];
+            } else {
+                conversation.name = u.identifier;
+                conversation.avatarURL = u.avatarURL;
+            }
+            
+            //24hour refresh name
+            int now = (int)time(NULL);
+            if (now - u.timestamp > 24*3600) {
+                [self asyncGetUser:cc.customerID appID:cc.customerAppID cb:^(IUser *u) {
+                    conversation.name = u.name;
+                    conversation.avatarURL = u.avatarURL;
+                }];
+            }
         }
     }
 }
@@ -442,6 +448,8 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     con.customerID = msg.customerID;
     con.customerAppID = msg.customerAppID;
     con.message = msg;
+    
+    con.isXiaoWei = (con.customerID == self.currentUID && APPID == con.customerAppID);
     
     [self updateConversationName:con];
     [self updateConversationDetail:con];
@@ -633,14 +641,6 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
 #pragma mark MessageViewControllerUserDelegate
 //从本地获取用户信息, IUser的name字段为空时，显示identifier字段
 - (IUser*)getUser:(int64_t)uid appID:(int64_t)appID {
-    if (uid == self.currentUID && appID == APPID) {
-        IUser *u = [[IUser alloc] init];
-        u.uid = uid;
-        u.name = @"小微团队";
-        u.identifier = [NSString stringWithFormat:@"匿名(%lld)", uid];
-        u.timestamp = (int)time(NULL);
-        return u;
-    }
     User *user = [User load:uid appID:appID];
 
     IUser *u = [[IUser alloc] init];
@@ -648,6 +648,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     if (user.name.length > 0) {
         u.name = user.name;
     }
+    u.avatarURL = user.avatarURL;
     u.identifier = [NSString stringWithFormat:@"匿名(%lld)", uid];
     u.timestamp = user.timestamp;
     return u;
@@ -670,11 +671,13 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
              NSLog(@"response:%@", responseObject);
              NSString *name = [responseObject objectForKey:@"name"];
+             NSString *avatar = [responseObject objectForKey:@"avatar"];
              if (name.length > 0) {
                  User *user = [[User alloc] init];
                  user.appID = appID;
                  user.uid = uid;
                  user.name = name;
+                 user.avatarURL = avatar ? avatar : @"";
                  user.timestamp = (int)time(NULL);
                  [User save:user];
                  
@@ -683,6 +686,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
                  if (user.name.length > 0) {
                      u.name = user.name;
                  }
+                 u.avatarURL = avatar ? avatar : @"";
                  u.identifier = [NSString stringWithFormat:@"匿名(%lld)", uid];
                  cb(u);
              }
