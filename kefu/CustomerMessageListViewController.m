@@ -17,6 +17,7 @@
 #import <gobelieve/GroupMessageViewController.h>
 #import "CustomerSupportMessageDB.h"
 #import "CustomerSupportViewController.h"
+#import "XWCustomerMessageViewController.h"
 #import "MessageConversationCell.h"
 #import "LevelDB.h"
 #import "AFNetworking.h"
@@ -31,13 +32,13 @@
 #import "LoginViewController.h"
 #import "Config.h"
 
+
+
 //RGB颜色
 #define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
 //RGB颜色和不透明度
 #define RGBACOLOR(r,g,b,a) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f \
 alpha:(a)]
-
-
 
 #define kConversationCellHeight         60
 
@@ -92,6 +93,14 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     [[IMService instance] addConnectionObserver:self];
     [[IMService instance] addCustomerMessageObserver:self];
     [[IMService instance] addSystemMessageObserver:self];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newCustomerSupportMessage:)
+                                                 name:LATEST_CUSTOMER_SUPPORT_MESSAGE
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(clearCustomerSupportNewState:)
+                                                 name:CLEAR_CUSTOMER_SUPPORT_NEW_MESSAGE
+                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(newCustomerMessage:)
                                                  name:LATEST_CUSTOMER_MESSAGE
@@ -327,15 +336,27 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     CustomerConversation *con = [self.conversations objectAtIndex:indexPath.row];
     if (con.type == CONVERSATION_CUSTOMER_SERVICE) {
-        CustomerSupportViewController *msgController = [[CustomerSupportViewController alloc] init];
-        msgController.customerAppID = con.customerAppID;
-        msgController.customerID = con.customerID;
-        msgController.customerName = con.name;
-        msgController.currentUID = self.currentUID;
-        msgController.storeID = self.storeID;
-        msgController.isShowUserName = NO;
-        msgController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:msgController animated:YES];
+        
+        if (con.customerID == self.currentUID && con.customerAppID == APPID) {
+            XWCustomerMessageViewController *msgController = [[XWCustomerMessageViewController alloc] init];
+            msgController.peerName = @"小微客服";
+            msgController.currentUID = self.currentUID;
+            msgController.storeID = STORE_ID;
+            msgController.appID = APPID;
+            msgController.isShowUserName = NO;
+            msgController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:msgController animated:YES];
+        } else {
+            CustomerSupportViewController *msgController = [[CustomerSupportViewController alloc] init];
+            msgController.customerAppID = con.customerAppID;
+            msgController.customerID = con.customerID;
+            msgController.customerName = con.name;
+            msgController.currentUID = self.currentUID;
+            msgController.storeID = self.storeID;
+            msgController.isShowUserName = NO;
+            msgController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:msgController animated:YES];
+        }
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -354,7 +375,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     cm.sellerID = msg.sellerID;
     cm.timestamp = msg.timestamp;
     cm.isSupport = NO;
-    cm.isOutgoing = NO;
+    cm.isOutgoing = (msg.customerAppID == APPID && msg.customerID == self.currentUID);
     
     cm.rawContent = msg.content;
     
@@ -446,6 +467,31 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     }
 }
 
+
+- (void)newCustomerSupportMessage:(NSNotification*) notification {
+    ICustomerMessage *msg = notification.object;
+    NSLog(@"new message:%lld, %lld", msg.sender, msg.receiver);
+    [self onNewCustomerMessage:msg];
+}
+
+- (void)clearCustomerSupportNewState:(NSNotification*) notification {
+    id obj = notification.userInfo;
+    int64_t uid = [[obj objectForKey:@"uid"] longLongValue];
+    int64_t appid = [[obj objectForKey:@"appid"] longLongValue];
+    
+    for (int i = 0; i < [self.conversations count]; i++) {
+        CustomerConversation *con = [self.conversations objectAtIndex:i];
+        if (con.type == CONVERSATION_CUSTOMER_SERVICE &&
+            con.customerID == uid &&
+            con.customerAppID == appid) {
+            con.newMsgCount = 0;
+            [NewCount setNewCount:0 uid:con.customerID appID:con.customerAppID];
+            break;
+        }
+    }
+}
+
+
 - (void)newCustomerMessage:(NSNotification*) notification {
     ICustomerMessage *msg = notification.object;
     NSLog(@"new message:%lld, %lld", msg.sender, msg.receiver);
@@ -453,7 +499,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
 }
 
 - (void)clearCustomerNewState:(NSNotification*) notification {
-    id obj = notification.object;
+    id obj = notification.userInfo;
     int64_t uid = [[obj objectForKey:@"uid"] longLongValue];
     int64_t appid = [[obj objectForKey:@"appid"] longLongValue];
     
@@ -587,6 +633,14 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
 #pragma mark MessageViewControllerUserDelegate
 //从本地获取用户信息, IUser的name字段为空时，显示identifier字段
 - (IUser*)getUser:(int64_t)uid appID:(int64_t)appID {
+    if (uid == self.currentUID && appID == APPID) {
+        IUser *u = [[IUser alloc] init];
+        u.uid = uid;
+        u.name = @"小微团队";
+        u.identifier = [NSString stringWithFormat:@"匿名(%lld)", uid];
+        u.timestamp = (int)time(NULL);
+        return u;
+    }
     User *user = [User load:uid appID:appID];
 
     IUser *u = [[IUser alloc] init];

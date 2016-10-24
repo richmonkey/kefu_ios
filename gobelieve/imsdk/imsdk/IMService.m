@@ -156,7 +156,7 @@
     [self publishCustomerSupportMessage:im];
     
     //客服端收到发自客服的消息
-    if (self.appID > 0 && self.appID != im.customerAppID && im.sellerID == self.uid) {
+    if (self.appID > 0 && im.sellerID == self.uid) {
         [self.customerMessageHandler handleMessageACK:im];
         [self publishCustomerMessageACK:im];
     }

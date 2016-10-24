@@ -9,10 +9,10 @@
 #import <gobelieve/MessageViewController.h>
 
 //最近发出的消息
-#define LATEST_CUSTOMER_MESSAGE        @"latest_customer_message"
+#define LATEST_CUSTOMER_SUPPORT_MESSAGE        @"latest_customer_support_message"
 
 //清空会话的未读消息数
-#define CLEAR_CUSTOMER_NEW_MESSAGE @"clear_customer_single_conv_new_message_notify"
+#define CLEAR_CUSTOMER_SUPPORT_NEW_MESSAGE @"clear_customer_support_single_conv_new_message_notify"
 
 @interface CustomerSupportViewController : MessageViewController<TCPConnectionObserver>
 

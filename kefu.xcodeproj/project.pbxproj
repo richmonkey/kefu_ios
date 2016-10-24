@@ -42,6 +42,8 @@
 		6D485E131CE17ED90082588F /* RobotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E121CE17ED90082588F /* RobotViewController.m */; };
 		6D76AFC21D0FC19100C9E89A /* ResolveUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D76AFC11D0FC19100C9E89A /* ResolveUtil.m */; };
 		6D76AFC41D0FC1F100C9E89A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D76AFC31D0FC1F100C9E89A /* libresolv.tbd */; };
+		6DBB2CCA1DBDBCC800BC545A /* XWCustomerMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CC91DBDBCC800BC545A /* XWCustomerMessageViewController.m */; };
+		6DBB2CCD1DBDC06500BC545A /* XWCustomerOutbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CCC1DBDC06500BC545A /* XWCustomerOutbox.m */; };
 		C5F26F771D27A072D32C2FDA /* libPods-kefu.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F009DD8FF86F9E4672B5E65B /* libPods-kefu.a */; };
 /* End PBXBuildFile section */
 
@@ -110,6 +112,10 @@
 		6D76AFC01D0FC19100C9E89A /* ResolveUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResolveUtil.h; sourceTree = "<group>"; };
 		6D76AFC11D0FC19100C9E89A /* ResolveUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResolveUtil.m; sourceTree = "<group>"; };
 		6D76AFC31D0FC1F100C9E89A /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
+		6DBB2CC81DBDBCC800BC545A /* XWCustomerMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XWCustomerMessageViewController.h; sourceTree = "<group>"; };
+		6DBB2CC91DBDBCC800BC545A /* XWCustomerMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XWCustomerMessageViewController.m; sourceTree = "<group>"; };
+		6DBB2CCB1DBDC06500BC545A /* XWCustomerOutbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XWCustomerOutbox.h; sourceTree = "<group>"; };
+		6DBB2CCC1DBDC06500BC545A /* XWCustomerOutbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XWCustomerOutbox.m; sourceTree = "<group>"; };
 		C4665C74201A0C8CC6A05334 /* Pods-kefu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kefu.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kefu/Pods-kefu.debug.xcconfig"; sourceTree = "<group>"; };
 		F009DD8FF86F9E4672B5E65B /* libPods-kefu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kefu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -222,6 +228,10 @@
 				6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */,
 				6D12EC901CB6061E0003A03B /* CustomerMessageListViewController.h */,
 				6D12EC911CB6061E0003A03B /* CustomerMessageListViewController.m */,
+				6DBB2CCB1DBDC06500BC545A /* XWCustomerOutbox.h */,
+				6DBB2CCC1DBDC06500BC545A /* XWCustomerOutbox.m */,
+				6DBB2CC81DBDBCC800BC545A /* XWCustomerMessageViewController.h */,
+				6DBB2CC91DBDBCC800BC545A /* XWCustomerMessageViewController.m */,
 				6D485E111CE17ED90082588F /* RobotViewController.h */,
 				6D485E121CE17ED90082588F /* RobotViewController.m */,
 				6D485E031CC71E660082588F /* MainViewController.h */,
@@ -385,6 +395,7 @@
 				6D25219E1CBFF598004C6FBE /* CustomerSupportViewController.m in Sources */,
 				6D485DFB1CC3612E0082588F /* CustomerSupportOutbox.m in Sources */,
 				4803C80D1CC3B323007550E6 /* LoginViewOneCell.m in Sources */,
+				6DBB2CCD1DBDC06500BC545A /* XWCustomerOutbox.m in Sources */,
 				6D485E051CC71E660082588F /* MainViewController.m in Sources */,
 				6D485E101CD1FEAB0082588F /* NewCount.m in Sources */,
 				487D48C31CC3E350005DE19D /* QuitTableViewCell.m in Sources */,
@@ -396,6 +407,7 @@
 				6D12EC691CB517650003A03B /* AppDelegate.m in Sources */,
 				6D12EC9B1CB618210003A03B /* AppDB.m in Sources */,
 				6D485E021CC623090082588F /* Token.m in Sources */,
+				6DBB2CCA1DBDBCC800BC545A /* XWCustomerMessageViewController.m in Sources */,
 				4803C8111CC3B323007550E6 /* LoginViewTwoCell.m in Sources */,
 				6D12EC661CB517650003A03B /* main.m in Sources */,
 				6D12EC961CB606390003A03B /* MessageConversationCell.m in Sources */,

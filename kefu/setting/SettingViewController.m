@@ -12,7 +12,10 @@
 #import "AppDB.h"
 #import "LoginViewController.h"
 #import <gobelieve/IMService.h>
+#import <gobelieve/CustomerMessageViewController.h>
+#import "XWCustomerMessageViewController.h"
 #import "Token.h"
+#import "Config.h"
 
 @interface SettingViewController () <UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic) int64_t number;
@@ -43,7 +46,7 @@
 
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 2;
+    return 3;
 }
 
 
@@ -51,7 +54,9 @@
     
     if (section==0) {
         return 2;
-    }else if (section == 1) {
+    } else if (section == 1) {
+        return 2;
+    } else if (section == 2) {
         return 1;
     }
     return 1;
@@ -85,8 +90,22 @@
         }
         
         return cell;
+    } else if (indexPath.section == 1) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell1"];
         
-    }else if (indexPath.section==1) {
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell1"];
+        }
+
+        if (indexPath.row == 0) {
+           [cell.textLabel setText:@"帮助与反馈"];
+        } else if(indexPath.row == 1){
+            [cell.textLabel setText:@"关于我们"];
+        }
+        
+        return cell;
+
+    } else if (indexPath.section == 2) {
         static NSString *reusableCellWithIdentifier = @"QuitTableViewCell";
         QuitTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellWithIdentifier];
         
@@ -101,12 +120,24 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath{
-    return NO;
+    return YES;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     //取消选中项
+    NSLog(@"select index path:%zd, %zd", indexPath.row, indexPath.section);
     [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
+    
+    if (indexPath.section == 1 && indexPath.row == 0) {
+        //帮助与反馈
+        XWCustomerMessageViewController *ctrl = [[XWCustomerMessageViewController alloc] init];
+        ctrl.currentUID = [Token instance].uid;
+        ctrl.storeID = STORE_ID;
+        ctrl.peerName = @"小微客服";
+        ctrl.appID = APPID;
+        
+        [self.navigationController pushViewController:ctrl animated:YES];
+    }
 }
 
 - (void)logout {
