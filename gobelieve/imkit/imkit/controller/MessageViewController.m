@@ -171,13 +171,6 @@
 }
 
 
--(void)addObserver {
-    [[AudioDownloader instance] addDownloaderObserver:self];
-}
-
--(void)removeObserver {
-    [[AudioDownloader instance] removeDownloaderObserver:self];
-}
 
 - (void)setDraft:(NSString *)draft {
     if (draft.length > 0) {
@@ -193,15 +186,6 @@
     return draft;
 }
 
-//-(void)setSenderInfo:(IUser *)senderInfo {
-//    [super setSenderInfo:senderInfo];
-//    
-//    for (IMessage *msg in self.messages) {
-//        if (msg.sender == self.sender) {
-//            msg.senderInfo = self.senderInfo;
-//        }
-//    }
-//}
 
 #pragma mark - View lifecycle
 - (void)viewWillAppear:(BOOL)animated {
@@ -885,6 +869,22 @@
     for (int i = 0; i < count; i++) {
         IMessage *msg = [messages objectAtIndex:i];
         [self downloadMessageContent:msg];
+    }
+}
+
+
+- (void)loadSenderInfo:(IMessage*)msg {
+    msg.senderInfo = [self.userDelegate getUser:msg.sender];
+    if (msg.senderInfo.name.length == 0) {
+        [self.userDelegate asyncGetUser:msg.sender cb:^(IUser *u) {
+            msg.senderInfo = u;
+        }];
+    }
+}
+- (void)loadSenderInfo:(NSArray*)messages count:(int)count {
+    for (int i = 0; i < count; i++) {
+        IMessage *msg = [messages objectAtIndex:i];
+        [self loadSenderInfo:msg];
     }
 }
 
