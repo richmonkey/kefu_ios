@@ -50,6 +50,7 @@
     }
     
     [self addObserver];
+    
 }
 
 -(void)addObserver {

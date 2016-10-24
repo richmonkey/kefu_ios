@@ -28,7 +28,7 @@
 #import "SettingViewController.h"
 #import "Token.h"
 #import "User.h"
-#import "NewCount.h"
+#import "ConversationDB.h"
 #import "LoginViewController.h"
 #import "Config.h"
 
@@ -124,20 +124,23 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     
     for (Conversation *conv in self.conversations) {
         CustomerConversation *cc = (CustomerConversation*)conv;
-        conv.newMsgCount = [NewCount getNewCount:cc.customerID appID:cc.customerAppID];
+        conv.newMsgCount = [ConversationDB getNewCount:cc.customerID appID:cc.customerAppID];
         cc.isXiaoWei = (cc.customerID == self.currentUID && APPID == cc.customerAppID);
-        NSLog(@"is xiaowei:%d", cc.isXiaoWei);
+        cc.top = [ConversationDB getTop:cc.customerID appID:cc.customerAppID];
         
         [self updateConversationName:conv];
         [self updateConversationDetail:conv];
     }
     
     NSArray *sortedArray = [self.conversations sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-        Conversation *c1 = obj1;
-        Conversation *c2 = obj2;
+        CustomerConversation *c1 = obj1;
+        CustomerConversation *c2 = obj2;
         
-        int t1 = c1.timestamp;
-        int t2 = c2.timestamp;
+        int64_t top1 = c1.top ? 1 : 0;
+        int64_t top2 = c1.top ? 1 : 0;
+        
+        int64_t t1 = top1 << 32 | c1.timestamp;
+        int64_t t2 = top2 << 32 | c2.timestamp;
         
         if (t1 < t2) {
             return NSOrderedDescending;
@@ -315,27 +318,85 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     return NO;
 }
 
+- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewRowAction *action1 = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Delete" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+        NSLog(@"delete");
+        Conversation *con = [self.conversations objectAtIndex:indexPath.row];
+        if (con.type == CONVERSATION_CUSTOMER_SERVICE) {
+            CustomerConversation *cc = (CustomerConversation*)con;
+            [[CustomerSupportMessageDB instance] clearConversation:cc.customerID appID:cc.customerAppID];
+        }
+        
+        [self.conversations removeObject:con];
+        [self.tableview reloadData];
+    }];
+    
+    CustomerConversation *cc = [self.conversations objectAtIndex:indexPath.row];
+    if (cc.top) {
+        UITableViewRowAction *action2 = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"取消置顶" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+            NSLog(@"取消置顶");
+            int originIndex = -1;
+            int index = -1;
+            for (int i = 0; i < self.conversations.count; i++) {
+                CustomerConversation *conv = [self.conversations objectAtIndex:i];
+                if (!conv.top) {
+                    index = i;
+                    NSAssert(originIndex != -1, @"");
+                    break;
+                }
+                if (conv == cc) {
+                    originIndex = i;
+                }
+            }
+            
+            NSAssert(originIndex != -1, @"");
+            if (index == -1) {
+                index = (int)self.conversations.count;
+            }
+            
+            [self.conversations removeObjectAtIndex:originIndex];
+            [self.conversations insertObject:cc atIndex:index - 1];
+            
+            cc.top = NO;
+            [ConversationDB setTop:cc.customerID appID:cc.customerAppID top:NO];
+            
+            [self.tableview reloadData];
+        }];
+        return @[action1, action2];
+    } else {
+        UITableViewRowAction *action2 = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"置顶" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+            NSLog(@"置顶");
+            int originIndex = -1;
+            for (int i = 0; i < self.conversations.count; i++) {
+                CustomerConversation *conv = [self.conversations objectAtIndex:i];
+                if (conv == cc) {
+                    originIndex = i;
+                }
+            }
+            
+            NSAssert(originIndex != -1, @"");
+   
+            if (originIndex > 0) {
+                [self.conversations removeObjectAtIndex:originIndex];
+                [self.conversations insertObject:cc atIndex:0];
+            }
+            
+            cc.top = YES;
+            [ConversationDB setTop:cc.customerID appID:cc.customerAppID top:YES];
+            
+            [self.tableview reloadData];
+        }];
+        return @[action1, action2];
+    }
+
+
+}
+
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
     return UITableViewCellEditingStyleDelete;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        //add code here for when you hit delete
-        Conversation *con = [self.conversations objectAtIndex:indexPath.row];
-        if (con.type == CONVERSATION_CUSTOMER_SERVICE) {
-            [[CustomerMessageDB instance] clearConversation:con.cid];
-        }
-        
-        [self.conversations removeObject:con];
-        
-        /*IOS8中删除最后一个cell的时，报一个错误
-         [RemindersCell _setDeleteAnimationInProgress:]: message sent to deallocated instance
-         在重新刷新tableView的时候延迟一下*/
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.tableview reloadData];
-        });
-    }
 }
 
 #pragma mark - UITableViewDelegate
@@ -429,15 +490,32 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     
     if (msg.isIncomming) {
         con.newMsgCount += 1;
-        [NewCount setNewCount:con.newMsgCount uid:con.customerID appID:con.customerAppID];
+        [ConversationDB setNewCount:con.newMsgCount uid:con.customerID appID:con.customerAppID];
         [self setNewOnTabBar];
     }
     
     if (index != 0) {
         //置顶
-        [self.conversations removeObjectAtIndex:index];
-        [self.conversations insertObject:con atIndex:0];
-        [self.tableview reloadData];
+        if (con.top) {
+            [self.conversations removeObjectAtIndex:index];
+            [self.conversations insertObject:con atIndex:0];
+            [self.tableview reloadData];
+        } else {
+            int insert = 0;
+            for (int i = 0; i < self.conversations.count; i++) {
+                CustomerConversation *cc = (CustomerConversation*)[self.conversations objectAtIndex:i];
+                if (!cc.top) {
+                    insert = i;
+                    break;
+                }
+            }
+            
+            if (insert < index) {
+                [self.conversations removeObjectAtIndex:index];
+                [self.conversations insertObject:con atIndex:insert];
+                [self.tableview reloadData];
+            }
+        }
     }
 
 }
@@ -457,12 +535,19 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
 
     if (msg.isIncomming) {
         con.newMsgCount += 1;
-        [NewCount setNewCount:con.newMsgCount uid:con.customerID appID:con.customerAppID];
+        [ConversationDB setNewCount:con.newMsgCount uid:con.customerID appID:con.customerAppID];
         [self setNewOnTabBar];
     }
-    
-    [self.conversations insertObject:con atIndex:0];
-    NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+    int index = 0;
+    for (int i = 0; i < self.conversations.count; i++) {
+        CustomerConversation *cc = (CustomerConversation*)[self.conversations objectAtIndex:i];
+        if (!cc.top) {
+            index = i;
+            break;
+        }
+    }
+    [self.conversations insertObject:con atIndex:index];
+    NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
     NSArray *array = [NSArray arrayWithObject:path];
     [self.tableview insertRowsAtIndexPaths:array withRowAnimation:UITableViewRowAnimationMiddle];
 }
@@ -494,7 +579,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
             con.customerID == uid &&
             con.customerAppID == appid) {
             con.newMsgCount = 0;
-            [NewCount setNewCount:0 uid:con.customerID appID:con.customerAppID];
+            [ConversationDB setNewCount:0 uid:con.customerID appID:con.customerAppID];
             break;
         }
     }
@@ -518,7 +603,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
             con.customerID == uid &&
             con.customerAppID == appid) {
             con.newMsgCount = 0;
-            [NewCount setNewCount:0 uid:con.customerID appID:con.customerAppID];
+            [ConversationDB setNewCount:0 uid:con.customerID appID:con.customerAppID];
             break;
         }
     }

@@ -41,7 +41,7 @@
 		6DBB2CCA1DBDBCC800BC545A /* XWCustomerMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CC91DBDBCC800BC545A /* XWCustomerMessageViewController.m */; };
 		6DBB2CCD1DBDC06500BC545A /* XWCustomerOutbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CCC1DBDC06500BC545A /* XWCustomerOutbox.m */; };
 		6DBB2CD71DBE246800BC545A /* AppDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CD01DBE246800BC545A /* AppDB.m */; };
-		6DBB2CD81DBE246800BC545A /* NewCount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CD21DBE246800BC545A /* NewCount.m */; };
+		6DBB2CD81DBE246800BC545A /* ConversationDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CD21DBE246800BC545A /* ConversationDB.m */; };
 		6DBB2CD91DBE246800BC545A /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CD41DBE246800BC545A /* Token.m */; };
 		6DBB2CDA1DBE246800BC545A /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CD61DBE246800BC545A /* User.m */; };
 		C5F26F771D27A072D32C2FDA /* libPods-kefu.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F009DD8FF86F9E4672B5E65B /* libPods-kefu.a */; };
@@ -110,8 +110,8 @@
 		6DBB2CCC1DBDC06500BC545A /* XWCustomerOutbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XWCustomerOutbox.m; sourceTree = "<group>"; };
 		6DBB2CCF1DBE246800BC545A /* AppDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDB.h; sourceTree = "<group>"; };
 		6DBB2CD01DBE246800BC545A /* AppDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDB.m; sourceTree = "<group>"; };
-		6DBB2CD11DBE246800BC545A /* NewCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewCount.h; sourceTree = "<group>"; };
-		6DBB2CD21DBE246800BC545A /* NewCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewCount.m; sourceTree = "<group>"; };
+		6DBB2CD11DBE246800BC545A /* ConversationDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationDB.h; sourceTree = "<group>"; };
+		6DBB2CD21DBE246800BC545A /* ConversationDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationDB.m; sourceTree = "<group>"; };
 		6DBB2CD31DBE246800BC545A /* Token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Token.h; sourceTree = "<group>"; };
 		6DBB2CD41DBE246800BC545A /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
 		6DBB2CD51DBE246800BC545A /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
@@ -252,8 +252,8 @@
 			children = (
 				6DBB2CCF1DBE246800BC545A /* AppDB.h */,
 				6DBB2CD01DBE246800BC545A /* AppDB.m */,
-				6DBB2CD11DBE246800BC545A /* NewCount.h */,
-				6DBB2CD21DBE246800BC545A /* NewCount.m */,
+				6DBB2CD11DBE246800BC545A /* ConversationDB.h */,
+				6DBB2CD21DBE246800BC545A /* ConversationDB.m */,
 				6DBB2CD31DBE246800BC545A /* Token.h */,
 				6DBB2CD41DBE246800BC545A /* Token.m */,
 				6DBB2CD51DBE246800BC545A /* User.h */,
@@ -401,7 +401,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DBB2CDA1DBE246800BC545A /* User.m in Sources */,
-				6DBB2CD81DBE246800BC545A /* NewCount.m in Sources */,
+				6DBB2CD81DBE246800BC545A /* ConversationDB.m in Sources */,
 				6DBB2CD91DBE246800BC545A /* Token.m in Sources */,
 				6D25219E1CBFF598004C6FBE /* CustomerSupportViewController.m in Sources */,
 				6D485DFB1CC3612E0082588F /* CustomerSupportOutbox.m in Sources */,
