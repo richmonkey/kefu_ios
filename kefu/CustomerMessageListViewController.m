@@ -123,12 +123,13 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     }
     
     for (Conversation *conv in self.conversations) {
-        [self updateConversationName:conv];
-        [self updateConversationDetail:conv];
-        
         CustomerConversation *cc = (CustomerConversation*)conv;
         conv.newMsgCount = [NewCount getNewCount:cc.customerID appID:cc.customerAppID];
         cc.isXiaoWei = (cc.customerID == self.currentUID && APPID == cc.customerAppID);
+        NSLog(@"is xiaowei:%d", cc.isXiaoWei);
+        
+        [self updateConversationName:conv];
+        [self updateConversationDetail:conv];
     }
     
     NSArray *sortedArray = [self.conversations sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
