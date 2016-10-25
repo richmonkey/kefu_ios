@@ -23,6 +23,7 @@
 #import <gobelieve/IMHttpAPI.h>
 #import <gobelieve/IMService.h>
 
+#import "AppDelegate.h"
 #import "Token.h"
 #import "Config.h"
 
@@ -152,16 +153,11 @@
 
 
 -(void)didRegisterForRemoteNotificationsWithDeviceToken:(NSNotification*)notification {
-    NSData *deviceToken = (NSData*)notification.object;
-    
-    NSString* newToken = [deviceToken description];
-    newToken = [newToken stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-    newToken = [newToken stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-    [IMHttpAPI bindDeviceToken:newToken
+    AppDelegate *app = [AppDelegate instance];
+
+    [IMHttpAPI bindDeviceToken:app.deviceToken
                        success:^{
                            NSLog(@"bind device token success");
-                           self.deviceToken = newToken;
                        }
                           fail:^{
                               NSLog(@"bind device token fail");
@@ -170,13 +166,7 @@
 
 
 - (void)onUserLogout:(NSNotification*) notification {
-    if (self.deviceToken.length > 0) {
-        [IMHttpAPI unbindDeviceToken:self.deviceToken success:^{
-            NSLog(@"unbind device token success");
-        } fail:^{
-            NSLog(@"unbind device token fail");
-        }];
-    }
+
 }
 
 @end

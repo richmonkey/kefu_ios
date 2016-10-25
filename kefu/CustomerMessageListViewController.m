@@ -17,7 +17,7 @@
 #import <gobelieve/GroupMessageViewController.h>
 #import "CustomerSupportMessageDB.h"
 #import "CustomerSupportViewController.h"
-#import "XWCustomerMessageViewController.h"
+#import "XWMessageViewController.h"
 #import "MessageConversationCell.h"
 #import "LevelDB.h"
 #import "AFNetworking.h"
@@ -406,7 +406,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     if (con.type == CONVERSATION_CUSTOMER_SERVICE) {
         
         if (con.customerID == self.currentUID && con.customerAppID == APPID) {
-            XWCustomerMessageViewController *msgController = [[XWCustomerMessageViewController alloc] init];
+            XWMessageViewController *msgController = [[XWMessageViewController alloc] init];
             msgController.peerName = @"小微客服";
             msgController.currentUID = self.currentUID;
             msgController.storeID = STORE_ID;

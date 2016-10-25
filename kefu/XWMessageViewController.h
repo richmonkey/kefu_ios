@@ -1,5 +1,5 @@
 //
-//  XWCustomerMessageViewController.h
+//  XWMessageViewController.h
 //  kefu
 //
 //  Created by houxh on 16/10/24.
@@ -15,7 +15,8 @@
 //清空会话的未读消息数
 #define CLEAR_CUSTOMER_NEW_MESSAGE @"clear_customer_single_conv_new_message_notify"
 
-@interface XWCustomerMessageViewController : MessageViewController
+//小微团队
+@interface XWMessageViewController : MessageViewController
 @property(nonatomic, assign) int64_t currentUID;
 @property(nonatomic, copy) NSString *peerName;
 

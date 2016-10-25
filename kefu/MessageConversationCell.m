@@ -76,12 +76,13 @@
 
 
 + (NSString *)getConversationTimeString:(NSDate *)date{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    [calendar setTimeZone:[NSTimeZone systemTimeZone]];
+    NSInteger unitFlags = NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|\
+    NSCalendarUnitWeekday|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond;
+    NSDateComponents *components = [calendar components:unitFlags fromDate:date];
+    NSDateComponents *todayComponents = [calendar components:NSIntegerMax fromDate:[NSDate date]];
     NSMutableString *outStr;
-    NSCalendar *gregorian = [[NSCalendar alloc]
-                             initWithCalendarIdentifier:NSGregorianCalendar];
-    NSDateComponents *components = [gregorian components:NSUIntegerMax fromDate:date];
-    NSDateComponents *todayComponents = [gregorian components:NSIntegerMax fromDate:[NSDate date]];
-    
     if (components.year == todayComponents.year &&
         components.day == todayComponents.day &&
         components.month == todayComponents.month) {

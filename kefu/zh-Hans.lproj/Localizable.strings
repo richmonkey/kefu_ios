@@ -8,7 +8,8 @@
 "login.success" = "登录成功";
 "login.failure" = "登录失败";
 "login.doing" = "登录中...";
-
+"logout.doing" = "注销中...";
+"logout.failure" = "注销失败，请检查网络是否连接";
 
 "robot.doing" = "搜索中...";
 "robot.failure" = "搜索失败";

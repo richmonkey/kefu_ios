@@ -1,12 +1,12 @@
 //
-//  XWCustomerMessageViewController.m
+//  XWMessageViewController.m
 //  kefu
 //
 //  Created by houxh on 16/10/24.
 //  Copyright © 2016年 beetle. All rights reserved.
 //
 
-#import "XWCustomerMessageViewController.h"
+#import "XWMessageViewController.h"
 #import "CustomerSupportMessageDB.h"
 #import <gobelieve/AudioDownloader.h>
 #import <gobelieve/FileCache.h>
@@ -19,11 +19,11 @@
 #define PAGE_COUNT 10
 
 
-@interface XWCustomerMessageViewController ()<OutboxObserver, CustomerMessageObserver,
+@interface XWMessageViewController ()<OutboxObserver, CustomerMessageObserver,
                                                 AudioDownloaderObserver, TCPConnectionObserver>
 
 @end
-@implementation XWCustomerMessageViewController
+@implementation XWMessageViewController
 
 
 - (void)dealloc {

@@ -8,6 +8,8 @@
 "login.success" = "login success";
 "login.failure" = "login failure";
 "login.doing" = "login...";
+"logout.doing" = "logout...";
+"logout.failure" = "logout failure, please check the network";
 
 "robot.doing" = "search...";
 "robot.failure" = "search failure";

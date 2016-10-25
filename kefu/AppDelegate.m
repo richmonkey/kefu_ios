@@ -111,6 +111,7 @@
     
     NSLog(@"device token is:%@", newToken);
     
+    self.deviceToken = newToken;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"didRegisterForRemoteNotificationsWithDeviceToken"
                                                         object:deviceToken];
 }

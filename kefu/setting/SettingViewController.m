@@ -12,10 +12,13 @@
 #import "AppDB.h"
 #import "LoginViewController.h"
 #import <gobelieve/IMService.h>
+#import <gobelieve/IMHttpAPI.h>
 #import <gobelieve/CustomerMessageViewController.h>
-#import "XWCustomerMessageViewController.h"
+#import "XWMessageViewController.h"
 #import "Token.h"
 #import "Config.h"
+#import "AppDelegate.h"
+#import "MBProgressHUD.h"
 
 @interface SettingViewController () <UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic) int64_t number;
@@ -130,7 +133,7 @@
     
     if (indexPath.section == 1 && indexPath.row == 0) {
         //帮助与反馈
-        XWCustomerMessageViewController *ctrl = [[XWCustomerMessageViewController alloc] init];
+        XWMessageViewController *ctrl = [[XWMessageViewController alloc] init];
         ctrl.currentUID = [Token instance].uid;
         ctrl.storeID = STORE_ID;
         ctrl.peerName = @"小微客服";
@@ -140,8 +143,8 @@
     }
 }
 
-- (void)logout {
-    NSLog(@"quit...");
+- (void)unregister {
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"user.logout" object:nil];
     
     Token *token = [Token instance];
@@ -160,6 +163,29 @@
     
     LoginViewController *ctrl = [[LoginViewController alloc] init];
     [UIApplication sharedApplication].keyWindow.rootViewController = ctrl;
+}
+
+- (void)logout {
+    NSLog(@"quit...");
+    AppDelegate *app = [AppDelegate instance];
+    if (app.deviceToken.length > 0) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = NSLocalizedString(@"logout.doing", @"注销中...");
+        
+        [IMHttpAPI unbindDeviceToken:app.deviceToken success:^{
+            NSLog(@"unbind device token success");
+            [MBProgressHUD hideHUDForView:self.view animated:NO];
+            [self unregister];
+        } fail:^{
+            NSLog(@"unbind device token fail");
+            hud.labelText = NSLocalizedString(@"logout.failure", @"注销失败，请检查网络是否连接");
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+            });
+        }];
+    } else {
+        [self unregister];
+    }
 }
 
 - (void)quitAction{
