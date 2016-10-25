@@ -13,6 +13,7 @@
 
 #define kCatchWidth 74.0f
 
+#define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
 
 @interface MessageConversationCell () 
 
@@ -116,8 +117,14 @@
     [self.conversation removeObserver:self forKeyPath:@"avatarURL"];
     
     _conversation = conversation;
-    
     Conversation *conv = self.conversation;
+    CustomerConversation *cc = (CustomerConversation*)conv;
+    if (cc.top) {
+        [self viewWithTag:1000].backgroundColor = RGBCOLOR(243, 242, 247);
+    } else {
+        [self viewWithTag:1000].backgroundColor = [UIColor whiteColor];
+    }
+    
     if(conv.type == CONVERSATION_PEER){
         [self.headView sd_setImageWithURL: [NSURL URLWithString:conv.avatarURL] placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
     } else if (conv.type == CONVERSATION_GROUP){

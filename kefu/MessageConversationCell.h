@@ -9,11 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "UIImageView+WebCache.h"
 
-//@class MessageConversationCell;
-
 @class Conversation;
 
 @interface MessageConversationCell : UITableViewCell
+
 
 @property (weak, nonatomic)     IBOutlet UIImageView* headView;
 @property (weak, nonatomic)     IBOutlet UILabel* namelabel;

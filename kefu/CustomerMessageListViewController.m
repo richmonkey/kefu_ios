@@ -137,7 +137,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
         CustomerConversation *c2 = obj2;
         
         int64_t top1 = c1.top ? 1 : 0;
-        int64_t top2 = c1.top ? 1 : 0;
+        int64_t top2 = c2.top ? 1 : 0;
         
         int64_t t1 = top1 << 32 | c1.timestamp;
         int64_t t2 = top2 << 32 | c2.timestamp;
