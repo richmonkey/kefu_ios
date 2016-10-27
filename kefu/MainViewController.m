@@ -88,8 +88,6 @@
     });
     
     [self startRefreshTimer];
-    
-    [[Profile instance] load];
 }
 
 //observer只会触发一次

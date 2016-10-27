@@ -61,6 +61,7 @@
 
     Token *token = [Token instance];
     Profile *profile = [Profile instance];
+    [profile load];
     
     if (profile.uid > 0 && token.accessToken.length > 0) {
         //已经登录
