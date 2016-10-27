@@ -227,12 +227,14 @@
               Token *token = [Token instance];
               token.accessToken = [responseObject objectForKey:@"access_token"];
               token.refreshToken = [responseObject objectForKey:@"refresh_token"];
-              token.uid = [[responseObject objectForKey:@"uid"] longLongValue];
-              token.storeID = [[responseObject objectForKey:@"store_id"] longLongValue];
-              token.name = [responseObject objectForKey:@"name"];
               token.expireTimestamp = (int)time(NULL) + [[responseObject objectForKey:@"expires_in"] intValue];
-              token.loginTimestamp = (int)time(NULL);
               [token save];
+              
+              [Profile instance].uid = [[responseObject objectForKey:@"uid"] longLongValue];
+              [Profile instance].storeID = [[responseObject objectForKey:@"store_id"] longLongValue];
+              [Profile instance].name = [responseObject objectForKey:@"name"];
+              [Profile instance].avatar = [responseObject objectForKey:@"avatar"];
+              [Profile instance].loginTimestamp = (int)time(NULL);
               [Profile instance].status = STATUS_ONLINE;
               [[Profile instance] save];
               

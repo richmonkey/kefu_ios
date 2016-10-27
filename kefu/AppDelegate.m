@@ -24,6 +24,7 @@
 #import "Config.h"
 #import "Token.h"
 #import "ResolveUtil.h"
+#import "Profile.h"
 
 @interface AppDelegate ()
 
@@ -59,7 +60,9 @@
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
 
     Token *token = [Token instance];
-    if (token.uid > 0 && token.accessToken.length > 0) {
+    Profile *profile = [Profile instance];
+    
+    if (profile.uid > 0 && token.accessToken.length > 0) {
         //已经登录
         CustomerMessageListViewController *ctrl = [[CustomerMessageListViewController alloc] init];
         UINavigationController *navigationCtrl = [[UINavigationController alloc] initWithRootViewController:ctrl];

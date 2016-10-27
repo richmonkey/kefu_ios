@@ -32,7 +32,7 @@
 #import "LoginViewController.h"
 #import "Config.h"
 #import "API.h"
-
+#import "Profile.h"
 
 //RGB颜色
 #define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
@@ -69,11 +69,10 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    Token *token = [Token instance];
-
+    Profile *profile = [Profile instance];
     
-    self.currentUID = token.uid;
-    self.storeID = token.storeID;
+    self.currentUID = profile.uid;
+    self.storeID = profile.storeID;
     NSLog(@"store id:%lld uid:%lld", self.storeID, self.currentUID);
     
 
@@ -584,6 +583,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
 
     Token *t = [Token instance];
 
+    Profile *profile = [Profile instance];
 #if TARGET_IPHONE_SIMULATOR
     NSString *deviceID = @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61";
 #else
@@ -596,7 +596,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     }
     
     int timestamp = [[dict objectForKey:@"timestamp"] intValue];
-    if (t.loginTimestamp > timestamp) {
+    if (profile.loginTimestamp > timestamp) {
         return;
     }
     
@@ -604,18 +604,24 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     [self logout];
 }
 
+//保证单点登录, 和settingviewcontroller unregister实现一样
 - (void)logout {
     NSLog(@"quit...");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"user.logout" object:nil];
     
     Token *token = [Token instance];
-    token.uid = 0;
     token.accessToken = @"";
     token.refreshToken = @"";
-    token.name = @"";
-    token.storeID = 0;
     token.expireTimestamp = 0;
     [token save];
+    
+    Profile *profile = [Profile instance];
+    profile.uid = 0;
+    profile.name = @"";
+    profile.storeID = 0;
+    profile.avatar = @"";
+    profile.loginTimestamp = 0;
+    [profile save];
     
     [[IMService instance] sendUnreadCount:0];
     [[IMService instance] stop];

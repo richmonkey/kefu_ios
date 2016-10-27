@@ -55,15 +55,15 @@
     self.tokenRefreshObservers = [NSMutableArray array];
     
     Token *token = [Token instance];
-    
+    Profile *profile = [Profile instance];
     //配置消息存储路径
     NSString *path = [self getDocumentPath];
-    NSString *customerPath = [NSString stringWithFormat:@"%@/%lld/customer", path, token.uid];
+    NSString *customerPath = [NSString stringWithFormat:@"%@/%lld/customer", path, profile.uid];
     [[CustomerSupportMessageDB instance] setDbPath:customerPath];
     
     //初始化im服务
     [IMHttpAPI instance].accessToken = token.accessToken;
-    [IMService instance].uid = token.uid;
+    [IMService instance].uid = profile.uid;
     [IMService instance].token = token.accessToken;
     
     [[IMService instance] start];
@@ -138,9 +138,6 @@
               NSLog(@"refresh token success:%@", responseObject);
               token.accessToken = [responseObject objectForKey:@"access_token"];
               token.refreshToken = [responseObject objectForKey:@"refresh_token"];
-              token.uid = [[responseObject objectForKey:@"uid"] longLongValue];
-              token.storeID = [[responseObject objectForKey:@"store_id"] longLongValue];
-              token.name = [responseObject objectForKey:@"name"];
               token.expireTimestamp = (int)time(NULL) + [[responseObject objectForKey:@"expires_in"] intValue];
               [token save];
               [self prepareTimer];

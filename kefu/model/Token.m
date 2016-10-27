@@ -43,14 +43,9 @@
 
 -(void)load {
     LevelDB *db = [AppDB instance].db;
-    
-    self.uid = [[db objectForKey:@"token_uid"] longLongValue];
     self.accessToken = [db objectForKey:@"token_access_token"];
     self.refreshToken = [db objectForKey:@"token_refresh_token"];
-    self.storeID = [[db objectForKey:@"token_store_id"] longLongValue];
-    self.name = [db objectForKey:@"token_name"];
     self.expireTimestamp = [[db objectForKey:@"token_expire"] intValue];
-    self.loginTimestamp = [[db objectForKey:@"token_login"] intValue];
 }
 
 -(void)save {
@@ -63,13 +58,8 @@
     NSString *refreshToken = self.refreshToken ? self.refreshToken : @"";
     [db setObject:refreshToken forKey:@"token_refresh_token"];
     
-    NSString *name = self.name ? self.name : @"";
-    [db setObject:name forKey:@"token_name"];
-    
-    [db setObject:[NSNumber numberWithLongLong:self.storeID] forKey:@"token_store_id"];
-    [db setObject:[NSNumber numberWithLongLong:self.uid] forKey:@"token_uid"];
     [db setObject:[NSNumber numberWithInt:self.expireTimestamp] forKey:@"token_expire"];
-    [db setObject:[NSNumber numberWithInt:self.loginTimestamp] forKey:@"token_login"];
+
 }
 
 @end

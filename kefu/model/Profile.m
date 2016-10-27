@@ -37,10 +37,21 @@
 - (void)load {
     NSDictionary *dict = [self loadDictionary];
     self.status = [dict objectForKey:@"status"];
+    self.uid = [[dict objectForKey:@"uid"] longLongValue];
+    self.storeID = [[dict objectForKey:@"store_id"] longLongValue];
+    self.loginTimestamp = [[dict objectForKey:@"login_timestamp"] intValue];
+    self.name = [dict objectForKey:@"name"];
+    self.avatar = [dict objectForKey:@"avatar"];
 }
 
 - (void)save {
-    NSDictionary *dict = @{@"status":self.status ? self.status : @""};
+    NSDictionary *dict = @{@"status":self.status ? self.status : @"",
+                           @"uid":[NSNumber numberWithLongLong:self.uid],
+                           @"store_id":[NSNumber numberWithLongLong:self.storeID],
+                           @"login_timestamp":[NSNumber numberWithInteger:self.loginTimestamp],
+                           @"name":self.name ? self.name : @"",
+                           @"avatar":self.avatar ? self.avatar : @""};
+    
     [self storeDictionary:dict];
 }
 

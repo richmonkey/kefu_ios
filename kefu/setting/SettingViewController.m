@@ -33,10 +33,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"设置";
-    
-    Token *token = [Token instance];
-    self.number = token.uid;
-    self.name = token.name ? token.name : @"";
+
+    Profile *profile = [Profile instance];
+    self.number = profile.uid;
+    self.name = profile.name ? profile.name : @"";
 }
 
 - (void)didReceiveMemoryWarning {
@@ -155,7 +155,7 @@
     if (indexPath.section == 1 && indexPath.row == 0) {
         //帮助与反馈
         XWMessageViewController *ctrl = [[XWMessageViewController alloc] init];
-        ctrl.currentUID = [Token instance].uid;
+        ctrl.currentUID = [Profile instance].uid;
         ctrl.storeID = STORE_ID;
         ctrl.peerName = @"小微客服";
         ctrl.appID = APPID;
@@ -175,7 +175,7 @@
 //用户上线／下线
 - (void)setUserStatus:(BOOL)online {
     AFHTTPSessionManager *manager = [API newSessionManager];
-    int64_t uid = [Token instance].uid;
+    int64_t uid = [Profile instance].uid;
     NSString *url = [NSString stringWithFormat:@"users/%lld", uid];
     NSDictionary *params = @{@"status":(online ? @"online" : @"offline")};
     
@@ -210,13 +210,18 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"user.logout" object:nil];
     
     Token *token = [Token instance];
-    token.uid = 0;
     token.accessToken = @"";
     token.refreshToken = @"";
-    token.name = @"";
-    token.storeID = 0;
     token.expireTimestamp = 0;
     [token save];
+    
+    Profile *profile = [Profile instance];
+    profile.uid = 0;
+    profile.name = @"";
+    profile.storeID = 0;
+    profile.avatar = @"";
+    profile.loginTimestamp = 0;
+    [profile save];
     
     [[IMService instance] sendUnreadCount:0];
     [[IMService instance] stop];
