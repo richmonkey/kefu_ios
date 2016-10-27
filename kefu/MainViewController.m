@@ -26,6 +26,7 @@
 #import "AppDelegate.h"
 #import "Token.h"
 #import "Config.h"
+#import "Profile.h"
 
 @interface MainViewController()
 @property(nonatomic) dispatch_source_t refreshTimer;
@@ -82,6 +83,8 @@
     });
     
     [self startRefreshTimer];
+    
+    [[Profile instance] load];
 }
 
 

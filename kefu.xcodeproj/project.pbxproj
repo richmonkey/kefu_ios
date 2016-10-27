@@ -33,6 +33,8 @@
 		6D2521A11CC1D58F004C6FBE /* CustomerSupportMessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2521A01CC1D58F004C6FBE /* CustomerSupportMessageDB.m */; };
 		6D2521A41CC1D8F1004C6FBE /* CustomerConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2521A31CC1D8F1004C6FBE /* CustomerConversation.m */; };
 		6D2521A71CC1DF27004C6FBE /* CustomerSupportMessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2521A61CC1DF27004C6FBE /* CustomerSupportMessageHandler.m */; };
+		6D25B3C11DC19D64009F99EA /* API.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25B3C01DC19D64009F99EA /* API.m */; };
+		6D25B3C41DC1BF02009F99EA /* Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25B3C31DC1BF02009F99EA /* Profile.m */; };
 		6D485DFB1CC3612E0082588F /* CustomerSupportOutbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485DFA1CC3612E0082588F /* CustomerSupportOutbox.m */; };
 		6D485E051CC71E660082588F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E041CC71E660082588F /* MainViewController.m */; };
 		6D485E131CE17ED90082588F /* RobotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E121CE17ED90082588F /* RobotViewController.m */; };
@@ -94,6 +96,10 @@
 		6D2521A31CC1D8F1004C6FBE /* CustomerConversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerConversation.m; sourceTree = "<group>"; };
 		6D2521A51CC1DF27004C6FBE /* CustomerSupportMessageHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerSupportMessageHandler.h; sourceTree = "<group>"; };
 		6D2521A61CC1DF27004C6FBE /* CustomerSupportMessageHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerSupportMessageHandler.m; sourceTree = "<group>"; };
+		6D25B3BF1DC19D64009F99EA /* API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
+		6D25B3C01DC19D64009F99EA /* API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = API.m; sourceTree = "<group>"; };
+		6D25B3C21DC1BF02009F99EA /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profile.h; sourceTree = "<group>"; };
+		6D25B3C31DC1BF02009F99EA /* Profile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Profile.m; sourceTree = "<group>"; };
 		6D485DF91CC3612E0082588F /* CustomerSupportOutbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerSupportOutbox.h; sourceTree = "<group>"; };
 		6D485DFA1CC3612E0082588F /* CustomerSupportOutbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerSupportOutbox.m; sourceTree = "<group>"; };
 		6D485DFC1CC616610082588F /* Config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
@@ -229,6 +235,8 @@
 				6D485E121CE17ED90082588F /* RobotViewController.m */,
 				6D485E031CC71E660082588F /* MainViewController.h */,
 				6D485E041CC71E660082588F /* MainViewController.m */,
+				6D25B3BF1DC19D64009F99EA /* API.h */,
+				6D25B3C01DC19D64009F99EA /* API.m */,
 				6D485DFC1CC616610082588F /* Config.h */,
 				6D12EC701CB517650003A03B /* Assets.xcassets */,
 				6D12EC881CB600C60003A03B /* Info.plist */,
@@ -258,6 +266,8 @@
 				6DBB2CD41DBE246800BC545A /* Token.m */,
 				6DBB2CD51DBE246800BC545A /* User.h */,
 				6DBB2CD61DBE246800BC545A /* User.m */,
+				6D25B3C21DC1BF02009F99EA /* Profile.h */,
+				6D25B3C31DC1BF02009F99EA /* Profile.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -405,6 +415,7 @@
 				6DBB2CD91DBE246800BC545A /* Token.m in Sources */,
 				6D25219E1CBFF598004C6FBE /* CustomerSupportViewController.m in Sources */,
 				6D485DFB1CC3612E0082588F /* CustomerSupportOutbox.m in Sources */,
+				6D25B3C41DC1BF02009F99EA /* Profile.m in Sources */,
 				4803C80D1CC3B323007550E6 /* LoginViewOneCell.m in Sources */,
 				6DBB2CCD1DBDC06500BC545A /* XWCustomerOutbox.m in Sources */,
 				6D485E051CC71E660082588F /* MainViewController.m in Sources */,
@@ -424,6 +435,7 @@
 				4803C80B1CC3B323007550E6 /* LoginViewController.m in Sources */,
 				487D48CA1CC3E365005DE19D /* SettingInforTableViewCell.m in Sources */,
 				6D485E131CE17ED90082588F /* RobotViewController.m in Sources */,
+				6D25B3C11DC19D64009F99EA /* API.m in Sources */,
 				487D48C51CC3E350005DE19D /* SettingViewController.m in Sources */,
 				487D48CE1CC3EAD4005DE19D /* UIAlertView+XPAlertView.m in Sources */,
 			);

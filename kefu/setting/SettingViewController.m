@@ -19,6 +19,9 @@
 #import "Config.h"
 #import "AppDelegate.h"
 #import "MBProgressHUD.h"
+#import <AFNetWorking.h>
+#import "Profile.h"
+#import "API.h"
 
 @interface SettingViewController () <UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic) int64_t number;
@@ -49,20 +52,21 @@
 
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 3;
+    return 4;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
     if (section==0) {
         return 2;
     } else if (section == 1) {
         return 2;
     } else if (section == 2) {
+        return 2;
+    } else if (section == 3) {
         return 1;
     }
-    return 1;
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -109,6 +113,23 @@
         return cell;
 
     } else if (indexPath.section == 2) {
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell2"];
+        
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell2"];
+        }
+        
+        BOOL isOnline = [Profile instance].isOnline;
+        if (indexPath.row == 0) {
+            [cell.textLabel setText:@"在线"];
+            cell.accessoryType = isOnline ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+        } else if(indexPath.row == 1){
+            [cell.textLabel setText:@"隐身"];
+            cell.accessoryType = !isOnline ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+        }
+        return cell;
+    } else if (indexPath.section == 3) {
         static NSString *reusableCellWithIdentifier = @"QuitTableViewCell";
         QuitTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellWithIdentifier];
         
@@ -140,7 +161,48 @@
         ctrl.appID = APPID;
         
         [self.navigationController pushViewController:ctrl animated:YES];
+    } else if (indexPath.section == 2 && indexPath.row == 0) {
+        if (![Profile instance].isOnline) {
+            [self setUserStatus:YES];
+        }
+    } else if (indexPath.section == 2 && indexPath.row == 1) {
+        if ([Profile instance].isOnline) {
+            [self setUserStatus:NO];
+        }
     }
+}
+
+//用户上线／下线
+- (void)setUserStatus:(BOOL)online {
+    AFHTTPSessionManager *manager = [API newSessionManager];
+    int64_t uid = [Token instance].uid;
+    NSString *url = [NSString stringWithFormat:@"users/%lld", uid];
+    NSDictionary *params = @{@"status":(online ? @"online" : @"offline")};
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [manager PATCH:url
+       parameters:params
+          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+              NSLog(@"set user status success:%@", responseObject);
+              [Profile instance].status = online ? STATUS_ONLINE : STATUS_OFFLINE;
+              [[Profile instance] save];
+              NSArray *array = @[[NSIndexPath indexPathForRow:1 inSection:2],
+                                 [NSIndexPath indexPathForRow:0 inSection:2]];
+              [self.tableView reloadRowsAtIndexPaths:array
+                                    withRowAnimation:UITableViewRowAnimationFade];
+              [MBProgressHUD hideHUDForView:self.view animated:YES];
+          }
+          failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+              NSLog(@"set user status failure:%@", error);
+              hud.labelText = online ? @"上线失败" : @"隐身失败";
+              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)),
+                             dispatch_get_main_queue(),
+                             ^{
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             });
+          }
+     ];
+    
 }
 
 - (void)unregister {
@@ -168,24 +230,31 @@
 - (void)logout {
     NSLog(@"quit...");
     AppDelegate *app = [AppDelegate instance];
-    if (app.deviceToken.length > 0) {
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.labelText = NSLocalizedString(@"logout.doing", @"注销中...");
-        
-        [IMHttpAPI unbindDeviceToken:app.deviceToken success:^{
-            NSLog(@"unbind device token success");
-            [MBProgressHUD hideHUDForView:self.view animated:NO];
-            [self unregister];
-        } fail:^{
-            NSLog(@"unbind device token fail");
-            hud.labelText = NSLocalizedString(@"logout.failure", @"注销失败，请检查网络是否连接");
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
-            });
-        }];
-    } else {
-        [self unregister];
-    }
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = NSLocalizedString(@"logout.doing", @"注销中...");
+
+    //注销接口会将当前用户设置下线状态以及解除devicetoken的绑带关系
+    AFHTTPSessionManager *manager = [API newSessionManager];
+    NSString *url = @"auth/unregister";
+    NSDictionary *params = @{@"apns_device_token":app.deviceToken?app.deviceToken:@""};
+    [manager POST:url parameters:params
+         progress:nil
+          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+              NSLog(@"unregister client success:%@", responseObject);
+              [MBProgressHUD hideHUDForView:self.view animated:NO];
+              [self unregister];
+          }
+          failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+              NSLog(@"unregister fail:%@", error);
+              hud.labelText = NSLocalizedString(@"logout.failure", @"注销失败，请检查网络是否连接");
+              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)),
+                             dispatch_get_main_queue(),
+                             ^{
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                             });
+          }
+     ];
 }
 
 - (void)quitAction{

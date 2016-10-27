@@ -31,7 +31,7 @@
 #import "ConversationDB.h"
 #import "LoginViewController.h"
 #import "Config.h"
-
+#import "API.h"
 
 
 //RGB颜色
@@ -741,14 +741,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
 }
 
 - (void)_asyncGetUser:(int64_t)uid appID:(int64_t)appID cb:(void(^)(IUser*))cb {
-    
-    NSString *base = [NSString stringWithFormat:@"%@/", KEFU_API];
-    NSURL *baseURL = [NSURL URLWithString:base];
-    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
-    manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    
-    NSString *auth = [NSString stringWithFormat:@"Bearer %@", [Token instance].accessToken];
-    [manager.requestSerializer setValue:auth forHTTPHeaderField:@"Authorization"];
+    AFHTTPSessionManager *manager = [API newSessionManager];
     
     NSString *url = [NSString stringWithFormat:@"customers/%lld/%lld", appID, uid];
     [manager GET:url

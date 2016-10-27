@@ -17,6 +17,8 @@
 #import "AppDB.h"
 #import "Config.h"
 #import "Token.h"
+#import "Profile.h"
+#import "API.h"
 
 #define kFirstCellOffset    20
 #define kSecondMax      60
@@ -199,10 +201,7 @@
 
 
 - (void)login:(NSString*)username password:(NSString*)password {
-    NSString *base = [NSString stringWithFormat:@"%@/", KEFU_API];
-    NSURL *baseURL = [NSURL URLWithString:base];
-    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
-    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    AFHTTPSessionManager *manager = [API newLoginSessionManager];
     
 #define  PLATFORM_IOS 1
     
@@ -234,6 +233,8 @@
               token.expireTimestamp = (int)time(NULL) + [[responseObject objectForKey:@"expires_in"] intValue];
               token.loginTimestamp = (int)time(NULL);
               [token save];
+              [Profile instance].status = STATUS_ONLINE;
+              [[Profile instance] save];
               
               [MBProgressHUD hideHUDForView:self.view animated:YES];
               CustomerMessageListViewController *ctrl = [[CustomerMessageListViewController alloc] init];

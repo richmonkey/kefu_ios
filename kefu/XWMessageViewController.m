@@ -165,7 +165,9 @@
         return;
     }
     
-    id<IMessageIterator> iterator =  [[CustomerSupportMessageDB instance] newMessageIterator:self.currentUID appID:self.appID];
+    id<IMessageIterator> iterator =  [[CustomerSupportMessageDB instance] newMessageIterator:self.currentUID
+                                                                                       appID:self.appID
+                                                                                        last:last.msgLocalID];
     
     int count = 0;
     ICustomerMessage *msg = (ICustomerMessage*)[iterator next];
