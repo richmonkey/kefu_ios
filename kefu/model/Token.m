@@ -32,6 +32,15 @@
     return self;
 }
 
+-(BOOL)isAccessTokenExpired {
+    int now = (int)time(NULL);
+    if (now >= self.expireTimestamp - 10) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
 -(void)load {
     LevelDB *db = [AppDB instance].db;
     

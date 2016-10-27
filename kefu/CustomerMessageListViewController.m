@@ -164,72 +164,19 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
                                                                          target:self
                                                                          action:@selector(rightBarButtonItemClicked:)];
     [self.navigationItem setRightBarButtonItem:barButtonItemRight];
-}
-
-
--(void)prepareTimer {
-    Token *token = [Token instance];
-    int now = (int)time(NULL);
-    if (now >= token.expireTimestamp - 1) {
-        dispatch_time_t w = dispatch_walltime(NULL, 0);
-        dispatch_source_set_timer(self.refreshTimer, w, DISPATCH_TIME_FOREVER, 0);
-    } else {
-        dispatch_time_t w = dispatch_walltime(NULL, (token.expireTimestamp - now - 1)*NSEC_PER_SEC);
-        dispatch_source_set_timer(self.refreshTimer, w, DISPATCH_TIME_FOREVER, 0);
+    
+    __weak CustomerMessageListViewController *wself = self;
+    if ([Token instance].isAccessTokenExpired) {
+        [self addTokenRefreshOneTimeObserver:^{
+            for (Conversation *conv in wself.conversations) {
+                [wself updateConversationName:conv];
+            }
+        }];
     }
 }
 
--(void)startRefreshTimer {
-    [self prepareTimer];
-    dispatch_resume(self.refreshTimer);
-}
 
--(void)refreshAccessToken {
-    Token *token = [Token instance];
-    if (!token.accessToken) {
-        return;
-    }
-    
-    NSString *base = [NSString stringWithFormat:@"%@/", KEFU_API];
-    NSURL *baseURL = [NSURL URLWithString:base];
-    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
-    manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    
-    NSDictionary *dict = @{@"refresh_token":token.refreshToken};
-    
-    [manager POST:@"auth/refresh_token"
-       parameters:dict
-         progress:nil
-          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-              NSLog(@"refresh token success:%@", responseObject);
-              token.accessToken = [responseObject objectForKey:@"access_token"];
-              token.refreshToken = [responseObject objectForKey:@"refresh_token"];
-              token.uid = [[responseObject objectForKey:@"uid"] longLongValue];
-              token.storeID = [[responseObject objectForKey:@"store_id"] longLongValue];
-              token.name = [responseObject objectForKey:@"name"];
-              token.expireTimestamp = (int)time(NULL) + [[responseObject objectForKey:@"expires_in"] intValue];
-              [token save];
-              [self prepareTimer];
-              
-          }
-          failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-              NSLog(@"refresh token failure");
-              
-              self.refreshFailCount = self.refreshFailCount + 1;
-              int64_t timeout;
-              if (self.refreshFailCount > 60) {
-                  timeout = 60*NSEC_PER_SEC;
-              } else {
-                  timeout = (int64_t)self.refreshFailCount*NSEC_PER_SEC;
-              }
-              
-              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, timeout), dispatch_get_main_queue(), ^{
-                  [self prepareTimer];
-              });
-              
-          }
-     ];
-}
+
 
 
 - (void)rightBarButtonItemClicked:(id)sender{
@@ -740,9 +687,13 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     return u;
 }
 
-- (void)_asyncGetUser:(int64_t)uid appID:(int64_t)appID cb:(void(^)(IUser*))cb {
-    AFHTTPSessionManager *manager = [API newSessionManager];
+//从服务器获取用户信息
+- (void)asyncGetUser:(int64_t)uid appID:(int64_t)appID cb:(void(^)(IUser*))cb {
+    if ([Token instance].isAccessTokenExpired) {
+        return;
+    }
     
+    AFHTTPSessionManager *manager = [API newSessionManager];
     NSString *url = [NSString stringWithFormat:@"customers/%lld/%lld", appID, uid];
     [manager GET:url
       parameters:nil
@@ -774,28 +725,6 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
              NSLog(@"failure");
          }
      ];
-
 }
-//从服务器获取用户信息
-- (void)asyncGetUser:(int64_t)uid appID:(int64_t)appID cb:(void(^)(IUser*))cb {
-    int now = (int)time(NULL);
-    if (now > [Token instance].expireTimestamp) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2ull * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            int now2 = (int)time(NULL);
-            if (now2 > [Token instance].expireTimestamp) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10ull * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                    [self _asyncGetUser:uid appID:appID cb:cb];
-                });
-            } else {
-                [self _asyncGetUser:uid appID:appID cb:cb];
-            }
-        });
-    } else {
-        [self _asyncGetUser:uid appID:appID cb:cb];
-    }
-}
-
-
-
 
 @end

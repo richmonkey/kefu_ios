@@ -32,6 +32,8 @@
 @property(nonatomic) dispatch_source_t refreshTimer;
 @property(nonatomic) int refreshFailCount;
 @property(nonatomic, copy) NSString *deviceToken;
+
+@property(nonatomic) NSMutableArray *tokenRefreshObservers;
 @end
 
 @implementation MainViewController
@@ -49,6 +51,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.tokenRefreshObservers = [NSMutableArray array];
+    
     Token *token = [Token instance];
     
     //配置消息存储路径
@@ -87,15 +92,23 @@
     [[Profile instance] load];
 }
 
+//observer只会触发一次
+- (void)addTokenRefreshOneTimeObserver:(void(^)())onTokenRefresh {
+    if ([self.tokenRefreshObservers containsObject:onTokenRefresh]) {
+        return;
+    }
+    [self.tokenRefreshObservers addObject:onTokenRefresh];
+}
 
 -(void)prepareTimer {
     Token *token = [Token instance];
     int now = (int)time(NULL);
-    if (now >= token.expireTimestamp - 1) {
+    if (token.isAccessTokenExpired) {
         dispatch_time_t w = dispatch_walltime(NULL, 0);
         dispatch_source_set_timer(self.refreshTimer, w, DISPATCH_TIME_FOREVER, 0);
     } else {
-        dispatch_time_t w = dispatch_walltime(NULL, (token.expireTimestamp - now - 1)*NSEC_PER_SEC);
+        //提前10s刷新accesstoken
+        dispatch_time_t w = dispatch_walltime(NULL, (token.expireTimestamp - now - 10)*NSEC_PER_SEC);
         dispatch_source_set_timer(self.refreshTimer, w, DISPATCH_TIME_FOREVER, 0);
     }
 }
@@ -132,6 +145,12 @@
               [token save];
               [self prepareTimer];
               
+              for (NSInteger i = 0; i < self.tokenRefreshObservers.count; i++) {
+                  void (^ob)() = [self.tokenRefreshObservers objectAtIndex:i];
+                  ob();
+              }
+              [self.tokenRefreshObservers removeAllObjects];
+              
           }
           failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
               NSLog(@"refresh token failure");
@@ -155,9 +174,8 @@
 }
 
 
--(void)didRegisterForRemoteNotificationsWithDeviceToken:(NSNotification*)notification {
+- (void)bindDeviceToken {
     AppDelegate *app = [AppDelegate instance];
-
     [IMHttpAPI bindDeviceToken:app.deviceToken
                        success:^{
                            NSLog(@"bind device token success");
@@ -165,6 +183,19 @@
                           fail:^{
                               NSLog(@"bind device token fail");
                           }];
+}
+
+-(void)didRegisterForRemoteNotificationsWithDeviceToken:(NSNotification*)notification {
+    __weak MainViewController *wself = self;
+    Token *token = [Token instance];
+    if (token.isAccessTokenExpired) {
+        //token 过期
+        [self addTokenRefreshOneTimeObserver:^{
+            [wself bindDeviceToken];
+        }];
+    } else {
+        [self bindDeviceToken];
+    }
 }
 
 

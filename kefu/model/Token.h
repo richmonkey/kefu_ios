@@ -13,6 +13,8 @@
 @property(copy) NSString *accessToken;
 @property(copy) NSString *refreshToken;
 @property(assign) int expireTimestamp;
+@property(nonatomic, readonly) BOOL isAccessTokenExpired;
+
 @property(assign) int64_t uid;
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic) int64_t storeID;
