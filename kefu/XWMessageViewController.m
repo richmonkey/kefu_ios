@@ -276,10 +276,8 @@
     return [[CustomerSupportMessageDB instance] eraseMessageFailure:msg.msgLocalID uid:cm.customerID appID:cm.customerAppID];
 }
 
-
-
 -(void)onCustomerSupportMessage:(CustomerMessage*)im {
-    if (self.storeID != im.storeID) {
+    if (im.customerID != self.currentUID || im.customerAppID != self.appID) {
         return;
     }
     
@@ -314,7 +312,7 @@
 }
 
 -(void)onCustomerMessage:(CustomerMessage*)im {
-    if (self.storeID != im.storeID) {
+    if (im.customerID != self.currentUID || im.customerAppID != self.appID) {
         return;
     }
     
