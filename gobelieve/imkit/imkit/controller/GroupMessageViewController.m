@@ -54,7 +54,6 @@
     [[GroupOutbox instance] addBoxObserver:self];
     [[IMService instance] addConnectionObserver:self];
     [[IMService instance] addGroupMessageObserver:self];
-    [[IMService instance] addLoginPointObserver:self];
 }
 
 -(void)removeObserver {
@@ -62,7 +61,6 @@
     [[GroupOutbox instance] removeBoxObserver:self];
     [[IMService instance] removeGroupMessageObserver:self];
     [[IMService instance] removeConnectionObserver:self];
-    [[IMService instance] removeLoginPointObserver:self];
 }
 
 - (int64_t)sender {
@@ -151,9 +149,6 @@
     }
 }
 
--(void)onLoginPoint:(LoginPoint*)lp {
-    NSLog(@"login point:%@, platform id:%d", lp.deviceID, lp.platformID);
-}
 
 
 #pragma mark - MessageObserver
@@ -200,7 +195,7 @@
 
 
 -(void)onGroupNotification:(NSString *)text {
-    MessageNotificationContent *notification = [[MessageNotificationContent alloc] initWithNotification:text];
+    MessageGroupNotificationContent *notification = [[MessageGroupNotificationContent alloc] initWithNotification:text];
     int64_t groupID = notification.groupID;
     if (groupID != self.groupID) {
         return;
@@ -327,7 +322,7 @@
 
 
 - (void)updateNotificationDesc:(IMessage*)message {
-    MessageNotificationContent *notification = message.notificationContent;
+    MessageGroupNotificationContent *notification = message.notificationContent;
     if (message.type == MESSAGE_GROUP_NOTIFICATION) {
         int type = notification.notificationType;
         if (type == NOTIFICATION_GROUP_CREATED) {
@@ -564,21 +559,22 @@
     msg.sender = self.sender;
     msg.receiver = self.receiver;
     
-    MessageImageContent *content = [[MessageImageContent alloc] initWithImageURL:[self localImageURL]];
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenHeight = screenRect.size.height;
+    
+    float newHeight = screenHeight;
+    float newWidth = newHeight*image.size.width/image.size.height;
+    
+    MessageImageContent *content = [[MessageImageContent alloc] initWithImageURL:[self localImageURL] width:newWidth height:newHeight];
     msg.rawContent = content.raw;
     msg.timestamp = (int)time(NULL);
     msg.isOutgoing = YES;
     
     [self loadSenderInfo:msg];
     
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    CGFloat screenHeight = screenRect.size.height;
-    
-    float newHeigth = screenHeight;
-    float newWidth = newHeigth*image.size.width/image.size.height;
     
     UIImage *sizeImage = [image resizedImage:CGSizeMake(128, 128) interpolationQuality:kCGInterpolationDefault];
-    image = [image resizedImage:CGSizeMake(newWidth, newHeigth) interpolationQuality:kCGInterpolationDefault];
+    image = [image resizedImage:CGSizeMake(newWidth, newHeight) interpolationQuality:kCGInterpolationDefault];
     
     [[SDImageCache sharedImageCache] storeImage:image forKey:content.imageURL];
     NSString *littleUrl =  [content littleImageURL];

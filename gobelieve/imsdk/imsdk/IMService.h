@@ -35,10 +35,10 @@
 -(BOOL)handleMessageFailure:(CustomerMessage*)msg;
 @end
 
-
-@protocol LoginPointObserver <NSObject>
-//用户在其他地方登陆
--(void)onLoginPoint:(LoginPoint*)lp;
+//保存消息的同步key
+@protocol IMSyncKeyHandler <NSObject>
+-(BOOL)saveSyncKey:(int64_t)syncKey;
+-(BOOL)saveGroupSyncKey:(int64_t)syncKey gid:(int64_t)gid;
 @end
 
 @protocol PeerMessageObserver <NSObject>
@@ -103,6 +103,12 @@
 
 @end
 
+
+/*消息如何接收
+ *1.初始化消息的同步key和所有超级群的同步key
+ *2.上线之后，自动同步所有离线消息
+ *3.收到同步消息的通知后，同步新消息
+*/
 @interface IMService : TCPConnection
 @property(nonatomic, copy) NSString *deviceID;
 @property(nonatomic, copy) NSString *token;
@@ -110,11 +116,21 @@
 //客服app需要设置，普通app不需要设置
 @property(nonatomic) int64_t appID;
 
+//离线消息的同步key
+@property(nonatomic) int64_t syncKey;
+
 @property(nonatomic, weak)id<IMPeerMessageHandler> peerMessageHandler;
 @property(nonatomic, weak)id<IMGroupMessageHandler> groupMessageHandler;
 @property(nonatomic, weak)id<IMCustomerMessageHandler> customerMessageHandler;
+@property(nonatomic, strong)id<IMSyncKeyHandler> syncKeyHandler;
 
 +(IMService*)instance;
+
+//超级群消息的同步key
+-(void)addSuperGroupSyncKey:(int64_t)syncKey gid:(int64_t)gid;
+-(void)removeSuperGroupSyncKey:(int64_t)gid;
+-(void)clearSuperGroupSyncKey;
+
 
 -(BOOL)isPeerMessageSending:(int64_t)peer id:(int)msgLocalID;
 -(BOOL)isGroupMessageSending:(int64_t)groupID id:(int)msgLocalID;
@@ -145,9 +161,6 @@
 
 -(void)addGroupMessageObserver:(id<GroupMessageObserver>)ob;
 -(void)removeGroupMessageObserver:(id<GroupMessageObserver>)ob;
-
--(void)addLoginPointObserver:(id<LoginPointObserver>)ob;
--(void)removeLoginPointObserver:(id<LoginPointObserver>)ob;
 
 -(void)addRoomMessageObserver:(id<RoomMessageObserver>)ob;
 -(void)removeRoomMessageObserver:(id<RoomMessageObserver>)ob;

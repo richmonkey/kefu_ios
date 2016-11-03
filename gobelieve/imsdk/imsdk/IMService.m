@@ -17,7 +17,7 @@
 
 #define HEARTBEAT_HZ (180)
 
-#define HOST  @"imnode.gobelieve.io"
+#define HOST  @"imnode2.gobelieve.io"
 #define PORT 23000
 
 @interface IMService()
@@ -26,7 +26,6 @@
 @property(nonatomic)NSMutableArray *peerObservers;
 @property(nonatomic)NSMutableArray *groupObservers;
 @property(nonatomic)NSMutableArray *roomObservers;
-@property(nonatomic)NSMutableArray *loginPointObservers;
 @property(nonatomic)NSMutableArray *systemObservers;
 @property(nonatomic)NSMutableArray *customerServiceObservers;
 @property(nonatomic)NSMutableArray *voipObservers;
@@ -38,7 +37,7 @@
 @property(nonatomic)NSMutableDictionary *roomMessages;
 @property(nonatomic)NSMutableDictionary *customerServiceMessages;
 
-
+@property(nonatomic)NSMutableDictionary *groupSyncKeys;
 @end
 
 @implementation IMService
@@ -59,7 +58,6 @@
         self.peerObservers = [NSMutableArray array];
         self.groupObservers = [NSMutableArray array];
         self.roomObservers = [NSMutableArray array];
-        self.loginPointObservers = [NSMutableArray array];
         self.systemObservers = [NSMutableArray array];
         self.customerServiceObservers = [NSMutableArray array];
         self.voipObservers = [NSMutableArray array];
@@ -70,7 +68,8 @@
         self.groupMessages = [NSMutableDictionary dictionary];
         self.roomMessages = [NSMutableDictionary dictionary];
         self.customerServiceMessages = [NSMutableDictionary dictionary];
-
+        self.groupSyncKeys = [NSMutableDictionary dictionary];
+        
         self.host = HOST;
         self.port = PORT;
         self.heartbeatHZ = HEARTBEAT_HZ;
@@ -233,10 +232,6 @@
     [self sendMessage:ack];
 }
 
--(void)handleLoginPoint:(Message*)msg {
-    [self publishLoginPoint:(LoginPoint*)msg.body];
-}
-
 -(void)handleRoomMessage:(Message*)msg {
     RoomMessage *rm = (RoomMessage*)msg.body;
     [self publishRoomMessage:rm];
@@ -252,6 +247,57 @@
     [self sendMessage:ack];
 }
 
+-(void)handleSyncBegin:(Message*)msg {
+    NSLog(@"sync begin...:%@", msg.body);
+}
+
+-(void)handleSyncEnd:(Message*)msg {
+    NSLog(@"sync end...:%@", msg.body);
+    
+    NSNumber *newSyncKey = (NSNumber*)msg.body;
+    if ([newSyncKey longLongValue] > self.syncKey) {
+        self.syncKey = [newSyncKey longLongValue];
+        [self.syncKeyHandler saveSyncKey:self.syncKey];
+    }
+}
+
+-(void)handleSyncNotify:(Message*)msg {
+    NSLog(@"sync notify:%@", msg.body);
+    NSNumber *newSyncKey = (NSNumber*)msg.body;
+    
+    if ([newSyncKey longLongValue] > self.syncKey) {
+        [self sendSync:self.syncKey];
+    }
+}
+
+-(void)handleSyncGroupBegin:(Message*)msg {
+    GroupSyncKey *groupSyncKey = (GroupSyncKey*)msg.body;
+    NSLog(@"sync group begin:%lld %lld", groupSyncKey.groupID, groupSyncKey.syncKey);
+}
+
+-(void)handleSyncGroupEnd:(Message*)msg {
+    GroupSyncKey *groupSyncKey = (GroupSyncKey*)msg.body;
+    NSLog(@"sync group end:%lld %lld", groupSyncKey.groupID, groupSyncKey.syncKey);
+    
+    NSNumber *originSyncKey = [self.groupSyncKeys objectForKey:[NSNumber numberWithLongLong:groupSyncKey.groupID]];
+    
+    if (groupSyncKey.syncKey > [originSyncKey longLongValue]) {
+        [self.groupSyncKeys setObject:[NSNumber numberWithLongLong:groupSyncKey.syncKey] forKey:[NSNumber numberWithLongLong:groupSyncKey.groupID]];
+        [self.syncKeyHandler saveGroupSyncKey:groupSyncKey.syncKey gid:groupSyncKey.groupID];
+    }
+    
+}
+
+-(void)handleSyncGroupNotify:(Message*)msg {
+    GroupSyncKey *groupSyncKey = (GroupSyncKey*)msg.body;
+    NSLog(@"sync group notify:%lld %lld", groupSyncKey.groupID, groupSyncKey.syncKey);
+    
+    NSNumber *originSyncKey = [self.groupSyncKeys objectForKey:[NSNumber numberWithLongLong:groupSyncKey.groupID]];
+    
+    if (groupSyncKey.syncKey > [originSyncKey longLongValue]) {
+        [self sendGroupSyncKey:[originSyncKey longLongValue] gid:groupSyncKey.groupID];
+    }
+}
 
 -(void)handleVOIPControl:(Message*)msg {
     VOIPControl *ctl = (VOIPControl*)msg.body;
@@ -333,14 +379,6 @@
     }
 }
 
--(void)publishLoginPoint:(LoginPoint*)lp {
-    for (id<LoginPointObserver> ob in self.loginPointObservers) {
-        if ([ob respondsToSelector:@selector(onLoginPoint:)]) {
-            [ob onLoginPoint:lp];
-        }
-    }
-}
-
 -(void)publishSystemMessage:(NSString*)sys {
     for (id<SystemMessageObserver> ob in self.systemObservers) {
         if ([ob respondsToSelector:@selector(onSystemMessage:)]) {
@@ -397,8 +435,6 @@
         [self handlePong:msg];
     } else if (msg.cmd == MSG_GROUP_NOTIFICATION) {
         [self handleGroupNotification:msg];
-    } else if (msg.cmd == MSG_LOGIN_POINT) {
-        [self handleLoginPoint:msg];
     } else if (msg.cmd == MSG_ROOM_IM) {
         [self handleRoomMessage:msg];
     } else if (msg.cmd == MSG_SYSTEM) {
@@ -411,6 +447,18 @@
         [self handleVOIPControl:msg];
     } else if (msg.cmd == MSG_RT) {
         [self handleRTMessage:msg];
+    } else if (msg.cmd == MSG_SYNC_NOTIFY) {
+        [self handleSyncNotify:msg];
+    } else if (msg.cmd == MSG_SYNC_BEGIN) {
+        [self handleSyncBegin:msg];
+    } else if (msg.cmd == MSG_SYNC_END) {
+        [self handleSyncEnd:msg];
+    } else if (msg.cmd == MSG_SYNC_GROUP_NOTIFY) {
+        [self handleSyncGroupNotify:msg];
+    } else if (msg.cmd == MSG_SYNC_GROUP_BEGIN) {
+        [self handleSyncGroupBegin:msg];
+    } else if (msg.cmd == MSG_SYNC_GROUP_END) {
+        [self handleSyncGroupEnd:msg];
     } else {
         NSLog(@"cmd:%d no handler", msg.cmd);
     }
@@ -458,14 +506,6 @@
     [self.groupObservers removeObject:ob];
 }
 
-
--(void)addLoginPointObserver:(id<LoginPointObserver>)ob {
-    [self.loginPointObservers addObject:ob];
-}
--(void)removeLoginPointObserver:(id<LoginPointObserver>)ob {
-    [self.loginPointObservers removeObject:ob];
-}
-
 -(void)addRoomMessageObserver:(id<RoomMessageObserver>)ob {
     [self.roomObservers addObject:ob];
 }
@@ -511,6 +551,22 @@
     if (top == ob) {
         [self.voipObservers removeObject:top];
     }
+}
+
+-(void)removeSuperGroupSyncKey:(int64_t)gid {
+    NSNumber *k = [NSNumber numberWithLongLong:gid];
+    [self.groupSyncKeys removeObjectForKey:k];
+}
+
+-(void)addSuperGroupSyncKey:(int64_t)syncKey gid:(int64_t)gid {
+    NSNumber *k = [NSNumber numberWithLongLong:gid];
+    NSNumber *v = [NSNumber numberWithLongLong:syncKey];
+    
+    [self.groupSyncKeys setObject:v forKey:k];
+}
+
+-(void)clearSuperGroupSyncKey {
+    [self.groupSyncKeys removeAllObjects];
 }
 
 -(BOOL)sendVOIPControl:(VOIPControl*)ctl {
@@ -669,6 +725,31 @@
     if (self.roomID > 0) {
         [self sendEnterRoom:self.roomID];
     }
+    
+    //send sync
+    [self sendSync:self.syncKey];
+    
+    for (NSNumber *k in self.groupSyncKeys) {
+        NSNumber *v = [self.groupSyncKeys objectForKey:k];
+        [self sendGroupSyncKey:[v longLongValue] gid:[k longLongValue]];
+    }
+}
+
+-(void)sendSync:(int64_t)syncKey {
+    Message *msg = [[Message alloc] init];
+    msg.cmd = MSG_SYNC;
+    msg.body = [NSNumber numberWithLongLong:syncKey];
+    [self sendMessage:msg];
+}
+
+-(void)sendGroupSyncKey:(int64_t)syncKey gid:(int64_t)gid {
+    Message *msg = [[Message alloc] init];
+    msg.cmd = MSG_SYNC_GROUP;
+    GroupSyncKey *s = [[GroupSyncKey alloc] init];
+    s.groupID = gid;
+    s.syncKey = syncKey;
+    msg.body = s;
+    [self sendMessage:msg];
 }
 
 -(void)onClose {
