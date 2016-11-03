@@ -22,6 +22,7 @@
 #import "CustomerConversation.h"
 #import <gobelieve/IMHttpAPI.h>
 #import <gobelieve/IMService.h>
+#import <gobelieve/SyncKeyHandler.h>
 
 #import "AppDelegate.h"
 #import "Token.h"
@@ -65,6 +66,13 @@
     [IMHttpAPI instance].accessToken = token.accessToken;
     [IMService instance].uid = profile.uid;
     [IMService instance].token = token.accessToken;
+    
+    NSString *fileName = [NSString stringWithFormat:@"%@/%lld/synckey", path, profile.uid];
+    SyncKeyHandler *handler = [[SyncKeyHandler alloc] initWithFileName:fileName];
+    [IMService instance].syncKeyHandler = handler;
+    
+    [IMService instance].syncKey = [handler syncKey];
+    NSLog(@"sync key:%lld", [handler syncKey]);
     
     [[IMService instance] start];
     
