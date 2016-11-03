@@ -34,16 +34,13 @@
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"对话"
                                                              style:UIBarButtonItemStyleDone
                                                             target:self
-                                                            action:@selector(returnMainTableViewController)];
+                                                            action:@selector(onBack)];
     
     self.navigationItem.leftBarButtonItem = item;
-
-    
     
     if (self.peerName.length > 0) {
         self.navigationItem.title = self.peerName;
     }
-
     
     [self addObserver];
     
@@ -81,7 +78,7 @@
     return self.storeID == cm.storeID;
 }
 
-- (void)returnMainTableViewController {
+- (void)onBack {
     [self removeObserver];
     [self stopPlayer];
     
@@ -131,10 +128,6 @@
         }
         msg = (ICustomerMessage*)[iterator next];
     }
-
-    //依旧发给上一次客服人员
-    ICustomerMessage *cm = [self.messages lastObject];
-    self.sellerID = cm.sellerID;
 
     [self downloadMessageContent:self.messages count:count];
     [self checkMessageFailureFlag:self.messages count:count];
@@ -283,8 +276,6 @@
     m.timestamp = im.timestamp;
     m.isSupport = YES;
     m.isOutgoing = NO;
-    
-    self.sellerID = im.sellerID;
     
     if (self.textMode && m.type != MESSAGE_TEXT) {
         return;
@@ -506,7 +497,6 @@
         return;
     }
     
-    
     ICustomerMessage *msg = [[ICustomerMessage alloc] init];
     msg.customerAppID = self.appID;
     msg.customerID = self.currentUID;
@@ -516,20 +506,20 @@
     msg.sender = self.sender;
     msg.receiver = self.receiver;
     
-    MessageImageContent *content = [[MessageImageContent alloc] initWithImageURL:[self localImageURL]];
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenHeight = screenRect.size.height;
+    
+    float newHeight = screenHeight;
+    float newWidth = newHeight*image.size.width/image.size.height;
+    
+    MessageImageContent *content = [[MessageImageContent alloc] initWithImageURL:[self localImageURL] width:newWidth height:newHeight];
     msg.rawContent = content.raw;
     msg.timestamp = (int)time(NULL);
     msg.isSupport = NO;
     msg.isOutgoing = YES;
     
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    CGFloat screenHeight = screenRect.size.height;
-    
-    float newHeigth = screenHeight;
-    float newWidth = newHeigth*image.size.width/image.size.height;
-    
     UIImage *sizeImage = [image resizedImage:CGSizeMake(128, 128) interpolationQuality:kCGInterpolationDefault];
-    image = [image resizedImage:CGSizeMake(newWidth, newHeigth) interpolationQuality:kCGInterpolationDefault];
+    image = [image resizedImage:CGSizeMake(newWidth, newHeight) interpolationQuality:kCGInterpolationDefault];
     
     [[SDImageCache sharedImageCache] storeImage:image forKey:content.imageURL];
     NSString *littleUrl =  [content littleImageURL];

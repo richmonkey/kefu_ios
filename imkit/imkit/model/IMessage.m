@@ -20,15 +20,20 @@
  {
     "text":"文本",
     "image":"image url",
+    "image2": {
+        "url":"image url",
+        "width":"宽度(整数)",
+        "height":"高度(整数)"
+    }
     "audio": {
         "url":"audio url",
-        "duration":"时长(整形)"
+        "duration":"时长(整数)"
     }
     "location":{
         "latitude":"纬度(浮点数)",
         "latitude":"经度(浮点数)"
     }
-    "notification":"通知内容"
+    "notification":"群组通知内容"
     "link":{
         "image":"图片url",
         "url":"跳转url",
@@ -38,7 +43,7 @@
 }*/
 
 @interface MessageContent()
-@property(nonatomic) int type;
+
 @end
 
 @implementation MessageContent
@@ -57,32 +62,15 @@
     if (utf8 == nil) return;
     NSData *data = [NSData dataWithBytes:utf8 length:strlen(utf8)];
     self.dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-    
-    if ([self.dict objectForKey:@"text"] != nil) {
-        self.type = MESSAGE_TEXT;
-    } else if ([self.dict objectForKey:@"image"] != nil) {
-        self.type = MESSAGE_IMAGE;
-    } else if ([self.dict objectForKey:@"audio"] != nil) {
-        self.type = MESSAGE_AUDIO;
-    } else if ([self.dict objectForKey:@"location"] != nil) {
-        self.type = MESSAGE_LOCATION;
-    } else if ([self.dict objectForKey:@"notification"] != nil) {
-        self.type = MESSAGE_GROUP_NOTIFICATION;
-    } else if ([self.dict objectForKey:@"link"] != nil) {
-        self.type = MESSAGE_LINK;
-    } else if ([self.dict objectForKey:@"attachment"] != nil) {
-        self.type = MESSAGE_ATTACHMENT;
-    } else if ([self.dict objectForKey:@"timestamp"] != nil) {
-        self.type = MESSAGE_TIME_BASE;
-    } else {
-        self.type = MESSAGE_UNKNOWN;
-    }
 }
 
 -(NSString*)raw {
     return self._raw;
 }
 
+-(NSString*)uuid {
+    return [self.dict objectForKey:@"uuid"];
+}
 @end
 
 
@@ -91,7 +79,8 @@
 -(id)initWithText:(NSString*)text {
     self = [super init];
     if (self) {
-        NSDictionary *dic = @{@"text":text};
+        NSString *uuid = [[NSUUID UUID] UUIDString];
+        NSDictionary *dic = @{@"text":text, @"uuid":uuid};
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
         NSString* newStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         self.raw =  newStr;
@@ -107,12 +96,23 @@
 
 
 @implementation MessageAudioContent
+- (id)initWithAudio:(NSString*)url duration:(int)duration uuid:(NSString*)uuid {
+    self = [super init];
+    if (self) {
+        NSNumber *d = [NSNumber numberWithInteger:duration];
+        NSDictionary *dic = @{@"audio":@{@"url":url, @"duration":d}, @"uuid":uuid};
+        NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
+        self.raw =  newStr;
+    }
+    return self;
+}
 
 - (id)initWithAudio:(NSString*)url duration:(int)duration {
     self = [super init];
     if (self) {
+        NSString *uuid = [[NSUUID UUID] UUIDString];
         NSNumber *d = [NSNumber numberWithInteger:duration];
-        NSDictionary *dic = @{@"audio":@{@"url":url, @"duration":d}};
+        NSDictionary *dic = @{@"audio":@{@"url":url, @"duration":d}, @"uuid":uuid};
         NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
         self.raw =  newStr;
     }
@@ -127,28 +127,66 @@
     return [[[self.dict objectForKey:@"audio"] objectForKey:@"duration"] intValue];
 }
 
+-(MessageAudioContent*)cloneWithURL:(NSString*)url {
+    MessageAudioContent *newContent = [[MessageAudioContent alloc] initWithAudio:url duration:self.duration uuid:self.uuid];
+    return newContent;
+}
+
 @end
 
 
 @implementation MessageImageContent
-- (id)initWithImageURL:(NSString*)imageURL {
+- (id)initWithImageURL:(NSString *)imageURL width:(int)width height:(int)height uuid:(NSString*)uuid {
     self = [super init];
     if (self) {
-        NSDictionary *dic = @{@"image":imageURL};
+        NSDictionary *image = @{@"url":imageURL,
+                                @"width":[NSNumber numberWithInt:width],
+                                @"height":[NSNumber numberWithInt:height]};
+        
+        //保留key:image是为了兼容性
+        NSDictionary *dic = @{@"image2":image,
+                              @"image":imageURL,
+                              @"uuid":uuid};
         NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
         self.raw = newStr;
     }
     return self;
 }
-
+- (id)initWithImageURL:(NSString *)imageURL width:(int)width height:(int)height {
+    self = [super init];
+    if (self) {
+        NSString *uuid = [[NSUUID UUID] UUIDString];
+        NSDictionary *image = @{@"url":imageURL,
+                                @"width":[NSNumber numberWithInt:width],
+                                @"height":[NSNumber numberWithInt:height]};
+        
+        //保留key:image是为了兼容性
+        NSDictionary *dic = @{@"image2":image,
+                              @"image":imageURL,
+                              @"uuid":uuid};
+        NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
+        self.raw = newStr;
+    }
+    return self;
+}
 -(NSString*)imageURL {
-    return[self.dict objectForKey:@"image"];
+    NSString *url = [self.dict objectForKey:@"image"];
+    if (url != nil) {
+        return url;
+    }
+    
+    NSDictionary *image = [self.dict objectForKey:@"image2"];
+    return [image objectForKey:@"url"];
 }
 
 -(NSString*) littleImageURL{
-    NSAssert(self.type==MESSAGE_IMAGE, @"littleImageURL:类型错误");
     NSString *littleUrl = [NSString stringWithFormat:@"%@@128w_128h_0c", [self imageURL]];
     return littleUrl;
+}
+
+-(MessageImageContent*)cloneWithURL:(NSString*)url {
+    MessageImageContent *newContent = [[MessageImageContent alloc] initWithImageURL:url width:self.width height:self.height uuid:self.uuid];
+    return newContent;
 }
 
 @end
@@ -159,9 +197,10 @@
 - (id)initWithLocation:(CLLocationCoordinate2D)location {
     self = [super init];
     if (self) {
+        NSString *uuid = [[NSUUID UUID] UUIDString];
         NSDictionary *loc = @{@"latitude":[NSNumber numberWithDouble:location.latitude],
                               @"longitude":[NSNumber numberWithDouble:location.longitude]};
-        NSDictionary *dic = @{@"location":loc};
+        NSDictionary *dic = @{@"location":loc, @"uuid":uuid};
         NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
         self.raw =  newStr;
     }
@@ -207,6 +246,10 @@
 @end
 
 @implementation MessageNotificationContent
+
+@end
+
+@implementation MessageGroupNotificationContent
 
 - (id)initWithRaw:(NSString *)raw {
     self = [super initWithRaw:raw];
@@ -358,7 +401,8 @@
     if ([dict objectForKey:@"text"] != nil) {
         self.type = MESSAGE_TEXT;
         content = [[MessageTextContent alloc] initWithRaw:rawContent];
-    } else if ([dict objectForKey:@"image"] != nil) {
+    } else if ([dict objectForKey:@"image"] != nil ||
+               [dict objectForKey:@"image2"] != nil) {
         self.type = MESSAGE_IMAGE;
         content = [[MessageImageContent alloc] initWithRaw:rawContent];
     } else if ([dict objectForKey:@"audio"] != nil) {
@@ -369,7 +413,7 @@
         content = [[MessageLocationContent alloc] initWithRaw:rawContent];
     } else if ([dict objectForKey:@"notification"] != nil) {
         self.type = MESSAGE_GROUP_NOTIFICATION;
-        content = [[MessageNotificationContent alloc] initWithRaw:rawContent];
+        content = [[MessageGroupNotificationContent alloc] initWithRaw:rawContent];
     } else if ([dict objectForKey:@"link"]) {
         self.type = MESSAGE_LINK;
         content = [[MessageLinkContent alloc] initWithRaw:rawContent];
@@ -379,6 +423,9 @@
     } else if ([dict objectForKey:@"timestamp"] != nil) {
         self.type = MESSAGE_TIME_BASE;
         content = [[MessageTimeBaseContent alloc] initWithRaw:rawContent];
+    } else if ([dict objectForKey:@"headline"] != nil) {
+        self.type = MESSAGE_HEADLINE;
+        content = [[MessageHeadlineContent alloc] initWithRaw:rawContent];
     } else {
         self.type = MESSAGE_UNKNOWN;
     }
@@ -387,61 +434,85 @@
 }
 
 -(MessageTextContent*)textContent {
-    if (self.content.type == MESSAGE_TEXT) {
+    if (self.type == MESSAGE_TEXT) {
         return (MessageTextContent*)self.content;
     }
     return nil;
 }
 
 -(MessageImageContent*)imageContent {
-    if (self.content.type == MESSAGE_IMAGE) {
+    if (self.type == MESSAGE_IMAGE) {
         return (MessageImageContent*)self.content;
     }
     return nil;
 }
 
 -(MessageAudioContent*)audioContent {
-    if (self.content.type == MESSAGE_AUDIO) {
+    if (self.type == MESSAGE_AUDIO) {
         return (MessageAudioContent*)self.content;
     }
     return nil;
 }
 
 -(MessageLocationContent*)locationContent {
-    if (self.content.type == MESSAGE_LOCATION) {
+    if (self.type == MESSAGE_LOCATION) {
         return (MessageLocationContent*)self.content;
     }
     return nil;
 }
 
 -(MessageNotificationContent*)notificationContent {
-    if (self.content.type == MESSAGE_GROUP_NOTIFICATION) {
-        return (MessageNotificationContent*)self.content;
+    if (self.type == MESSAGE_GROUP_NOTIFICATION) {
+        return (MessageGroupNotificationContent*)self.content;
+    } else if (self.type == MESSAGE_TIME_BASE) {
+        return (MessageTimeBaseContent*)self.content;
+    } else if (self.type == MESSAGE_HEADLINE) {
+        return (MessageHeadlineContent*)self.content;
     }
     return nil;
 }
 
 -(MessageLinkContent*)linkContent {
-    if (self.content.type == MESSAGE_LINK) {
+    if (self.type == MESSAGE_LINK) {
         return (MessageLinkContent*)self.content;
     }
     return nil;
 }
 
 -(MessageAttachmentContent*)attachmentContent {
-    if (self.content.type == MESSAGE_ATTACHMENT) {
+    if (self.type == MESSAGE_ATTACHMENT) {
         return (MessageAttachmentContent*)self.content;
     }
     return nil;
 }
 
 -(MessageTimeBaseContent*)timeBaseContent {
-    if (self.content.type == MESSAGE_TIME_BASE) {
+    if (self.type == MESSAGE_TIME_BASE) {
         return (MessageTimeBaseContent*)self.content;
     }
     return nil;
 }
 
+@end
+
+@implementation MessageHeadlineContent
+-(id)initWithHeadline:(NSString*)headline {
+    self = [super init];
+    if (self) {
+        NSDictionary *dic = @{@"headline":headline};
+        NSString* newStr = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:dic options:0 error:nil] encoding:NSUTF8StringEncoding];
+        self.raw =  newStr;
+    }
+    return self;
+}
+
+-(NSString*)notificationDesc {
+    return [self headline];
+}
+
+-(NSString*)headline {
+    return [self.dict objectForKey:@"headline"];
+}
 @end
 
 @implementation ICustomerMessage
