@@ -142,7 +142,7 @@
     f = CGRectMake(insets*4 + CHAT_BUTTON_SIZE*3, 10 + CHAT_BUTTON_SIZE + 4, CHAT_BUTTON_SIZE, 24);
     label = [[UILabel alloc] initWithFrame:f];
     label.textAlignment = NSTextAlignmentCenter;
-    label.text = NSLocalizedString(@"message.robot", @"robot");
+    label.text = NSLocalizedString(@"message.robot", @"question");
     [_scrollview addSubview:label];
     
     

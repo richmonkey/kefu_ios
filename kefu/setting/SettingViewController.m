@@ -22,6 +22,7 @@
 #import <AFNetWorking.h>
 #import "Profile.h"
 #import "API.h"
+#import "UIAlertView+XPAlertView.h"
 
 @interface SettingViewController () <UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic) int64_t number;

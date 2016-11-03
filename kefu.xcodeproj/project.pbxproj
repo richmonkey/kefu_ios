@@ -13,7 +13,6 @@
 		4803C80E1CC3B323007550E6 /* LoginViewOneCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4803C7FB1CC3B323007550E6 /* LoginViewOneCell.xib */; };
 		4803C8111CC3B323007550E6 /* LoginViewTwoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4803C8001CC3B323007550E6 /* LoginViewTwoCell.m */; };
 		4803C8121CC3B323007550E6 /* LoginViewTwoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4803C8011CC3B323007550E6 /* LoginViewTwoCell.xib */; };
-		487D48B01CC3D9EE005DE19D /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 487D48AF1CC3D9EE005DE19D /* BaseViewController.m */; };
 		487D48C31CC3E350005DE19D /* QuitTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 487D48BE1CC3E350005DE19D /* QuitTableViewCell.m */; };
 		487D48C41CC3E350005DE19D /* QuitTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 487D48BF1CC3E350005DE19D /* QuitTableViewCell.xib */; };
 		487D48C51CC3E350005DE19D /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 487D48C11CC3E350005DE19D /* SettingViewController.m */; };
@@ -60,8 +59,6 @@
 		4803C7FF1CC3B323007550E6 /* LoginViewTwoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewTwoCell.h; sourceTree = "<group>"; };
 		4803C8001CC3B323007550E6 /* LoginViewTwoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewTwoCell.m; sourceTree = "<group>"; };
 		4803C8011CC3B323007550E6 /* LoginViewTwoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewTwoCell.xib; sourceTree = "<group>"; };
-		487D48AE1CC3D9EE005DE19D /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
-		487D48AF1CC3D9EE005DE19D /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		487D48BD1CC3E350005DE19D /* QuitTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuitTableViewCell.h; sourceTree = "<group>"; };
 		487D48BE1CC3E350005DE19D /* QuitTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuitTableViewCell.m; sourceTree = "<group>"; };
 		487D48BF1CC3E350005DE19D /* QuitTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QuitTableViewCell.xib; sourceTree = "<group>"; };
@@ -210,8 +207,6 @@
 				487D48CD1CC3EAD4005DE19D /* UIAlertView+XPAlertView.m */,
 				6D12EC671CB517650003A03B /* AppDelegate.h */,
 				6D12EC681CB517650003A03B /* AppDelegate.m */,
-				487D48AE1CC3D9EE005DE19D /* BaseViewController.h */,
-				487D48AF1CC3D9EE005DE19D /* BaseViewController.m */,
 				6D12EC931CB606390003A03B /* MessageConversationCell.h */,
 				6D12EC941CB606390003A03B /* MessageConversationCell.m */,
 				6D12EC951CB606390003A03B /* MessageConversationCell.xib */,
@@ -423,7 +418,6 @@
 				6D76AFC21D0FC19100C9E89A /* ResolveUtil.m in Sources */,
 				6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */,
 				6D2521A71CC1DF27004C6FBE /* CustomerSupportMessageHandler.m in Sources */,
-				487D48B01CC3D9EE005DE19D /* BaseViewController.m in Sources */,
 				6D12EC691CB517650003A03B /* AppDelegate.m in Sources */,
 				6DBB2CCA1DBDBCC800BC545A /* XWMessageViewController.m in Sources */,
 				4803C8111CC3B323007550E6 /* LoginViewTwoCell.m in Sources */,

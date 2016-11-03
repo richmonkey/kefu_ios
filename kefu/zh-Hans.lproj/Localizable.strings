@@ -18,7 +18,7 @@
 //message
 "message.photo" = "照片";
 "message.camera" = "拍照";
-"message.robot" = "智能";
+"message.robot" = "问题库";
 
 "message.image" = "图片";
 "message.location" = "位置";

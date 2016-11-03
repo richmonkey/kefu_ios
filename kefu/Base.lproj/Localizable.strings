@@ -18,7 +18,7 @@
 //message
 "message.photo" = "photo";
 "message.camera" = "camera";
-"message.robot" = "robot";
+"message.robot" = "question";
 
 "message.image" = "image";
 "message.location" = "location";

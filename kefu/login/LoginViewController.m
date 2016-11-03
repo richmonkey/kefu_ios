@@ -19,6 +19,8 @@
 #import "Token.h"
 #import "Profile.h"
 #import "API.h"
+#import "UIView+Toast.h"
+#import "UIAlertView+XPAlertView.h"
 
 #define kFirstCellOffset    20
 #define kSecondMax      60
@@ -197,6 +199,20 @@
     NSString *password = self.loginPasswordTextField.text;
     [self login:userName password:password];
     
+}
+
+
+- (UIView*)findFirstResponderBeneathView:(UIView*)view{
+    
+    // Search recursively for first responder
+    for ( UIView *childView in view.subviews ) {
+        if ( [childView respondsToSelector:@selector(isFirstResponder)] && [childView isFirstResponder] )
+            return childView;
+        UIView *result = [self findFirstResponderBeneathView:childView];
+        if ( result )
+            return result;
+    }
+    return nil;
 }
 
 

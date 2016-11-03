@@ -29,8 +29,9 @@ alpha:(a)]
 @implementation Question
 @end
 
-@interface RobotViewController ()
+@interface RobotViewController ()<UISearchBarDelegate>
 @property(nonatomic) NSArray *questions;
+@property(nonatomic, strong) UISearchController *searchController;
 @end
 
 @implementation RobotViewController
@@ -43,29 +44,19 @@ alpha:(a)]
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = RGBACOLOR(235, 235, 237, 1);
     self.tableView.separatorColor = RGBCOLOR(208, 208, 208);
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    //self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
-    int imageSize = 30; //REPLACE WITH YOUR IMAGE WIDTH
-    
-    UIImage *barBackBtnImg = [[UIImage imageNamed:@"back"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, imageSize, 0, 0)];
-    UIBarButtonItem *barButtonItemLeft=[[UIBarButtonItem alloc] initWithImage:barBackBtnImg
-                                                                        style:UIBarButtonItemStylePlain
-                                                                       target:self
-                                                                       action:@selector(back)];
-    [self.navigationItem setLeftBarButtonItem:barButtonItemLeft];
-    
     self.navigationItem.title = @"相似问题";
     
-    NSLog(@"q:%@", self.question);
-    [self askRobotWithQuestion:self.question];
-}
-
-- (void)back {
-    [self.navigationController popViewControllerAnimated:YES];
+    UISearchController *searchCtrl = [[UISearchController alloc] initWithSearchResultsController:nil];
+    searchCtrl.searchBar.delegate = self;
+    
+    self.searchController = searchCtrl;
+    self.tableView.tableHeaderView = searchCtrl.searchBar;
+    
+    if (self.question.length > 0) {
+        searchCtrl.searchBar.text = self.question;
+        [self askRobotWithQuestion:self.question];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -73,6 +64,12 @@ alpha:(a)]
     // Dispose of any resources that can be recreated.
 }
 
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    NSLog(@"search...:%@", searchBar.text);
+    if (searchBar.text.length > 0) {
+        [self askRobotWithQuestion:searchBar.text];
+    }
+}
 - (void)askRobotWithQuestion:(NSString*)question {
     AFHTTPSessionManager *manager = [API newSessionManager];
     
@@ -171,9 +168,6 @@ alpha:(a)]
     if (tmp) {
         [tmp setFrame:CGRectMake(8, cell.bounds.size.height - 1 , cell.bounds.size.width - 16, 1)];
     }
-    
-
-    
     
     Question *q = [self.questions objectAtIndex:indexPath.row];
     [cell.textLabel setText:q.question];

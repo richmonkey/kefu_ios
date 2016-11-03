@@ -581,8 +581,6 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
         return;
     }
 
-    Token *t = [Token instance];
-
     Profile *profile = [Profile instance];
 #if TARGET_IPHONE_SIMULATOR
     NSString *deviceID = @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61";

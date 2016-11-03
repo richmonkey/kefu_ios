@@ -33,25 +33,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-    
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"对话"
-                                                             style:UIBarButtonItemStyleDone
-                                                            target:self
-                                                            action:@selector(returnMainTableViewController)];
-    
-    self.navigationItem.leftBarButtonItem = item;
-    
-    
-    
-    if (self.peerName.length > 0) {
-        self.navigationItem.title = self.peerName;
-    }
-    
-    
+    self.navigationItem.title = self.peerName;
     [self addObserver];
-    
 }
 
 -(void)addObserver {
@@ -97,9 +80,15 @@
                                                                userInfo:dict];
     
     [[NSNotificationCenter defaultCenter] postNotification:notification];
-    
-    [self.navigationController popViewControllerAnimated:YES];
 }
+
+-(void) viewWillDisappear:(BOOL)animated {
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+        [self returnMainTableViewController];
+    }
+    [super viewWillDisappear:animated];
+}
+
 
 
 //同IM服务器连接的状态变更通知

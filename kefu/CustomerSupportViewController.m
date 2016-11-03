@@ -37,12 +37,12 @@
     
     int imageSize = 30; //REPLACE WITH YOUR IMAGE WIDTH
     
-    UIImage *barBackBtnImg = [[UIImage imageNamed:@"back"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, imageSize, 0, 0)];
-    UIBarButtonItem *barButtonItemLeft=[[UIBarButtonItem alloc] initWithImage:barBackBtnImg
-                                                                        style:UIBarButtonItemStylePlain
-                                                                       target:self
-                                                                       action:@selector(returnMainTableViewController)];
-    [self.navigationItem setLeftBarButtonItem:barButtonItemLeft];
+//    UIImage *barBackBtnImg = [[UIImage imageNamed:@"back"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, imageSize, 0, 0)];
+//    UIBarButtonItem *barButtonItemLeft=[[UIBarButtonItem alloc] initWithImage:barBackBtnImg
+//                                                                        style:UIBarButtonItemStylePlain
+//                                                                       target:self
+//                                                                       action:@selector(returnMainTableViewController)];
+//    [self.navigationItem setLeftBarButtonItem:barButtonItemLeft];
 
     
     if (self.customerName.length > 0) {
@@ -99,8 +99,14 @@
                                                                  object:nil
                                                                userInfo:obj];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
-    
-    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+-(void) viewWillDisappear:(BOOL)animated {
+    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
+        [self returnMainTableViewController];
+    }
+    [super viewWillDisappear:animated];
 }
 
 
@@ -614,16 +620,15 @@
     NSLog(@"robot action...");
     RobotViewController *ctrl = [[RobotViewController alloc] init];
     ctrl.delegate = self;
-    
-    int index = (int)self.messages.count - 1;
-    for (; index >= 0; index--) {
-        IMessage *m = [self.messages objectAtIndex:index];
-        if (m.isIncomming && m.type == MESSAGE_TEXT) {
-            ctrl.question = m.textContent.text;
-            break;
-        }
-    }
+    [self.navigationController pushViewController:ctrl animated:YES];
+}
 
+
+- (void)search:(NSString*)text {
+    NSLog(@"robot action...");
+    RobotViewController *ctrl = [[RobotViewController alloc] init];
+    ctrl.question = text;
+    ctrl.delegate = self;
     [self.navigationController pushViewController:ctrl animated:YES];
 }
 
@@ -632,5 +637,6 @@
     NSLog(@"send robot answer...");
     [self sendTextMessage:answer];
 }
+
 
 @end

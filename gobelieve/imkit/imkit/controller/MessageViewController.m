@@ -762,6 +762,21 @@
     [self resignFirstResponder];
 }
 
+- (void)searchText:(id)sender {
+    if (self.selectedMessage.type != MESSAGE_TEXT) {
+        return;
+    }
+    NSLog(@"copy...");
+    
+    MessageTextContent *content = self.selectedMessage.textContent;
+    [self search:content.text];
+    [self resignFirstResponder];
+}
+
+- (void)search:(NSString*)text {
+    
+}
+
 - (BOOL)canBecomeFirstResponder {
     return YES;
 }
@@ -788,6 +803,9 @@
 
     if (message.type == MESSAGE_TEXT) {
         UIMenuItem *item = [[UIMenuItem alloc] initWithTitle:@"拷贝" action:@selector(copyText:)];
+        [menuItems addObject:item];
+        
+        item = [[UIMenuItem alloc] initWithTitle:@"搜索" action:@selector(searchText:)];
         [menuItems addObject:item];
     }
     if (message.isFailure) {
