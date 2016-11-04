@@ -33,22 +33,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    
-    int imageSize = 30; //REPLACE WITH YOUR IMAGE WIDTH
-    
-//    UIImage *barBackBtnImg = [[UIImage imageNamed:@"back"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, imageSize, 0, 0)];
-//    UIBarButtonItem *barButtonItemLeft=[[UIBarButtonItem alloc] initWithImage:barBackBtnImg
-//                                                                        style:UIBarButtonItemStylePlain
-//                                                                       target:self
-//                                                                       action:@selector(returnMainTableViewController)];
-//    [self.navigationItem setLeftBarButtonItem:barButtonItemLeft];
-
-    
-    if (self.customerName.length > 0) {
-        self.navigationItem.title = self.customerName;
-    }
-    
+    self.navigationItem.title = self.customerName;
     [self addObserver];
     
 }

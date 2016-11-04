@@ -157,7 +157,8 @@
         //帮助与反馈
         XWMessageViewController *ctrl = [[XWMessageViewController alloc] init];
         ctrl.currentUID = [Profile instance].uid;
-        ctrl.storeID = STORE_ID;
+        ctrl.storeID = XIAOWEI_STORE_ID;
+        ctrl.sellerID = XIAOWEI_SELLER_ID;
         ctrl.peerName = @"小微客服";
         ctrl.appID = APPID;
         

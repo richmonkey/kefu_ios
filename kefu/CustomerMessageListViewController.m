@@ -355,7 +355,8 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
             XWMessageViewController *msgController = [[XWMessageViewController alloc] init];
             msgController.peerName = @"小微客服";
             msgController.currentUID = self.currentUID;
-            msgController.storeID = STORE_ID;
+            msgController.storeID = XIAOWEI_STORE_ID;
+            msgController.sellerID = XIAOWEI_SELLER_ID;
             msgController.appID = APPID;
             msgController.isShowUserName = NO;
             msgController.hidesBottomBarWhenPushed = YES;

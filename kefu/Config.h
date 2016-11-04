@@ -16,6 +16,8 @@
 #define KEFU_API @"http://api.kefu.gobelieve.io"
 #define REGISTER_URL @"http://xiaowei.io"
 //小微客服本身对应的咨询台
-#define STORE_ID 110
+#define XIAOWEI_STORE_ID 110
+
+#define XIAOWEI_SELLER_ID 100088
 
 #endif /* Config_h */
