@@ -16,6 +16,7 @@
 
 #import <gobelieve/EaseChatToolbar.h>
 #import "RobotViewController.h"
+#import "Profile.h"
 
 #define PAGE_COUNT 10
 
@@ -51,6 +52,33 @@
     [[IMService instance] removeConnectionObserver:self];
     [[IMService instance] removeCustomerMessageObserver:self];
 }
+
+- (void)loadSenderInfo:(IMessage*)msg {
+    ICustomerMessage *cm = (ICustomerMessage*)msg;
+    if (cm.isSupport) {
+        Profile *profile = [Profile instance];
+        
+        IUser *u = [[IUser alloc] init];
+        u.name = profile.name;
+        u.avatarURL = profile.avatar;
+        
+        msg.senderInfo = u;
+    } else {
+        IUser *u = [[IUser alloc] init];
+        u.name = self.customerName;
+        u.avatarURL = self.customerAvatar;
+        
+        msg.senderInfo = u;
+    }
+}
+
+- (void)loadSenderInfo:(NSArray*)messages count:(int)count {
+    for (int i = 0; i < count; i++) {
+        IMessage *msg = [messages objectAtIndex:i];
+        [self loadSenderInfo:msg];
+    }
+}
+
 
 - (int64_t)sender {
     return self.storeID;
@@ -137,6 +165,7 @@
 
 
     [self downloadMessageContent:self.messages count:count];
+    [self loadSenderInfo:self.messages count:count];
     [self checkMessageFailureFlag:self.messages count:count];
     
     [self initTableViewData];
@@ -183,6 +212,7 @@
     }
     
     [self downloadMessageContent:self.messages count:count];
+    [self loadSenderInfo:self.messages count:count];
     [self checkMessageFailureFlag:self.messages count:count];
     
     [self initTableViewData];
@@ -311,6 +341,7 @@
     }
     
     [self downloadMessageContent:m];
+    [self loadSenderInfo:m];
     [self insertMessage:m];
 }
 
@@ -349,6 +380,7 @@
     }
     
     [self downloadMessageContent:m];
+    [self loadSenderInfo:m];
     [self insertMessage:m];
 }
 
@@ -476,6 +508,8 @@
     msg.isSupport = YES;
     msg.isOutgoing = YES;
     
+    [self loadSenderInfo:msg];
+    
     [self saveMessage:msg];
     
     [self sendMessage:msg];
@@ -512,6 +546,8 @@
     NSData *data = [NSData dataWithContentsOfFile:path];
     FileCache *fileCache = [FileCache instance];
     [fileCache storeFile:data forKey:content.url];
+
+    [self loadSenderInfo:msg];
     
     [self saveMessage:msg];
     
@@ -558,6 +594,8 @@
     NSString *littleUrl =  [content littleImageURL];
     [[SDImageCache sharedImageCache] storeImage:sizeImage forKey: littleUrl];
     
+    [self loadSenderInfo:msg];
+    
     [self saveMessage:msg];
     
     [self sendMessage:msg withImage:image];
@@ -584,6 +622,8 @@
     msg.timestamp = (int)time(NULL);
     msg.isSupport = YES;
     msg.isOutgoing = YES;
+    
+    [self loadSenderInfo:msg];
     
     [self saveMessage:msg];
     

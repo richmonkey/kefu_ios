@@ -20,4 +20,6 @@
 
 #define XIAOWEI_SELLER_ID 100088
 
+#define XIAOWEI_ICON_URL @"http://localhost/images/6d68fed7-a263-11e6-9604-34363bd464b2.png"
+
 #endif /* Config_h */

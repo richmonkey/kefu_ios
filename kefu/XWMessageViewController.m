@@ -15,6 +15,8 @@
 
 #import <gobelieve/EaseChatToolbar.h>
 #import "XWCustomerOutbox.h"
+#import "Profile.h"
+#import "Config.h"
 
 #define PAGE_COUNT 10
 
@@ -49,6 +51,22 @@
     [[XWCustomerOutbox instance] removeBoxObserver:self];
     [[IMService instance] removeConnectionObserver:self];
     [[IMService instance] removeCustomerMessageObserver:self];
+}
+
+- (void)loadSenderInfo:(IMessage*)msg {
+    ICustomerMessage *cm = (ICustomerMessage*)msg;
+    if (cm.isSupport) {
+        IUser *u = [[IUser alloc] init];
+        u.name = @"小微团队";
+        u.avatarURL = XIAOWEI_ICON_URL;
+        msg.senderInfo = u;
+    } else {
+        Profile *profile = [Profile instance];
+        IUser *u = [[IUser alloc] init];
+        u.name = profile.name;
+        u.avatarURL = profile.avatar;
+        msg.senderInfo = u;
+    }
 }
 
 - (int64_t)sender {
@@ -130,6 +148,7 @@
     }
     
     [self downloadMessageContent:self.messages count:count];
+    [self loadSenderInfo:self.messages count:count];
     [self checkMessageFailureFlag:self.messages count:count];
     
     [self initTableViewData];
@@ -176,6 +195,7 @@
     }
     
     [self downloadMessageContent:self.messages count:count];
+    [self loadSenderInfo:self.messages count:count];
     [self checkMessageFailureFlag:self.messages count:count];
     
     [self initTableViewData];
@@ -291,6 +311,7 @@
     }
     
     [self downloadMessageContent:m];
+    [self loadSenderInfo:m];
     [self insertMessage:m];
 }
 
@@ -324,6 +345,7 @@
     }
     
     [self downloadMessageContent:m];
+    [self loadSenderInfo:m];
     [self insertMessage:m];
 }
 
@@ -448,6 +470,7 @@
     msg.isSupport = NO;
     msg.isOutgoing = YES;
     
+    [self loadSenderInfo:msg];
     [self saveMessage:msg];
     
     [self sendMessage:msg];
@@ -484,6 +507,8 @@
     NSData *data = [NSData dataWithContentsOfFile:path];
     FileCache *fileCache = [FileCache instance];
     [fileCache storeFile:data forKey:content.url];
+    
+    [self loadSenderInfo:msg];
     
     [self saveMessage:msg];
     
@@ -530,6 +555,8 @@
     NSString *littleUrl =  [content littleImageURL];
     [[SDImageCache sharedImageCache] storeImage:sizeImage forKey: littleUrl];
     
+    [self loadSenderInfo:msg];
+    
     [self saveMessage:msg];
     
     [self sendMessage:msg withImage:image];
@@ -556,6 +583,7 @@
     msg.isSupport = NO;
     msg.isOutgoing = YES;
     
+    [self loadSenderInfo:msg];
     [self saveMessage:msg];
     
     [self sendMessage:msg];

@@ -19,6 +19,7 @@
 @property(nonatomic, assign) int64_t currentUID;
 
 @property(nonatomic, copy) NSString *customerName;
+@property(nonatomic, copy) NSString *customerAvatar;
 
 
 @property(nonatomic) int64_t customerAppID;

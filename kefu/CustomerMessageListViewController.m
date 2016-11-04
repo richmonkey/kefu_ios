@@ -203,7 +203,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
         CustomerConversation *cc = (CustomerConversation*)conversation;
         if (cc.isXiaoWei) {
             conversation.name = @"小微团队";
-            conversation.avatarURL = @"";
+            conversation.avatarURL = XIAOWEI_ICON_URL;
         } else {
             IUser *u = [self getUser:cc.customerID appID:cc.customerAppID];
             if (u.name.length > 0) {
@@ -366,6 +366,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
             msgController.customerAppID = con.customerAppID;
             msgController.customerID = con.customerID;
             msgController.customerName = con.name;
+            msgController.customerAvatar = con.avatarURL;
             msgController.currentUID = self.currentUID;
             msgController.storeID = self.storeID;
             msgController.isShowUserName = NO;

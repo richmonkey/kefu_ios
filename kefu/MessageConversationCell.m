@@ -28,7 +28,7 @@
     
     CALayer *imageLayer = [self.headView layer];   //获取ImageView的层
     [imageLayer setMasksToBounds:YES];
-    [imageLayer setCornerRadius:self.headView.frame.size.width/2];
+    [imageLayer setCornerRadius:4];
     
 }
 
@@ -133,13 +133,9 @@
     } else if (self.conversation.type == CONVERSATION_SYSTEM) {
         //todo
     } else if (self.conversation.type == CONVERSATION_CUSTOMER_SERVICE) {
-        CustomerConversation *cc = (CustomerConversation*)self.conversation;
-        if (cc.isXiaoWei) {
-            self.headView.image = [UIImage imageNamed:@"icon"];
-        } else {
-            [self.headView sd_setImageWithURL: [NSURL URLWithString:conv.avatarURL]
-                             placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
-        }
+        [self.headView sd_setImageWithURL: [NSURL URLWithString:conv.avatarURL]
+                         placeholderImage:[UIImage imageNamed:@"PersonalChat"]];
+
     }
     
     self.messageContent.text = self.conversation.detail;

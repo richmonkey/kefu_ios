@@ -25,6 +25,7 @@
 #import "Token.h"
 #import "ResolveUtil.h"
 #import "Profile.h"
+#import <SDImageCache.h>
 
 @interface AppDelegate ()
 
@@ -38,6 +39,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    //小微团队图标
+    UIImage *image = [UIImage imageNamed:@"icon"];
+    if (![[SDImageCache sharedImageCache] diskImageExistsWithKey:XIAOWEI_ICON_URL]) {
+        [[SDImageCache sharedImageCache] storeImage:image forKey:XIAOWEI_ICON_URL];
+    }
     
     // Override point for customization after application launch.
     [IMHttpAPI instance].apiURL = IM_API;
