@@ -23,6 +23,7 @@
 #import "Profile.h"
 #import "API.h"
 #import "UIAlertView+XPAlertView.h"
+#import "AboutViewController.h"
 
 @interface SettingViewController () <UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic) int64_t number;
@@ -163,6 +164,9 @@
         ctrl.appID = APPID;
         
         [self.navigationController pushViewController:ctrl animated:YES];
+    } else if (indexPath.section == 1 && indexPath.row == 1) {
+        AboutViewController * aboutController = [[AboutViewController alloc] init];
+        [self.navigationController pushViewController:aboutController animated: YES];
     } else if (indexPath.section == 2 && indexPath.row == 0) {
         if (![Profile instance].isOnline) {
             [self setUserStatus:YES];

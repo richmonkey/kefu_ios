@@ -28,6 +28,8 @@
 		6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC911CB6061E0003A03B /* CustomerMessageListViewController.m */; };
 		6D12EC961CB606390003A03B /* MessageConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC941CB606390003A03B /* MessageConversationCell.m */; };
 		6D12EC971CB606390003A03B /* MessageConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC951CB606390003A03B /* MessageConversationCell.xib */; };
+		6D13A6401DEC39A400683948 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D13A63E1DEC39A400683948 /* AboutViewController.m */; };
+		6D13A6411DEC39A400683948 /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D13A63F1DEC39A400683948 /* AboutViewController.xib */; };
 		6D25219E1CBFF598004C6FBE /* CustomerSupportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */; };
 		6D2521A11CC1D58F004C6FBE /* CustomerSupportMessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2521A01CC1D58F004C6FBE /* CustomerSupportMessageDB.m */; };
 		6D2521A41CC1D8F1004C6FBE /* CustomerConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2521A31CC1D8F1004C6FBE /* CustomerConversation.m */; };
@@ -85,6 +87,9 @@
 		6D12EC931CB606390003A03B /* MessageConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageConversationCell.h; sourceTree = "<group>"; };
 		6D12EC941CB606390003A03B /* MessageConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageConversationCell.m; sourceTree = "<group>"; };
 		6D12EC951CB606390003A03B /* MessageConversationCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageConversationCell.xib; sourceTree = "<group>"; };
+		6D13A63D1DEC39A400683948 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		6D13A63E1DEC39A400683948 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		6D13A63F1DEC39A400683948 /* AboutViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController.xib; sourceTree = "<group>"; };
 		6D25219C1CBFF598004C6FBE /* CustomerSupportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerSupportViewController.h; sourceTree = "<group>"; };
 		6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerSupportViewController.m; sourceTree = "<group>"; };
 		6D25219F1CC1D58F004C6FBE /* CustomerSupportMessageDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerSupportMessageDB.h; sourceTree = "<group>"; };
@@ -164,6 +169,9 @@
 		487D48BC1CC3E350005DE19D /* setting */ = {
 			isa = PBXGroup;
 			children = (
+				6D13A63D1DEC39A400683948 /* AboutViewController.h */,
+				6D13A63E1DEC39A400683948 /* AboutViewController.m */,
+				6D13A63F1DEC39A400683948 /* AboutViewController.xib */,
 				487D48C01CC3E350005DE19D /* SettingViewController.h */,
 				487D48C11CC3E350005DE19D /* SettingViewController.m */,
 				487D48C21CC3E350005DE19D /* SettingViewController.xib */,
@@ -346,6 +354,7 @@
 				4803C8121CC3B323007550E6 /* LoginViewTwoCell.xib in Resources */,
 				6D12EC971CB606390003A03B /* MessageConversationCell.xib in Resources */,
 				487D48CB1CC3E365005DE19D /* SettingInforTableViewCell.xib in Resources */,
+				6D13A6411DEC39A400683948 /* AboutViewController.xib in Resources */,
 				487D48C41CC3E350005DE19D /* QuitTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -415,6 +424,7 @@
 				6DBB2CCD1DBDC06500BC545A /* XWCustomerOutbox.m in Sources */,
 				6D485E051CC71E660082588F /* MainViewController.m in Sources */,
 				487D48C31CC3E350005DE19D /* QuitTableViewCell.m in Sources */,
+				6D13A6401DEC39A400683948 /* AboutViewController.m in Sources */,
 				6D76AFC21D0FC19100C9E89A /* ResolveUtil.m in Sources */,
 				6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */,
 				6D2521A71CC1DF27004C6FBE /* CustomerSupportMessageHandler.m in Sources */,
