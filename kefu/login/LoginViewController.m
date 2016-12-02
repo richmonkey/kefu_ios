@@ -22,11 +22,14 @@
 #import "UIView+Toast.h"
 #import "UIAlertView+XPAlertView.h"
 
+#import <SafariServices/SafariServices.h>
+
+
 #define kFirstCellOffset    20
 #define kSecondMax      60
 #define kTextFieldTag  40
 
-@interface LoginViewController (){
+@interface LoginViewController ()<SFSafariViewControllerDelegate> {
     
 }
 
@@ -289,10 +292,13 @@
 -(void)registerAction{
     
     NSURL *url = [NSURL URLWithString: REGISTER_URL];
-    if ([[UIApplication sharedApplication] canOpenURL:url]) {
-        [[UIApplication sharedApplication] openURL:url];
-    }
-    
+    SFSafariViewController *svc = [[SFSafariViewController alloc] initWithURL:url];
+    svc.delegate = self;
+    [self presentViewController:svc animated:YES completion:nil];
+}
+
+- (void)safariViewControllerDidFinish:(SFSafariViewController *)controller {
+    [self dismissViewControllerAnimated:true completion:nil];
 }
 
 @end

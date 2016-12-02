@@ -47,6 +47,7 @@
 		6DBB2CD81DBE246800BC545A /* ConversationDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CD21DBE246800BC545A /* ConversationDB.m */; };
 		6DBB2CD91DBE246800BC545A /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CD41DBE246800BC545A /* Token.m */; };
 		6DBB2CDA1DBE246800BC545A /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CD61DBE246800BC545A /* User.m */; };
+		6DD23D7C1DF0FB7A007EBCD2 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DD23D7B1DF0FB7A007EBCD2 /* SafariServices.framework */; };
 		C5F26F771D27A072D32C2FDA /* libPods-kefu.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F009DD8FF86F9E4672B5E65B /* libPods-kefu.a */; };
 /* End PBXBuildFile section */
 
@@ -124,6 +125,7 @@
 		6DBB2CD41DBE246800BC545A /* Token.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Token.m; sourceTree = "<group>"; };
 		6DBB2CD51DBE246800BC545A /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		6DBB2CD61DBE246800BC545A /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		6DD23D7B1DF0FB7A007EBCD2 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		C4665C74201A0C8CC6A05334 /* Pods-kefu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kefu.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kefu/Pods-kefu.debug.xcconfig"; sourceTree = "<group>"; };
 		F009DD8FF86F9E4672B5E65B /* libPods-kefu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kefu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -133,6 +135,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DD23D7C1DF0FB7A007EBCD2 /* SafariServices.framework in Frameworks */,
 				6D76AFC41D0FC1F100C9E89A /* libresolv.tbd in Frameworks */,
 				C5F26F771D27A072D32C2FDA /* libPods-kefu.a in Frameworks */,
 			);
@@ -144,6 +147,7 @@
 		41493CA340133906C8067453 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6DD23D7B1DF0FB7A007EBCD2 /* SafariServices.framework */,
 				6D76AFC31D0FC1F100C9E89A /* libresolv.tbd */,
 				F009DD8FF86F9E4672B5E65B /* libPods-kefu.a */,
 			);
@@ -575,7 +579,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3cbabbad-77a8-49f6-85d4-976e398cfa9f";
+				PROVISIONING_PROFILE = "5f7e3100-f016-43ba-a85e-426be6e367b8";
 			};
 			name = Debug;
 		};
@@ -599,7 +603,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5c3562a1-518f-481e-95fd-8ed236ac7958";
+				PROVISIONING_PROFILE = "ac2b9c5b-8045-43ff-a644-585942e9530c";
 			};
 			name = Release;
 		};
