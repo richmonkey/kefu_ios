@@ -11,10 +11,10 @@
 #include <dirent.h>
 
 @protocol ConversationIterator
--(Conversation*)next;
+-(IMessage*)next;
 @end
 
-@interface ConversationIterator : NSObject<ConversationIterator>
+@interface FileConversationIterator : NSObject<ConversationIterator>
 @property(nonatomic, assign)DIR *dirp;
 @property(nonatomic, copy) NSString *path;
 

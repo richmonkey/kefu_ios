@@ -45,6 +45,7 @@
 
 
 //protect method
+-(void)ping;
 -(void)pong;
 -(void)reconnect2S;
 

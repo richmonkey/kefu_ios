@@ -6,35 +6,34 @@
 //  Copyright © 2016年 beetle. All rights reserved.
 //
 
-#import "CustomerMessageDB.h"
-#import "MessageDB.h"
+#import "FileCustomerMessageDB.h"
 #include <sys/stat.h>
 #include <dirent.h>
 #import "util.h"
 #import "ReverseFile.h"
 
-@interface CustomerMessageIterator : IMessageIterator
+@interface FileCustomerMessageIterator : IMessageIterator
 
 @end
 
-@implementation CustomerMessageIterator
+@implementation FileCustomerMessageIterator
 
 
 -(IMessage*)nextMessage {
     if (!self.file) return nil;
-    return [CustomerMessageDB readMessage:self.file];
+    return [FileCustomerMessageDB readMessage:self.file];
 }
 
 @end
 
-@interface CustomerConversationIterator : ConversationIterator
+@interface FileCustomerConversationIterator : FileConversationIterator
 
 @end
 
-@implementation CustomerConversationIterator
+@implementation FileCustomerConversationIterator
 
 -(IMessage*)getLastMessage:(NSString*)path {
-    CustomerMessageIterator *iter = [[CustomerMessageIterator alloc] initWithPath:path];
+    FileCustomerMessageIterator *iter = [[FileCustomerMessageIterator alloc] initWithPath:path];
     IMessage *msg;
     //返回第一条不是附件的消息
     while (YES) {
@@ -50,7 +49,7 @@
     return msg;
 }
 
--(Conversation*)next {
+-(IMessage*)next {
     if (!self.dirp) return nil;
     
     struct dirent *dp;
@@ -59,13 +58,9 @@
         NSLog(@"type:%d name:%@", dp->d_type, name);
         if (dp->d_type == DT_REG) {
             if ([name hasPrefix:@"c_"]) {
-                Conversation *c = [[Conversation alloc] init];
-                int64_t uid = [[name substringFromIndex:2] longLongValue];
-                c.cid = uid;
-                c.type = CONVERSATION_CUSTOMER_SERVICE;
                 NSString *path = [NSString stringWithFormat:@"%@/%@", self.path, name];
-                c.message = [self getLastMessage:path];
-                return c;
+                IMessage *message = [self getLastMessage:path];
+                return message;
             } else {
                 NSLog(@"skip file:%@", name);
             }
@@ -76,13 +71,13 @@
 
 @end
 
-@implementation CustomerMessageDB
-+(CustomerMessageDB*)instance {
-    static CustomerMessageDB *m;
+@implementation FileCustomerMessageDB
++(FileCustomerMessageDB*)instance {
+    static FileCustomerMessageDB *m;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (!m) {
-            m = [[CustomerMessageDB alloc] init];
+            m = [[FileCustomerMessageDB alloc] init];
         }
     });
     return m;
@@ -289,17 +284,17 @@
 
 -(id<IMessageIterator>)newMessageIterator:(int64_t)uid {
     NSString *path = [self getPeerPath:uid];
-    return [[CustomerMessageIterator alloc] initWithPath:path];
+    return [[FileCustomerMessageIterator alloc] initWithPath:path];
 }
 
 -(id<IMessageIterator>)newMessageIterator:(int64_t)uid last:(int)lastMsgID {
     NSString *path = [self getPeerPath:uid];
-    return [[CustomerMessageIterator alloc] initWithPath:path position:lastMsgID];
+    return [[FileCustomerMessageIterator alloc] initWithPath:path position:lastMsgID];
 }
 
 -(id<ConversationIterator>)newConversationIterator {
     NSString *path = [self getMessagePath];
-    return [[CustomerConversationIterator alloc] initWithPath:path];
+    return [[FileCustomerMessageIterator alloc] initWithPath:path];
 }
 
 @end
