@@ -30,6 +30,7 @@
 		6D12EC971CB606390003A03B /* MessageConversationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D12EC951CB606390003A03B /* MessageConversationCell.xib */; };
 		6D13A6401DEC39A400683948 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D13A63E1DEC39A400683948 /* AboutViewController.m */; };
 		6D13A6411DEC39A400683948 /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D13A63F1DEC39A400683948 /* AboutViewController.xib */; };
+		6D1C1AC21EAA518700F8BB1F /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D1C1AC11EAA518700F8BB1F /* Conversation.m */; };
 		6D25219E1CBFF598004C6FBE /* CustomerSupportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */; };
 		6D2521A11CC1D58F004C6FBE /* CustomerSupportMessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2521A01CC1D58F004C6FBE /* CustomerSupportMessageDB.m */; };
 		6D2521A41CC1D8F1004C6FBE /* CustomerConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D2521A31CC1D8F1004C6FBE /* CustomerConversation.m */; };
@@ -92,6 +93,8 @@
 		6D13A63E1DEC39A400683948 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		6D13A63F1DEC39A400683948 /* AboutViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController.xib; sourceTree = "<group>"; };
 		6D1C1ABF1EA8694B00F8BB1F /* kefu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = kefu.entitlements; sourceTree = "<group>"; };
+		6D1C1AC01EAA518700F8BB1F /* Conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conversation.h; sourceTree = "<group>"; };
+		6D1C1AC11EAA518700F8BB1F /* Conversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Conversation.m; sourceTree = "<group>"; };
 		6D25219C1CBFF598004C6FBE /* CustomerSupportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerSupportViewController.h; sourceTree = "<group>"; };
 		6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerSupportViewController.m; sourceTree = "<group>"; };
 		6D25219F1CC1D58F004C6FBE /* CustomerSupportMessageDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerSupportMessageDB.h; sourceTree = "<group>"; };
@@ -267,6 +270,8 @@
 		6DBB2CCE1DBE246800BC545A /* model */ = {
 			isa = PBXGroup;
 			children = (
+				6D1C1AC01EAA518700F8BB1F /* Conversation.h */,
+				6D1C1AC11EAA518700F8BB1F /* Conversation.m */,
 				6DBB2CCF1DBE246800BC545A /* AppDB.h */,
 				6DBB2CD01DBE246800BC545A /* AppDB.m */,
 				6DBB2CD11DBE246800BC545A /* ConversationDB.h */,
@@ -400,7 +405,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E1A476C7533AF4FA5201E886 /* [CP] Embed Pods Frameworks */ = {
@@ -447,6 +452,7 @@
 				6DBB2CD71DBE246800BC545A /* AppDB.m in Sources */,
 				6D2521A41CC1D8F1004C6FBE /* CustomerConversation.m in Sources */,
 				6D2521A11CC1D58F004C6FBE /* CustomerSupportMessageDB.m in Sources */,
+				6D1C1AC21EAA518700F8BB1F /* Conversation.m in Sources */,
 				4803C80B1CC3B323007550E6 /* LoginViewController.m in Sources */,
 				487D48CA1CC3E365005DE19D /* SettingInforTableViewCell.m in Sources */,
 				6D485E131CE17ED90082588F /* RobotViewController.m in Sources */,

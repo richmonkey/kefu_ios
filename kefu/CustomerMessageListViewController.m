@@ -115,10 +115,17 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     
     
     id<ConversationIterator> iterator =  [[CustomerSupportMessageDB instance] newConversationIterator];
-    Conversation * conversation = [iterator next];
-    while (conversation) {
+    ICustomerMessage * msg = (ICustomerMessage*)[iterator next];
+    while (msg) {
+        CustomerConversation *conversation = [[CustomerConversation alloc] init];
+        conversation.message = msg;
+        conversation.cid = msg.customerID;
+        conversation.customerAppID = msg.customerAppID;
+        conversation.customerID = msg.customerID;
+        conversation.type = CONVERSATION_CUSTOMER_SERVICE;
+        conversation.timestamp = msg.timestamp;
         [self.conversations addObject:conversation];
-        conversation = [iterator next];
+        msg = (ICustomerMessage*)[iterator next];
     }
     
     for (Conversation *conv in self.conversations) {

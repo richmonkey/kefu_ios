@@ -14,10 +14,14 @@ PODS:
   - AFNetworking/Serialization (3.0.4)
   - AFNetworking/UIKit (3.0.4):
     - AFNetworking/NSURLSession
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
   - gobelieve (0.1.0):
     - gobelieve/imkit (= 0.1.0)
     - gobelieve/imsdk (= 0.1.0)
   - gobelieve/imkit (0.1.0):
+    - FMDB
     - gobelieve/imsdk
     - MBProgressHUD (~> 0.9.1)
     - SDWebImage (~> 3.7.1)
@@ -47,7 +51,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
-  gobelieve: 2dbcacac0037d3450acdf33b03e6ad88e854e311
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  gobelieve: c7ab94aec95ec5e95004734de3543ec634479fdc
   JSBadgeView: 3861ddee41094284d9468e6d0af5107f703aaac5
   leveldb-library: ef0453697c0fda3a9e550e5650e52976e6724548
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
@@ -58,4 +63,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 205af974c8b57d4a88ea4a6bfc4efe0c518f058c
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.1

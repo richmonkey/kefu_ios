@@ -9,10 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <gobelieve/MessageDB.h>
 #import <gobelieve/IMessage.h>
+#import <gobelieve/FileMessageDB.h>
 #import <gobelieve/ConversationIterator.h>
 #import <gobelieve/IMessageIterator.h>
 
-@interface CustomerSupportMessageDB : MessageDB
+@interface CustomerSupportMessageDB : FileMessageDB
 +(CustomerSupportMessageDB*)instance;
 
 @property(nonatomic, copy) NSString *dbPath;

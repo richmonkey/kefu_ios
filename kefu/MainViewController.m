@@ -7,6 +7,10 @@
 //
 
 #import "MainViewController.h"
+#import <gobelieve/IMHttpAPI.h>
+#import <gobelieve/IMService.h>
+#import <gobelieve/SyncKeyHandler.h>
+#import <gobelieve/PeerMessageHandler.h>
 #import <gobelieve/IMessage.h>
 #import <gobelieve/IMService.h>
 #import <gobelieve/PeerMessageDB.h>
@@ -14,15 +18,14 @@
 #import <gobelieve/CustomerMessageDB.h>
 #import <gobelieve/PeerMessageViewController.h>
 #import <gobelieve/GroupMessageViewController.h>
+
 #import "CustomerSupportMessageDB.h"
 #import "CustomerSupportViewController.h"
 #import "MessageConversationCell.h"
 #import "LevelDB.h"
 #import "AFNetworking.h"
 #import "CustomerConversation.h"
-#import <gobelieve/IMHttpAPI.h>
-#import <gobelieve/IMService.h>
-#import <gobelieve/SyncKeyHandler.h>
+#import "CustomerSupportMessageHandler.h"
 
 #import "AppDelegate.h"
 #import "Token.h"
@@ -61,10 +64,12 @@
     NSString *path = [self getDocumentPath];
     NSString *customerPath = [NSString stringWithFormat:@"%@/%lld/customer", path, profile.uid];
     [[CustomerSupportMessageDB instance] setDbPath:customerPath];
-    
+
+    [CustomerSupportMessageHandler instance].uid = profile.uid;
+    [PeerMessageHandler instance].uid = profile.uid;
+
     //初始化im服务
     [IMHttpAPI instance].accessToken = token.accessToken;
-    [IMService instance].uid = profile.uid;
     [IMService instance].token = token.accessToken;
     
     NSString *fileName = [NSString stringWithFormat:@"%@/%lld/synckey", path, profile.uid];

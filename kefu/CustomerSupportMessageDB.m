@@ -28,7 +28,7 @@
 
 @end
 
-@interface CustomerSupportConversationIterator : ConversationIterator
+@interface CustomerSupportConversationIterator : FileConversationIterator
 
 @end
 
@@ -51,7 +51,7 @@
     return msg;
 }
 
--(Conversation*)next {
+-(IMessage*)next {
     if (!self.dirp) return nil;
     
     struct dirent *dp;
@@ -67,16 +67,9 @@
                     continue;
                 }
                 
-                int64_t appID = [array[1] longLongValue];
-                int64_t uid = [array[2] longLongValue];
-                CustomerConversation *c = [[CustomerConversation alloc] init];
-                c.cid = uid;
-                c.customerAppID = appID;
-                c.customerID = uid;
-                c.type = CONVERSATION_CUSTOMER_SERVICE;
+      
                 NSString *path = [NSString stringWithFormat:@"%@/%@", self.path, name];
-                c.message = [self getLastMessage:path];
-                return c;
+                return [self getLastMessage:path];
             } else {
                 NSLog(@"skip file:%@", name);
             }

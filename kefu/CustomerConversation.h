@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <gobelieve/IMessage.h>
+#import "Conversation.h"
 @interface CustomerConversation : Conversation
 @property(nonatomic) int64_t customerAppID;
 @property(nonatomic) int64_t customerID;

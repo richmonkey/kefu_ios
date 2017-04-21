@@ -9,6 +9,7 @@
 #import "CustomerSupportMessageHandler.h"
 #import <gobelieve/IMessage.h>
 #import "CustomerSupportMessageDB.h"
+#import "Config.h"
 
 @implementation CustomerSupportMessageHandler
 +(CustomerSupportMessageHandler*)instance {
@@ -33,6 +34,11 @@
     m.receiver = msg.storeID;
     m.rawContent = msg.content;
     m.timestamp = msg.timestamp;
+    
+    //“小微客服”发出的消息
+    if (msg.sellerID == self.uid) {
+        m.flags = m.flags|MESSAGE_FLAG_ACK;
+    }
     BOOL r = [[CustomerSupportMessageDB instance] insertMessage:m uid:msg.customerID appID:msg.customerAppID];
     if (r) {
         msg.msgLocalID = m.msgLocalID;
@@ -51,6 +57,11 @@
     m.receiver = msg.storeID;
     m.rawContent = msg.content;
     m.timestamp = msg.timestamp;
+    
+    //"小微客服"或者第三方app发出的消息
+    if (msg.customerAppID == APPID && msg.customerID == self.uid) {
+        m.flags = m.flags|MESSAGE_FLAG_ACK;
+    }
     BOOL r = [[CustomerSupportMessageDB instance] insertMessage:m uid:msg.customerID appID:msg.customerAppID];
     if (r) {
         msg.msgLocalID = m.msgLocalID;

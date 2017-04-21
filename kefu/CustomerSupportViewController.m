@@ -17,6 +17,7 @@
 #import <gobelieve/EaseChatToolbar.h>
 #import "RobotViewController.h"
 #import "Profile.h"
+#import "Config.h"
 
 #define PAGE_COUNT 10
 
@@ -324,15 +325,14 @@
     m.sellerID = im.sellerID;
     m.isSupport = YES;
     m.isOutgoing = (self.currentUID == im.sellerID);
+    if (m.isOutgoing) {
+        m.flags = m.flags | MESSAGE_FLAG_ACK;
+    }
     
     m.msgLocalID = im.msgLocalID;
     m.rawContent = im.content;
     m.timestamp = im.timestamp;
-    
-    if (self.textMode && m.type != MESSAGE_TEXT) {
-        return;
-    }
-    
+
     
     int now = (int)time(NULL);
     if (now - self.lastReceivedTimestamp > 1) {
@@ -362,16 +362,13 @@
     m.storeID = im.storeID;
     m.sellerID = im.sellerID;
     m.isSupport = NO;
-    m.isOutgoing = NO;
-    
+    m.isOutgoing = (im.customerAppID == APPID && im.customerID == self.currentUID);
+    if (m.isOutgoing) {
+        m.flags = m.flags | MESSAGE_FLAG_ACK;
+    }
     m.msgLocalID = im.msgLocalID;
     m.rawContent = im.content;
     m.timestamp = im.timestamp;
-    
-    if (self.textMode && m.type != MESSAGE_TEXT) {
-        return;
-    }
-
     
     int now = (int)time(NULL);
     if (now - self.lastReceivedTimestamp > 1) {
