@@ -91,6 +91,7 @@
 		6D13A63D1DEC39A400683948 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		6D13A63E1DEC39A400683948 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		6D13A63F1DEC39A400683948 /* AboutViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController.xib; sourceTree = "<group>"; };
+		6D1C1ABF1EA8694B00F8BB1F /* kefu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = kefu.entitlements; sourceTree = "<group>"; };
 		6D25219C1CBFF598004C6FBE /* CustomerSupportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerSupportViewController.h; sourceTree = "<group>"; };
 		6D25219D1CBFF598004C6FBE /* CustomerSupportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerSupportViewController.m; sourceTree = "<group>"; };
 		6D25219F1CC1D58F004C6FBE /* CustomerSupportMessageDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerSupportMessageDB.h; sourceTree = "<group>"; };
@@ -210,6 +211,7 @@
 		6D12EC631CB517650003A03B /* kefu */ = {
 			isa = PBXGroup;
 			children = (
+				6D1C1ABF1EA8694B00F8BB1F /* kefu.entitlements */,
 				6DBB2CCE1DBE246800BC545A /* model */,
 				487D48BC1CC3E350005DE19D /* setting */,
 				4803C7EA1CC3B323007550E6 /* login */,
@@ -323,6 +325,11 @@
 					6D12EC601CB517650003A03B = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = HB5A8TLKYL;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -565,6 +572,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CODE_SIGN_ENTITLEMENTS = kefu/kefu.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Zhifeng Zhou (PV548P44SL)";
 				DEVELOPMENT_TEAM = HB5A8TLKYL;
@@ -589,6 +597,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CODE_SIGN_ENTITLEMENTS = kefu/kefu.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Zhifeng Zhou (HB5A8TLKYL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Zhifeng Zhou (HB5A8TLKYL)";
 				DEVELOPMENT_TEAM = HB5A8TLKYL;
