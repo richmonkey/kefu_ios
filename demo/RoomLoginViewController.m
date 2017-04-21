@@ -12,7 +12,6 @@
 #import <gobelieve/MessageViewController.h>
 #import <gobelieve/PeerMessageViewController.h>
 #import <gobelieve/IMHttpAPI.h>
-#import <gobelieve/MessageDB.h>
 #import <gobelieve/PeerMessageDB.h>
 #import <gobelieve/GroupMessageDB.h>
 #import <gobelieve/CustomerMessageDB.h>
@@ -127,10 +126,8 @@
             [GroupMessageDB instance].dbPath = [NSString stringWithFormat:@"%@/group", dbPath];
             [CustomerMessageDB instance].dbPath = [NSString stringWithFormat:@"%@/customer", dbPath];
             
-            
             [IMHttpAPI instance].accessToken = token;
             [[IMService instance] setToken:token];
-            [IMService instance].uid = [tfSender.text longLongValue];
             [[IMService instance] start];
             
             RoomViewController *msgController = [[RoomViewController alloc] init];

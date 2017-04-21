@@ -171,11 +171,13 @@
 
 //2s后重新连接
 -(void)reconnect2S {
+    [self onClose];
+    self.connectState = STATE_UNCONNECTED;
+    [self publishConnectState:STATE_UNCONNECTED];
+    
     self.connectFailCount = 2;
     [self close];
     [self startConnectTimer];
-    self.connectState = STATE_UNCONNECTED;
-    [self publishConnectState:STATE_UNCONNECTED];
 }
 
 -(void)close {
@@ -355,10 +357,10 @@
 }
 
 -(void)ping {
-    NSLog(@"send ping");
-    [self sendPing];
-    
     if (self.tcp != nil && self.pingTimestamp == 0) {
+        NSLog(@"send ping");
+        [self sendPing];
+        
         self.pingTimestamp = time(NULL);
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             time_t now = time(NULL);

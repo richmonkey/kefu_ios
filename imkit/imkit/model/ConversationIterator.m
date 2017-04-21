@@ -11,11 +11,11 @@
 #include <sys/stat.h>
 
 
-@interface ConversationIterator()
+@interface FileConversationIterator()
 
 @end
 
-@implementation ConversationIterator
+@implementation FileConversationIterator
 -(id)initWithPath:(NSString*)path {
     self = [super init];
     if (self) {
@@ -39,7 +39,7 @@
     self.dirp = dirp;
 }
 
--(Conversation*)next {
+-(IMessage*)next {
     return nil;
 }
 @end

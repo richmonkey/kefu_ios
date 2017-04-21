@@ -20,6 +20,18 @@
 #define HOST  @"imnode2.gobelieve.io"
 #define PORT 23000
 
+
+@interface GroupSync : NSObject
+@property(nonatomic, assign) int64_t groupID;
+@property(nonatomic, assign) int64_t syncKey;
+@property(nonatomic, assign) int64_t peedingSyncKey;
+@property(nonatomic, assign) int32_t syncTimestamp;
+@property(nonatomic, assign) BOOL isSyncing;
+@end
+
+@implementation GroupSync
+@end
+
 @interface IMService()
 @property(nonatomic)int seq;
 @property(nonatomic)int64_t roomID;
@@ -36,6 +48,13 @@
 @property(nonatomic)NSMutableDictionary *groupMessages;
 @property(nonatomic)NSMutableDictionary *roomMessages;
 @property(nonatomic)NSMutableDictionary *customerServiceMessages;
+
+
+//保证一个时刻只存在一个同步过程，否则会导致获取到重复的消息
+@property(nonatomic, assign) int64_t peedingSyncKey;
+@property(nonatomic, assign) BOOL isSyncing;
+@property(nonatomic, assign) int32_t syncTimestmap;
+
 
 @property(nonatomic)NSMutableDictionary *groupSyncKeys;
 @end
@@ -87,11 +106,11 @@
         return;
     }
     if (m) {
-        [self.peerMessageHandler handleMessageACK:m.msgLocalID uid:m.receiver];
+        [self.peerMessageHandler handleMessageACK:m];
         [self.peerMessages removeObjectForKey:seq];
         [self publishPeerMessageACK:m.msgLocalID uid:m.receiver];
     } else if (m2) {
-        [self.groupMessageHandler handleMessageACK:m2.msgLocalID gid:m2.receiver];
+        [self.groupMessageHandler handleMessageACK:m2];
         [self.groupMessages removeObjectForKey:seq];
         [self publishGroupMessageACK:m2.msgLocalID gid:m2.receiver];
     } else if (m3) {
@@ -106,11 +125,7 @@
 
 -(void)handleIMMessage:(Message*)msg {
     IMMessage *im = (IMMessage*)msg.body;
-    if (self.uid == im.sender) {
-        [self.peerMessageHandler handleMessage:im uid:im.receiver];
-    } else {
-        [self.peerMessageHandler handleMessage:im uid:im.sender];
-    }
+    [self.peerMessageHandler handleMessage:im];
     NSLog(@"peer message sender:%lld receiver:%lld content:%s", im.sender, im.receiver, [im.content UTF8String]);
     
     Message *ack = [[Message alloc] init];
@@ -118,11 +133,6 @@
     ack.body = [NSNumber numberWithInt:msg.seq];
     [self sendMessage:ack];
     [self publishPeerMessage:im];
-    
-    if (self.uid == im.sender) {
-        [self.peerMessageHandler handleMessageACK:im.msgLocalID uid:im.receiver];
-        [self publishPeerMessageACK:im.msgLocalID uid:im.receiver];
-    }
 }
 
 -(void)handleGroupIMMessage:(Message*)msg {
@@ -134,11 +144,6 @@
     ack.body = [NSNumber numberWithInt:msg.seq];
     [self sendMessage:ack];
     [self publishGroupMessage:im];
-    
-    if (im.sender == self.uid) {
-        [self.groupMessageHandler handleMessageACK:im.msgLocalID gid:im.receiver];
-        [self publishGroupMessageACK:im.msgLocalID gid:im.receiver];
-    }
 }
 
 -(void)handleCustomerSupportMessage:(Message*)msg {
@@ -153,12 +158,6 @@
     ack.body = [NSNumber numberWithInt:msg.seq];
     [self sendMessage:ack];
     [self publishCustomerSupportMessage:im];
-    
-    //客服端收到发自客服的消息
-    if (self.appID > 0 && im.sellerID == self.uid) {
-        [self.customerMessageHandler handleMessageACK:im];
-        [self publishCustomerMessageACK:im];
-    }
 }
 
 -(void)handleCustomerMessage:(Message*)msg {
@@ -173,12 +172,6 @@
     ack.body = [NSNumber numberWithInt:msg.seq];
     [self sendMessage:ack];
     [self publishCustomerMessage:im];
-    
-    //客户收到发自客户自己的消息
-    if ((self.appID == 0 || self.appID == im.customerAppID) && im.customerID == self.uid) {
-        [self.customerMessageHandler handleMessageACK:im];
-        [self publishCustomerMessageACK:im];
-    }
 }
 
 -(void)handleRTMessage:(Message*)msg {
@@ -260,14 +253,30 @@
         [self.syncKeyHandler saveSyncKey:self.syncKey];
         [self sendSyncKey:self.syncKey];
     }
+    
+    self.isSyncing = NO;
+    
+    if (self.peedingSyncKey > self.syncKey) {
+        //在本次同步过程中，再次收到了新的SyncNotify消息
+        [self sendSync:self.syncKey];
+        self.isSyncing = YES;
+        self.syncTimestmap = (int)time(NULL);
+        self.peedingSyncKey = 0;
+    }
 }
 
 -(void)handleSyncNotify:(Message*)msg {
     NSLog(@"sync notify:%@", msg.body);
     NSNumber *newSyncKey = (NSNumber*)msg.body;
-    
-    if ([newSyncKey longLongValue] > self.syncKey) {
+    int now = (int)time(NULL);
+    //4s同步超时
+    BOOL isSyncing = self.isSyncing && (now - self.syncTimestmap < 4);
+    if (!isSyncing && [newSyncKey longLongValue] > self.syncKey) {
         [self sendSync:self.syncKey];
+        self.isSyncing = YES;
+        self.syncTimestmap = (int)time(NULL);
+    } else if ([newSyncKey longLongValue] > self.peedingSyncKey) {
+        self.peedingSyncKey = [newSyncKey longLongValue];
     }
 }
 
@@ -280,24 +289,52 @@
     GroupSyncKey *groupSyncKey = (GroupSyncKey*)msg.body;
     NSLog(@"sync group end:%lld %lld", groupSyncKey.groupID, groupSyncKey.syncKey);
     
-    NSNumber *originSyncKey = [self.groupSyncKeys objectForKey:[NSNumber numberWithLongLong:groupSyncKey.groupID]];
+    GroupSync *s = [self.groupSyncKeys objectForKey:[NSNumber numberWithLongLong:groupSyncKey.groupID]];
+    if (!s) {
+        NSLog(@"no group:%lld sync key", groupSyncKey.groupID);
+        return;
+    }
     
-    if (groupSyncKey.syncKey > [originSyncKey longLongValue]) {
-        [self.groupSyncKeys setObject:[NSNumber numberWithLongLong:groupSyncKey.syncKey] forKey:[NSNumber numberWithLongLong:groupSyncKey.groupID]];
+    if (groupSyncKey.syncKey > s.syncKey) {
+        s.syncKey = groupSyncKey.syncKey;
         [self.syncKeyHandler saveGroupSyncKey:groupSyncKey.syncKey gid:groupSyncKey.groupID];
         [self sendGroupSyncKey:groupSyncKey.syncKey gid:groupSyncKey.groupID];
     }
     
+    s.isSyncing = NO;
+    
+    if (s.peedingSyncKey > s.syncKey) {
+        //上次同步过程中，再次收到了新的SyncGroupNotify消息
+        [self sendGroupSync:s.syncKey gid:s.groupID];
+        s.syncTimestamp = (int)time(NULL);
+        s.isSyncing = YES;
+        s.peedingSyncKey = 0;
+    }
 }
 
 -(void)handleSyncGroupNotify:(Message*)msg {
     GroupSyncKey *groupSyncKey = (GroupSyncKey*)msg.body;
     NSLog(@"sync group notify:%lld %lld", groupSyncKey.groupID, groupSyncKey.syncKey);
     
-    NSNumber *originSyncKey = [self.groupSyncKeys objectForKey:[NSNumber numberWithLongLong:groupSyncKey.groupID]];
+    int now = (int)time(NULL);
+    GroupSync *s = [self.groupSyncKeys objectForKey:[NSNumber numberWithLongLong:groupSyncKey.groupID]];
+    if (!s) {
+        //新加入的超级群
+        s = [[GroupSync alloc] init];
+        s.groupID = groupSyncKey.groupID;
+        s.syncKey = 0;
+        [self.groupSyncKeys setObject:s forKey:[NSNumber numberWithLongLong:groupSyncKey.groupID]];
+    }
     
-    if (groupSyncKey.syncKey > [originSyncKey longLongValue]) {
-        [self sendGroupSync:[originSyncKey longLongValue] gid:groupSyncKey.groupID];
+    //4s同步超时
+    BOOL isSyncing = s.isSyncing && (now - s.syncTimestamp < 4);
+    
+    if (!isSyncing && groupSyncKey.syncKey > s.syncKey) {
+        [self sendGroupSync:s.syncKey gid:s.groupID];
+        s.syncTimestamp = now;
+        s.isSyncing = YES;
+    } else if (groupSyncKey.syncKey > s.peedingSyncKey) {
+        s.peedingSyncKey = groupSyncKey.syncKey;
     }
 }
 
@@ -562,9 +599,10 @@
 
 -(void)addSuperGroupSyncKey:(int64_t)syncKey gid:(int64_t)gid {
     NSNumber *k = [NSNumber numberWithLongLong:gid];
-    NSNumber *v = [NSNumber numberWithLongLong:syncKey];
-    
-    [self.groupSyncKeys setObject:v forKey:k];
+    GroupSync *s = [[GroupSync alloc] init];
+    s.groupID = gid;
+    s.syncKey = syncKey;
+    [self.groupSyncKeys setObject:s forKey:k];
 }
 
 -(void)clearSuperGroupSyncKey {
@@ -632,6 +670,10 @@
         return r;
     }
     [self.peerMessages setObject:im forKey:[NSNumber numberWithInt:m.seq]];
+    
+    //在发送需要回执的消息时尽快发现socket已经断开的情况
+    [self ping];
+    
     return r;
 }
 
@@ -643,6 +685,10 @@
     
     if (!r) return r;
     [self.groupMessages setObject:im forKey:[NSNumber numberWithInt:m.seq]];
+    
+    //在发送需要回执的消息时尽快发现socket已经断开的情况
+    [self ping];
+    
     return r;
 }
 
@@ -666,6 +712,10 @@
         return r;
     }
     [self.customerServiceMessages setObject:im forKey:[NSNumber numberWithInt:m.seq]];
+    
+    //在发送需要回执的消息时尽快发现socket已经断开的情况
+    [self ping];
+    
     return r;
 }
 
@@ -679,6 +729,10 @@
         return r;
     }
     [self.customerServiceMessages setObject:im forKey:[NSNumber numberWithInt:m.seq]];
+    
+    //在发送需要回执的消息时尽快发现socket已经断开的情况
+    [self ping];
+    
     return r;
 }
 
@@ -691,6 +745,7 @@
 }
 
 -(BOOL)sendMessage:(Message *)msg {
+    NSLog(@"send message:%d", msg.cmd);
     if (!self.tcp || self.connectState != STATE_CONNECTED) return NO;
     self.seq = self.seq + 1;
     msg.seq = self.seq;
@@ -723,17 +778,34 @@
 }
 
 -(void)onConnect {
+    self.data = [NSMutableData data];
+    self.peedingSyncKey = 0;
+    self.isSyncing = 0;
+    self.syncTimestmap = 0;
+    for (NSNumber *k in self.groupSyncKeys) {
+        GroupSync *v = [self.groupSyncKeys objectForKey:k];
+        v.isSyncing = NO;
+        v.syncTimestamp = 0;
+        v.peedingSyncKey = 0;
+    }
+    
+    
     [self sendAuth];
     if (self.roomID > 0) {
         [self sendEnterRoom:self.roomID];
     }
     
+    int now = (int)time(NULL);
     //send sync
     [self sendSync:self.syncKey];
+    self.isSyncing = YES;
+    self.syncTimestmap = now;
     
     for (NSNumber *k in self.groupSyncKeys) {
-        NSNumber *v = [self.groupSyncKeys objectForKey:k];
-        [self sendGroupSync:[v longLongValue] gid:[k longLongValue]];
+        GroupSync *v = [self.groupSyncKeys objectForKey:k];
+        [self sendGroupSync:v.syncKey gid:v.groupID];
+        v.isSyncing = YES;
+        v.syncTimestamp = now;
     }
 }
 
@@ -774,13 +846,13 @@
 -(void)onClose {
     for (NSNumber *seq in self.peerMessages) {
         IMMessage *msg = [self.peerMessages objectForKey:seq];
-        [self.peerMessageHandler handleMessageFailure:msg.msgLocalID uid:msg.receiver];
+        [self.peerMessageHandler handleMessageFailure:msg];
         [self publishPeerMessageFailure:msg];
     }
     
     for (NSNumber *seq in self.groupMessages) {
         IMMessage *msg = [self.peerMessages objectForKey:seq];
-        [self.groupMessageHandler handleMessageFailure:msg.msgLocalID gid:msg.receiver];
+        [self.groupMessageHandler handleMessageFailure:msg];
         [self publishGroupMessageFailure:msg];
     }
     

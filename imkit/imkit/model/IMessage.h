@@ -39,14 +39,9 @@
 #define NOTIFICATION_GROUP_MEMBER_LEAVED 4
 #define NOTIFICATION_GROUP_NAME_UPDATED 5
 
-//会话类型
-#define CONVERSATION_PEER 1
-#define CONVERSATION_GROUP 2
-#define CONVERSATION_SYSTEM 3
-#define CONVERSATION_CUSTOMER_SERVICE 4
+
 
 @class IUser;
-@class IGroup;
 
 @interface MessageContent : NSObject
 
@@ -131,8 +126,13 @@
 @property(nonatomic) int msgLocalID;
 
 @property(nonatomic) NSString *address;
+@property(nonatomic) NSString *url;
 
+//location
 - (id)initWithAttachment:(int)msgLocalID address:(NSString*)address;
+
+//image/audio
+- (id)initWithAttachment:(int)msgLocalID url:(NSString*)url;
 
 @end
 
@@ -158,6 +158,8 @@
 
 @property(nonatomic, copy) NSString *rawContent;
 @property(nonatomic) int type;
+
+@property(nonatomic, readonly) NSString *uuid;
 
 @property(nonatomic, readonly) MessageTextContent *textContent;
 @property(nonatomic, readonly) MessageAudioContent *audioContent;
@@ -196,18 +198,6 @@
 @property(nonatomic) BOOL  isSupport;
 @end
 
-@interface Conversation : NSObject
-@property(nonatomic) int type;
-@property(nonatomic, assign) int64_t cid;
-@property(nonatomic, copy) NSString *name;
-@property(nonatomic, copy) NSString *avatarURL;
-@property(nonatomic) IMessage *message;
-
-@property(nonatomic) int newMsgCount;
-@property(nonatomic, copy) NSString *detail;
-@property(nonatomic) int timestamp;
-@end
-
 
 @interface IUser : NSObject
 @property(nonatomic) int64_t uid;
@@ -218,13 +208,5 @@
 @property(nonatomic, copy) NSString *identifier;
 @end
 
-@interface IGroup : NSObject
-@property(nonatomic, assign) int64_t gid;
-@property(nonatomic, copy) NSString *name;
-@property(nonatomic, copy) NSString *avatarURL;
 
-//name为nil时，界面显示identifier字段
-@property(nonatomic, copy) NSString *identifier;
-
-@end
 
