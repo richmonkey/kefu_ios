@@ -173,7 +173,6 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     
     self.conversations = [NSMutableArray arrayWithArray:sortedArray];
     
-    
     self.navigationItem.title = @"对话";
     if ([[IMService instance] connectState] == STATE_CONNECTING) {
         self.navigationItem.title = @"连接中...";
@@ -216,6 +215,8 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
         conv.detail = @"一个地理位置";
     }else if (conv.message.type == MESSAGE_AUDIO){
         conv.detail = @"一个音频";
+    } else if (conv.message.type == MESSAGE_HEADLINE) {
+        conv.detail = conv.message.notificationContent.notificationDesc;
     }
 }
 
@@ -675,30 +676,56 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     NSData *data = [NSData dataWithBytes:utf8 length:strlen(utf8)];
     NSDictionary *d = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
 
-    NSDictionary *dict = [d objectForKey:@"login"];
-    if (!dict) {
-        return;
-    }
-
-    Profile *profile = [Profile instance];
+    if ([d objectForKey:@"login"]) {
+        NSDictionary *dict = [d objectForKey:@"login"];
+        
+        Profile *profile = [Profile instance];
 #if TARGET_IPHONE_SIMULATOR
-    NSString *deviceID = @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61";
+        NSString *deviceID = @"7C8A8F5B-E5F4-4797-8758-05367D2A4D61";
 #else
-    NSString *deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+        NSString *deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
 #endif
+        
+        int platform = [[dict objectForKey:@"platform"] intValue];
+        if (platform == PLATFORM_IOS && [[dict objectForKey:@"device_id"] isEqualToString:deviceID]) {
+            return;
+        }
+        
+        int timestamp = [[dict objectForKey:@"timestamp"] intValue];
+        if (profile.loginTimestamp > timestamp) {
+            return;
+        }
+        
+        NSLog(@"login another place");
+        [self logout];
+    } else if ([d objectForKey:@"wechat"]) {
+        NSDictionary *dict = [d objectForKey:@"wechat"];
+        ICustomerMessage *msg = [[ICustomerMessage alloc] init];
+        msg.customerAppID = [[dict objectForKey:@"customer_appid"] longLongValue];
+        msg.customerID = [[dict objectForKey:@"customer_id"] longLongValue];
+
+        msg.storeID = self.storeID;
+        msg.sellerID = self.currentUID;
     
-    int platform = [[dict objectForKey:@"platform"] intValue];
-    if (platform == PLATFORM_IOS && [[dict objectForKey:@"device_id"] isEqualToString:deviceID]) {
-        return;
+        NSString *headline = [dict objectForKey:@"notification"];
+        MessageHeadlineContent *content = [[MessageHeadlineContent alloc] initWithHeadline:headline];
+        msg.rawContent = content.raw;
+        
+        msg.timestamp = [[dict objectForKey:@"timestamp"] intValue];
+        msg.isSupport = NO;
+        msg.isOutgoing = NO;
+        [[CustomerSupportMessageDB instance] insertMessage:msg
+                                                       uid:msg.customerID
+                                                     appID:msg.customerAppID];
+        
+        for (CustomerConversation *conv in self.conversations) {
+            if (conv.customerID == msg.customerID &&
+                conv.customerAppID == msg.customerAppID) {
+                conv.detail = headline;
+                break;
+            }
+        }
     }
-    
-    int timestamp = [[dict objectForKey:@"timestamp"] intValue];
-    if (profile.loginTimestamp > timestamp) {
-        return;
-    }
-    
-    NSLog(@"login another place");
-    [self logout];
 }
 
 //保证单点登录, 和settingviewcontroller unregister实现一样

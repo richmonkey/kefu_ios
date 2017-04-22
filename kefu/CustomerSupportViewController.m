@@ -22,7 +22,8 @@
 #define PAGE_COUNT 10
 
 @interface CustomerSupportViewController ()<OutboxObserver, CustomerMessageObserver,
-                                            AudioDownloaderObserver, RobotViewControllerDelegate>
+                                            AudioDownloaderObserver, RobotViewControllerDelegate,
+                                            SystemMessageObserver>
 
 @end
 
@@ -45,6 +46,7 @@
     [[CustomerSupportOutbox instance] addBoxObserver:self];
     [[IMService instance] addConnectionObserver:self];
     [[IMService instance] addCustomerMessageObserver:self];
+    [[IMService instance] addSystemMessageObserver:self];
 }
 
 -(void)removeObserver {
@@ -52,6 +54,7 @@
     [[CustomerSupportOutbox instance] removeBoxObserver:self];
     [[IMService instance] removeConnectionObserver:self];
     [[IMService instance] removeCustomerMessageObserver:self];
+    [[IMService instance] removeSystemMessageObserver:self];
 }
 
 - (void)loadSenderInfo:(IMessage*)msg {
@@ -306,7 +309,30 @@
                                                               appID:self.customerAppID];
 }
 
-
+#pragma mark SystemMessageObserver
+-(void)onSystemMessage:(NSString*)sm {
+    const char *utf8 = [sm UTF8String];
+    NSData *data = [NSData dataWithBytes:utf8 length:strlen(utf8)];
+    NSDictionary *d = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+    if ([d objectForKey:@"wechat"]) {
+        NSDictionary *dict = [d objectForKey:@"wechat"];
+        ICustomerMessage *msg = [[ICustomerMessage alloc] init];
+        msg.customerAppID = [[dict objectForKey:@"customer_appid"] longLongValue];
+        msg.customerID = [[dict objectForKey:@"customer_id"] longLongValue];
+        
+        msg.storeID = self.storeID;
+        msg.sellerID = self.currentUID;
+        
+        NSString *headline = [dict objectForKey:@"notification"];
+        MessageHeadlineContent *content = [[MessageHeadlineContent alloc] initWithHeadline:headline];
+        msg.rawContent = content.raw;
+        
+        msg.timestamp = [[dict objectForKey:@"timestamp"] intValue];
+        msg.isSupport = NO;
+        msg.isOutgoing = NO;
+        [self insertMessage:msg];
+    }
+}
 
 -(void)onCustomerSupportMessage:(CustomerMessage*)im {
     if (self.customerAppID != im.customerAppID || self.customerID != im.customerID) {
