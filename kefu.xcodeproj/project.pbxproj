@@ -45,6 +45,7 @@
 		6DBB2CD91DBE246800BC545A /* Token.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CD41DBE246800BC545A /* Token.m */; };
 		6DBB2CDA1DBE246800BC545A /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CD61DBE246800BC545A /* User.m */; };
 		6DD23D7C1DF0FB7A007EBCD2 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DD23D7B1DF0FB7A007EBCD2 /* SafariServices.framework */; };
+		6DD382FB1EABB930002ADD91 /* App.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DD382FA1EABB930002ADD91 /* App.m */; };
 		C5F26F771D27A072D32C2FDA /* libPods-kefu.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F009DD8FF86F9E4672B5E65B /* libPods-kefu.a */; };
 /* End PBXBuildFile section */
 
@@ -120,6 +121,8 @@
 		6DBB2CD51DBE246800BC545A /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		6DBB2CD61DBE246800BC545A /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		6DD23D7B1DF0FB7A007EBCD2 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		6DD382F91EABB930002ADD91 /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
+		6DD382FA1EABB930002ADD91 /* App.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = App.m; sourceTree = "<group>"; };
 		C4665C74201A0C8CC6A05334 /* Pods-kefu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kefu.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kefu/Pods-kefu.debug.xcconfig"; sourceTree = "<group>"; };
 		F009DD8FF86F9E4672B5E65B /* libPods-kefu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-kefu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -266,6 +269,8 @@
 				6DBB2CD61DBE246800BC545A /* User.m */,
 				6D25B3C21DC1BF02009F99EA /* Profile.h */,
 				6D25B3C31DC1BF02009F99EA /* Profile.m */,
+				6DD382F91EABB930002ADD91 /* App.h */,
+				6DD382FA1EABB930002ADD91 /* App.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -421,6 +426,7 @@
 				4803C80D1CC3B323007550E6 /* LoginViewOneCell.m in Sources */,
 				6DBB2CCD1DBDC06500BC545A /* XWCustomerOutbox.m in Sources */,
 				6D485E051CC71E660082588F /* MainViewController.m in Sources */,
+				6DD382FB1EABB930002ADD91 /* App.m in Sources */,
 				6D13A6401DEC39A400683948 /* AboutViewController.m in Sources */,
 				6D76AFC21D0FC19100C9E89A /* ResolveUtil.m in Sources */,
 				6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */,

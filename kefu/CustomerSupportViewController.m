@@ -13,11 +13,15 @@
 #import "SDImageCache.h"
 #import "FileCache.h"
 #import "UIImage+Resize.h"
+#import "AFNetworking.h"
 
 #import <gobelieve/EaseChatToolbar.h>
 #import "RobotViewController.h"
 #import "Profile.h"
 #import "Config.h"
+#import "App.h"
+#import "API.h"
+#import "Token.h"
 
 #define PAGE_COUNT 10
 
@@ -36,10 +40,82 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.title = self.customerName;
     [self addObserver];
-    
+    App *app = [App load:self.customerAppID];
+    if (app.name.length == 0) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            //等待界面动画结束
+            [self getApp:self.customerAppID];
+        });
+        self.navigationItem.title = self.customerName;
+    } else {
+        [self setBarTitle:app];
+    }
 }
+
+//http://stackoverflow.com/questions/9921026/center-custom-title-in-uinavigationbar
+- (void)setBarTitle:(App*)app {
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 100, 22)];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.numberOfLines = 1;
+    titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    titleLabel.text = self.customerName;
+    
+    [titleLabel sizeToFit];
+    
+    UILabel *subTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 22, 100, 22)];
+    subTitleLabel.textAlignment = NSTextAlignmentCenter;
+    [subTitleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:12.0]];
+    subTitleLabel.numberOfLines = 1;
+    subTitleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    subTitleLabel.text = app.name;
+    
+    [subTitleLabel sizeToFit];
+    
+    int width = MAX(titleLabel.frame.size.width + 8, subTitleLabel.frame.size.width + 8);
+    //最大宽度不超过220px
+    width = MIN(220, width);
+    UIView *titleView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, width, 44)];
+    [titleView addSubview:titleLabel];
+    [titleView addSubview:subTitleLabel];
+    
+    titleLabel.frame = CGRectMake(0, 0, width, 22);
+    subTitleLabel.frame = CGRectMake(0, 22, width, 22);
+    
+    self.navigationItem.titleView = titleView;
+}
+
+//从服务器获取用户信息
+- (void)getApp:(int64_t)appID {
+    if ([Token instance].isAccessTokenExpired) {
+        return;
+    }
+    
+    AFHTTPSessionManager *manager = [API newSessionManager];
+    NSString *url = [NSString stringWithFormat:@"customers/%lld", appID];
+    [manager GET:url
+      parameters:nil
+        progress:nil
+         success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+             NSLog(@"response:%@", responseObject);
+             NSString *name = [responseObject objectForKey:@"name"];
+             BOOL wechat = [[responseObject objectForKey:@"wechat"] boolValue];
+             if (name.length > 0) {
+                 App *app = [[App alloc] init];
+                 app.appID = appID;
+                 app.name = name;
+                 app.wechat = wechat;
+                 [App save:app];
+                 
+                 [self setBarTitle:app];
+             }
+         }
+         failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+             NSLog(@"failure");
+         }
+     ];
+}
+
 
 -(void)addObserver {
     [[AudioDownloader instance] addDownloaderObserver:self];
