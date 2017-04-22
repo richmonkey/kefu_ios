@@ -42,6 +42,7 @@
     self.loginTimestamp = [[dict objectForKey:@"login_timestamp"] intValue];
     self.name = [dict objectForKey:@"name"];
     self.avatar = [dict objectForKey:@"avatar"];
+    self.conversationView = [[dict objectForKey:@"conversation_view"] intValue];
 }
 
 - (void)save {
@@ -50,7 +51,8 @@
                            @"store_id":[NSNumber numberWithLongLong:self.storeID],
                            @"login_timestamp":[NSNumber numberWithInteger:self.loginTimestamp],
                            @"name":self.name ? self.name : @"",
-                           @"avatar":self.avatar ? self.avatar : @""};
+                           @"avatar":self.avatar ? self.avatar : @"",
+                           @"conversation_view":[NSNumber numberWithInteger:self.conversationView]};
     
     [self storeDictionary:dict];
 }

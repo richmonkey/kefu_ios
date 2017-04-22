@@ -113,7 +113,13 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
                                                  name:UIApplicationWillResignActiveNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(conversationViewDidChanged:)
+                                                 name:@"conversationViewDidChanged"
+                                               object:nil];
     
+    
+    
+    int conversationView = [Profile instance].conversationView;
     id<ConversationIterator> iterator =  [[CustomerSupportMessageDB instance] newConversationIterator];
     ICustomerMessage * msg = (ICustomerMessage*)[iterator next];
     while (msg) {
@@ -124,7 +130,15 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
         conversation.customerID = msg.customerID;
         conversation.type = CONVERSATION_CUSTOMER_SERVICE;
         conversation.timestamp = msg.timestamp;
-        [self.conversations addObject:conversation];
+        
+        if (conversationView == CONVERSATION_VIEW_WEEK) {
+            int now = (int)time(NULL);
+            if (now - conversation.timestamp <= 7*24*3600) {
+                [self.conversations addObject:conversation];
+            }
+        } else if (conversationView == CONVERSATION_VIEW_ALL) {
+            [self.conversations addObject:conversation];
+        }
         msg = (ICustomerMessage*)[iterator next];
     }
     
@@ -561,6 +575,82 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
             [ConversationDB setNewCount:0 uid:con.customerID appID:con.customerAppID];
             break;
         }
+    }
+}
+
+
+- (void)conversationViewDidChanged:(NSNotification*) notification {
+    int conversationView = [[notification.userInfo objectForKey:@"conversationView"] intValue];
+    NSLog(@"cv:%d", conversationView);
+
+    if (conversationView == CONVERSATION_VIEW_WEEK) {
+        NSMutableArray *weekConversations = [NSMutableArray array];
+        int now = (int)time(NULL);
+        for (CustomerConversation *conv in self.conversations) {
+            if (now - conv.timestamp <= 7*24*3600) {
+                [weekConversations addObject:conv];
+            }
+        }
+        self.conversations = weekConversations;
+        [self.tableview reloadData];
+    } else if (conversationView == CONVERSATION_VIEW_ALL) {
+        NSMutableArray *otherConversations = [NSMutableArray array];
+        id<ConversationIterator> iterator =  [[CustomerSupportMessageDB instance] newConversationIterator];
+        ICustomerMessage * msg = (ICustomerMessage*)[iterator next];
+        while (msg) {
+            CustomerConversation *conversation = [[CustomerConversation alloc] init];
+            conversation.message = msg;
+            conversation.cid = msg.customerID;
+            conversation.customerAppID = msg.customerAppID;
+            conversation.customerID = msg.customerID;
+            conversation.type = CONVERSATION_CUSTOMER_SERVICE;
+            conversation.timestamp = msg.timestamp;
+            
+            
+            NSInteger pos = [self.conversations  indexOfObjectPassingTest:^BOOL(CustomerConversation *obj, NSUInteger idx, BOOL *stop) {
+                if (obj.customerAppID == conversation.customerAppID && obj.customerID == conversation.customerID) {
+                    *stop = YES;
+                    return YES;
+                }
+                return NO;
+            }];
+            if (pos == NSNotFound) {
+                [otherConversations addObject:conversation];
+            }
+            msg = (ICustomerMessage*)[iterator next];
+        }
+    
+        for (Conversation *conv in otherConversations) {
+            CustomerConversation *cc = (CustomerConversation*)conv;
+            conv.newMsgCount = [ConversationDB getNewCount:cc.customerID appID:cc.customerAppID];
+            cc.isXiaoWei = (cc.customerID == self.currentUID && APPID == cc.customerAppID);
+            cc.top = [ConversationDB getTop:cc.customerID appID:cc.customerAppID];
+            
+            [self updateConversationName:conv];
+            [self updateConversationDetail:conv];
+        }
+        
+        NSArray *sortedArray = [otherConversations sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            CustomerConversation *c1 = obj1;
+            CustomerConversation *c2 = obj2;
+            
+            int64_t top1 = c1.top ? 1 : 0;
+            int64_t top2 = c2.top ? 1 : 0;
+            
+            int64_t t1 = top1 << 32 | c1.timestamp;
+            int64_t t2 = top2 << 32 | c2.timestamp;
+            
+            if (t1 < t2) {
+                return NSOrderedDescending;
+            } else if (t1 == t2) {
+                return NSOrderedSame;
+            } else {
+                return NSOrderedAscending;
+            }
+        }];
+        
+        [self.conversations addObjectsFromArray:sortedArray];
+        [self.tableview reloadData];
     }
 }
 

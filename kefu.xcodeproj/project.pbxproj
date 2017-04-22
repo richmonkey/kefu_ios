@@ -13,12 +13,8 @@
 		4803C80E1CC3B323007550E6 /* LoginViewOneCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4803C7FB1CC3B323007550E6 /* LoginViewOneCell.xib */; };
 		4803C8111CC3B323007550E6 /* LoginViewTwoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4803C8001CC3B323007550E6 /* LoginViewTwoCell.m */; };
 		4803C8121CC3B323007550E6 /* LoginViewTwoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4803C8011CC3B323007550E6 /* LoginViewTwoCell.xib */; };
-		487D48C31CC3E350005DE19D /* QuitTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 487D48BE1CC3E350005DE19D /* QuitTableViewCell.m */; };
-		487D48C41CC3E350005DE19D /* QuitTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 487D48BF1CC3E350005DE19D /* QuitTableViewCell.xib */; };
 		487D48C51CC3E350005DE19D /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 487D48C11CC3E350005DE19D /* SettingViewController.m */; };
 		487D48C61CC3E350005DE19D /* SettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 487D48C21CC3E350005DE19D /* SettingViewController.xib */; };
-		487D48CA1CC3E365005DE19D /* SettingInforTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 487D48C81CC3E365005DE19D /* SettingInforTableViewCell.m */; };
-		487D48CB1CC3E365005DE19D /* SettingInforTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 487D48C91CC3E365005DE19D /* SettingInforTableViewCell.xib */; };
 		487D48CE1CC3EAD4005DE19D /* UIAlertView+XPAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 487D48CD1CC3EAD4005DE19D /* UIAlertView+XPAlertView.m */; };
 		6D12EC661CB517650003A03B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC651CB517650003A03B /* main.m */; };
 		6D12EC691CB517650003A03B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EC681CB517650003A03B /* AppDelegate.m */; };
@@ -63,15 +59,9 @@
 		4803C7FF1CC3B323007550E6 /* LoginViewTwoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewTwoCell.h; sourceTree = "<group>"; };
 		4803C8001CC3B323007550E6 /* LoginViewTwoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewTwoCell.m; sourceTree = "<group>"; };
 		4803C8011CC3B323007550E6 /* LoginViewTwoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewTwoCell.xib; sourceTree = "<group>"; };
-		487D48BD1CC3E350005DE19D /* QuitTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuitTableViewCell.h; sourceTree = "<group>"; };
-		487D48BE1CC3E350005DE19D /* QuitTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuitTableViewCell.m; sourceTree = "<group>"; };
-		487D48BF1CC3E350005DE19D /* QuitTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QuitTableViewCell.xib; sourceTree = "<group>"; };
 		487D48C01CC3E350005DE19D /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
 		487D48C11CC3E350005DE19D /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		487D48C21CC3E350005DE19D /* SettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController.xib; sourceTree = "<group>"; };
-		487D48C71CC3E365005DE19D /* SettingInforTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingInforTableViewCell.h; sourceTree = "<group>"; };
-		487D48C81CC3E365005DE19D /* SettingInforTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingInforTableViewCell.m; sourceTree = "<group>"; };
-		487D48C91CC3E365005DE19D /* SettingInforTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingInforTableViewCell.xib; sourceTree = "<group>"; };
 		487D48CC1CC3EAD4005DE19D /* UIAlertView+XPAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+XPAlertView.h"; sourceTree = "<group>"; };
 		487D48CD1CC3EAD4005DE19D /* UIAlertView+XPAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+XPAlertView.m"; sourceTree = "<group>"; };
 		6D12EC611CB517650003A03B /* kefu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kefu.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -183,12 +173,6 @@
 				487D48C01CC3E350005DE19D /* SettingViewController.h */,
 				487D48C11CC3E350005DE19D /* SettingViewController.m */,
 				487D48C21CC3E350005DE19D /* SettingViewController.xib */,
-				487D48BD1CC3E350005DE19D /* QuitTableViewCell.h */,
-				487D48BE1CC3E350005DE19D /* QuitTableViewCell.m */,
-				487D48BF1CC3E350005DE19D /* QuitTableViewCell.xib */,
-				487D48C71CC3E365005DE19D /* SettingInforTableViewCell.h */,
-				487D48C81CC3E365005DE19D /* SettingInforTableViewCell.m */,
-				487D48C91CC3E365005DE19D /* SettingInforTableViewCell.xib */,
 			);
 			path = setting;
 			sourceTree = "<group>";
@@ -369,9 +353,7 @@
 				6D12EC711CB517650003A03B /* Assets.xcassets in Resources */,
 				4803C8121CC3B323007550E6 /* LoginViewTwoCell.xib in Resources */,
 				6D12EC971CB606390003A03B /* MessageConversationCell.xib in Resources */,
-				487D48CB1CC3E365005DE19D /* SettingInforTableViewCell.xib in Resources */,
 				6D13A6411DEC39A400683948 /* AboutViewController.xib in Resources */,
-				487D48C41CC3E350005DE19D /* QuitTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,7 +421,6 @@
 				4803C80D1CC3B323007550E6 /* LoginViewOneCell.m in Sources */,
 				6DBB2CCD1DBDC06500BC545A /* XWCustomerOutbox.m in Sources */,
 				6D485E051CC71E660082588F /* MainViewController.m in Sources */,
-				487D48C31CC3E350005DE19D /* QuitTableViewCell.m in Sources */,
 				6D13A6401DEC39A400683948 /* AboutViewController.m in Sources */,
 				6D76AFC21D0FC19100C9E89A /* ResolveUtil.m in Sources */,
 				6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */,
@@ -454,7 +435,6 @@
 				6D2521A11CC1D58F004C6FBE /* CustomerSupportMessageDB.m in Sources */,
 				6D1C1AC21EAA518700F8BB1F /* Conversation.m in Sources */,
 				4803C80B1CC3B323007550E6 /* LoginViewController.m in Sources */,
-				487D48CA1CC3E365005DE19D /* SettingInforTableViewCell.m in Sources */,
 				6D485E131CE17ED90082588F /* RobotViewController.m in Sources */,
 				6D25B3C11DC19D64009F99EA /* API.m in Sources */,
 				487D48C51CC3E350005DE19D /* SettingViewController.m in Sources */,

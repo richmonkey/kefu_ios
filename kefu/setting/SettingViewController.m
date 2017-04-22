@@ -7,8 +7,6 @@
 //
 
 #import "SettingViewController.h"
-#import "SettingInforTableViewCell.h"
-#import "QuitTableViewCell.h"
 #import "AppDB.h"
 #import "LoginViewController.h"
 #import <gobelieve/IMService.h>
@@ -25,7 +23,7 @@
 #import "UIAlertView+XPAlertView.h"
 #import "AboutViewController.h"
 
-@interface SettingViewController () <UITableViewDelegate,UITableViewDataSource>
+@interface SettingViewController () <UITableViewDelegate,UITableViewDataSource, UIActionSheetDelegate>
 @property(nonatomic) int64_t number;
 @property(nonatomic, copy) NSString *name;
 @end
@@ -36,6 +34,7 @@
     [super viewDidLoad];
     self.title = @"设置";
 
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
     Profile *profile = [Profile instance];
     self.number = profile.uid;
     self.name = profile.name ? profile.name : @"";
@@ -64,7 +63,7 @@
     } else if (section == 1) {
         return 2;
     } else if (section == 2) {
-        return 2;
+        return 3;
     } else if (section == 3) {
         return 1;
     }
@@ -74,47 +73,25 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section==0) {
         static NSString *reusableCellWithIdentifier = @"SettingInforTableViewCell";
-        SettingInforTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellWithIdentifier];
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellWithIdentifier];
         
         if (cell == nil) {
-            NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"SettingInforTableViewCell" owner:self options:nil];
-            cell = [array objectAtIndex:0];
+           cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"SettingInforTableViewCell"];
+
         }
         if (indexPath.row == 0) {
-            [cell.nameLabel setText:@"客服工号"];
+            [cell.textLabel setText:@"客服工号"];
+
             NSString *number = [NSString stringWithFormat:@"%lld", self.number];
-            [cell.valueLabel setText:number];
-        }else if(indexPath.row == 1){
-            [cell.nameLabel setText:@"客服姓名"];
-            if (self.name.length > 0) {
-                [cell.valueLabel setText:self.name];
-            } else {
-                [cell.valueLabel setText:@""];
-            }
+            [cell.detailTextLabel setText:number];
+
+        } else if(indexPath.row == 1) {
+            [cell.textLabel setText:@"客服姓名"];
+            [cell.detailTextLabel setText:self.name.length > 0 ? self.name : @""];
+
         }
-        
-        [cell.line setHidden:NO];
-        if (indexPath.row==1) {
-            [cell.line setHidden:YES];
-        }
-        
         return cell;
     } else if (indexPath.section == 1) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell1"];
-        
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell1"];
-        }
-
-        if (indexPath.row == 0) {
-           [cell.textLabel setText:@"帮助与反馈"];
-        } else if(indexPath.row == 1){
-            [cell.textLabel setText:@"关于我们"];
-        }
-        
-        return cell;
-
-    } else if (indexPath.section == 2) {
         
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell2"];
         
@@ -131,16 +108,55 @@
             cell.accessoryType = !isOnline ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
         }
         return cell;
-    } else if (indexPath.section == 3) {
-        static NSString *reusableCellWithIdentifier = @"QuitTableViewCell";
-        QuitTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusableCellWithIdentifier];
         
-        if (cell == nil) {
-            NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"QuitTableViewCell" owner:self options:nil];
-            cell = [array objectAtIndex:0];
-            [cell.quitButton addTarget:self action:@selector(quitAction) forControlEvents:UIControlEventTouchUpInside];
+    } else if (indexPath.section == 2) {
+        if (indexPath.row == 0) {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell1"];
+            
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell1"];
+            }
+            
+            [cell.textLabel setText:@"帮助与反馈"];
+            return cell;
+        } else if(indexPath.row == 1){
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell1"];
+            
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell1"];
+            }
+            
+            [cell.textLabel setText:@"关于我们"];
+            
+            return cell;
+        } else if (indexPath.row == 2) {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ConversationCell"];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"ConversationCell"];
+            }
+            [cell.textLabel setText:@"会话"];
+            
+            int cv = [Profile instance].conversationView;
+            if (cv == CONVERSATION_VIEW_WEEK) {
+                [cell.detailTextLabel setText:@"最近一周"];
+            } else if (cv == CONVERSATION_VIEW_ALL) {
+                [cell.detailTextLabel setText:@"全部"];
+            }
             return cell;
         }
+        
+        return nil;
+    } else if (indexPath.section == 3) {
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"QuitTableViewCell"];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"QuitTableViewCell"];
+        }
+        [cell.textLabel setText:@"退出登录"];
+        cell.textLabel.textAlignment = NSTextAlignmentCenter;
+     
+        return cell;
+
     }
     return nil;
 }
@@ -154,7 +170,7 @@
     NSLog(@"select index path:%zd, %zd", indexPath.row, indexPath.section);
     [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
     
-    if (indexPath.section == 1 && indexPath.row == 0) {
+    if (indexPath.section == 2 && indexPath.row == 0) {
         //帮助与反馈
         XWMessageViewController *ctrl = [[XWMessageViewController alloc] init];
         ctrl.currentUID = [Profile instance].uid;
@@ -164,17 +180,30 @@
         ctrl.appID = APPID;
         
         [self.navigationController pushViewController:ctrl animated:YES];
-    } else if (indexPath.section == 1 && indexPath.row == 1) {
+    } else if (indexPath.section == 2 && indexPath.row == 1) {
         AboutViewController * aboutController = [[AboutViewController alloc] init];
         [self.navigationController pushViewController:aboutController animated: YES];
-    } else if (indexPath.section == 2 && indexPath.row == 0) {
+    } else if (indexPath.section == 2 && indexPath.row == 2) {
+        
+        UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                      initWithTitle:nil
+                                      delegate:self
+                                      cancelButtonTitle:@"取消"
+                                      destructiveButtonTitle:nil
+                                      otherButtonTitles:@"最近一周", @"全部",nil];
+        actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+        [actionSheet showInView:self.view];
+        
+    } else if (indexPath.section == 1 && indexPath.row == 0) {
         if (![Profile instance].isOnline) {
             [self setUserStatus:YES];
         }
-    } else if (indexPath.section == 2 && indexPath.row == 1) {
+    } else if (indexPath.section == 1 && indexPath.row == 1) {
         if ([Profile instance].isOnline) {
             [self setUserStatus:NO];
         }
+    } else if (indexPath.section == 3 && indexPath.row == 0) {
+        [self quitAction];
     }
 }
 
@@ -192,8 +221,8 @@
               NSLog(@"set user status success:%@", responseObject);
               [Profile instance].status = online ? STATUS_ONLINE : STATUS_OFFLINE;
               [[Profile instance] save];
-              NSArray *array = @[[NSIndexPath indexPathForRow:1 inSection:2],
-                                 [NSIndexPath indexPathForRow:0 inSection:2]];
+              NSArray *array = @[[NSIndexPath indexPathForRow:1 inSection:1],
+                                 [NSIndexPath indexPathForRow:0 inSection:1]];
               [self.tableView reloadRowsAtIndexPaths:array
                                     withRowAnimation:UITableViewRowAnimationFade];
               [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -275,6 +304,33 @@
             [self logout];
         }
     }];
+}
+
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"action sheet:%zd", buttonIndex);
+    int conversationView;
+    if (buttonIndex == 0) {
+        conversationView = CONVERSATION_VIEW_WEEK;
+    } else if (buttonIndex == 1) {
+        conversationView = CONVERSATION_VIEW_ALL;
+    } else {
+        return;
+    }
+    
+    if (conversationView != [Profile instance].conversationView) {
+        [Profile instance].conversationView = conversationView;
+        [[Profile instance] save];
+        
+        NSArray *array = @[[NSIndexPath indexPathForRow:2 inSection:2]];
+        [self.tableView reloadRowsAtIndexPaths:array
+                              withRowAnimation:UITableViewRowAnimationFade];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"conversationViewDidChanged"
+                                                            object:nil
+                                                          userInfo:@{@"conversationView":@(conversationView)}];
+    }
 }
 
 @end
