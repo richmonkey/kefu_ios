@@ -183,20 +183,16 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
                                                                          target:self
                                                                          action:@selector(rightBarButtonItemClicked:)];
     [self.navigationItem setRightBarButtonItem:barButtonItemRight];
-    
-    __weak CustomerMessageListViewController *wself = self;
-    if ([Token instance].isAccessTokenExpired) {
-        [self addTokenRefreshOneTimeObserver:^{
-            for (Conversation *conv in wself.conversations) {
-                [wself updateConversationName:conv];
-            }
-        }];
-    }
 }
 
-
-
-
+- (void)onTokenRefreshed {
+    [super onTokenRefreshed];
+    for (Conversation *conv in self.conversations) {
+        if (conv.name.length == 0) {
+            [self updateConversationName:conv];
+        }
+    }
+}
 
 - (void)rightBarButtonItemClicked:(id)sender{
     SettingViewController *setting = [[SettingViewController alloc] init];

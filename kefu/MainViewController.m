@@ -34,10 +34,12 @@
 
 @interface MainViewController()
 @property(nonatomic) dispatch_source_t refreshTimer;
+
+@property(nonatomic) dispatch_source_t timer;
 @property(nonatomic) int refreshFailCount;
 @property(nonatomic, copy) NSString *deviceToken;
 
-@property(nonatomic) NSMutableArray *tokenRefreshObservers;
+@property(nonatomic, assign) BOOL binded;
 @end
 
 @implementation MainViewController
@@ -56,7 +58,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.tokenRefreshObservers = [NSMutableArray array];
+    self.binded = NO;
     
     Token *token = [Token instance];
     Profile *profile = [Profile instance];
@@ -103,13 +105,7 @@
     [self startRefreshTimer];
 }
 
-//observer只会触发一次
-- (void)addTokenRefreshOneTimeObserver:(void(^)())onTokenRefresh {
-    if ([self.tokenRefreshObservers containsObject:onTokenRefresh]) {
-        return;
-    }
-    [self.tokenRefreshObservers addObject:onTokenRefresh];
-}
+
 
 -(void)prepareTimer {
     Token *token = [Token instance];
@@ -129,12 +125,20 @@
     dispatch_resume(self.refreshTimer);
 }
 
+- (void)onTokenRefreshed {
+    if (!self.binded) {
+        [self bindDeviceToken];
+    }
+}
+
 -(void)refreshAccessToken {
     Token *token = [Token instance];
     if (!token.accessToken) {
+        NSLog(@"access token is null");
         return;
     }
     
+    NSLog(@"refresh access token...");
     NSString *base = [NSString stringWithFormat:@"%@/", KEFU_API];
     NSURL *baseURL = [NSURL URLWithString:base];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
@@ -153,12 +157,7 @@
               [token save];
               [self prepareTimer];
               
-              for (NSInteger i = 0; i < self.tokenRefreshObservers.count; i++) {
-                  void (^ob)() = [self.tokenRefreshObservers objectAtIndex:i];
-                  ob();
-              }
-              [self.tokenRefreshObservers removeAllObjects];
-              
+              [self onTokenRefreshed];
           }
           failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
               NSLog(@"refresh token failure");
@@ -177,16 +176,19 @@
               
           }
      ];
-    
-    
 }
 
 
 - (void)bindDeviceToken {
     AppDelegate *app = [AppDelegate instance];
+    if (app.deviceToken.length == 0) {
+        return;
+    }
+    
     [IMHttpAPI bindDeviceToken:app.deviceToken
                        success:^{
                            NSLog(@"bind device token success");
+                           self.binded = YES;
                        }
                           fail:^{
                               NSLog(@"bind device token fail");
@@ -194,14 +196,8 @@
 }
 
 -(void)didRegisterForRemoteNotificationsWithDeviceToken:(NSNotification*)notification {
-    __weak MainViewController *wself = self;
     Token *token = [Token instance];
-    if (token.isAccessTokenExpired) {
-        //token 过期
-        [self addTokenRefreshOneTimeObserver:^{
-            [wself bindDeviceToken];
-        }];
-    } else {
+    if (!token.isAccessTokenExpired) {
         [self bindDeviceToken];
     }
 }

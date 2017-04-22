@@ -10,9 +10,6 @@
 
 @interface MainViewController : UIViewController
 
-//observer只会触发一次
-- (void)addTokenRefreshOneTimeObserver:(void(^)())onTokenRefresh;
-
 - (void)onUserLogout:(NSNotification*) notification;
-
+- (void)onTokenRefreshed;
 @end
