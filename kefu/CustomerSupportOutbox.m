@@ -45,9 +45,22 @@
 }
 
 -(void)markMessageFailure:(IMessage*)msg {
-     ICustomerMessage *cm = (ICustomerMessage*)msg;
+    ICustomerMessage *cm = (ICustomerMessage*)msg;
     [[CustomerSupportMessageDB instance] markMessageFailure:cm.msgLocalID
                                                         uid:cm.customerID
                                                       appID:cm.customerAppID];
+}
+
+-(void)saveMessageAttachment:(IMessage*)msg url:(NSString*)url {
+    ICustomerMessage *cm = (ICustomerMessage*)msg;
+    MessageAttachmentContent *att = [[MessageAttachmentContent alloc] initWithAttachment:msg.msgLocalID url:url];
+    ICustomerMessage *attachment = [[ICustomerMessage alloc] init];
+    attachment.storeID = cm.storeID;
+    attachment.sellerID = cm.sellerID;
+    attachment.customerID = cm.customerID;
+    attachment.customerAppID = cm.customerAppID;
+    attachment.rawContent = att.raw;
+    
+    [[CustomerSupportMessageDB instance] insertMessage:attachment uid:cm.customerID appID:cm.customerAppID];
 }
 @end
