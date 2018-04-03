@@ -188,7 +188,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
 - (void)onTokenRefreshed {
     [super onTokenRefreshed];
     for (Conversation *conv in self.conversations) {
-        if (conv.name.length == 0) {
+        if (conv.isAnonymous) {
             [self updateConversationName:conv];
         }
     }
@@ -220,6 +220,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
     if (conversation.type == CONVERSATION_CUSTOMER_SERVICE) {
         CustomerConversation *cc = (CustomerConversation*)conversation;
         if (cc.isXiaoWei) {
+            conversation.anonymous = NO;
             conversation.name = @"小微团队";
             conversation.avatarURL = XIAOWEI_ICON_URL;
         } else {
@@ -227,9 +228,11 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
             if (u.name.length > 0) {
                 conversation.name = u.name;
                 conversation.avatarURL = u.avatarURL;
+                conversation.anonymous = NO;
             } else {
                 conversation.name = u.identifier;
                 conversation.avatarURL = u.avatarURL;
+                conversation.anonymous = YES;
             }
             
             //24hour refresh name
@@ -238,6 +241,7 @@ TCPConnectionObserver, CustomerMessageObserver, SystemMessageObserver>
                 [self asyncGetUser:cc.customerID appID:cc.customerAppID cb:^(IUser *u) {
                     conversation.name = u.name;
                     conversation.avatarURL = u.avatarURL;
+                    conversation.anonymous = NO;
                 }];
             }
         }

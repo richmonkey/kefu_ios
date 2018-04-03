@@ -17,6 +17,7 @@
 @interface Conversation : NSObject
 @property(nonatomic) int type;
 @property(nonatomic, assign) int64_t cid;
+@property(nonatomic, assign, getter=isAnonymous) BOOL anonymous;
 @property(nonatomic, copy) NSString *name;
 @property(nonatomic, copy) NSString *avatarURL;
 @property(nonatomic) IMessage *message;
