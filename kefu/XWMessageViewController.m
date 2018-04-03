@@ -87,7 +87,7 @@
     return self.storeID == cm.storeID;
 }
 
-- (void)returnMainTableViewController {
+- (void)onBack {
     [self removeObserver];
     [self stopPlayer];
     
@@ -99,14 +99,6 @@
     
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
-
--(void) viewWillDisappear:(BOOL)animated {
-    if ([self.navigationController.viewControllers indexOfObject:self]==NSNotFound) {
-        [self returnMainTableViewController];
-    }
-    [super viewWillDisappear:animated];
-}
-
 
 
 //同IM服务器连接的状态变更通知

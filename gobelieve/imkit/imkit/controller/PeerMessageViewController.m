@@ -34,9 +34,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    [self setNormalNavigationButtons];
-    
     if (self.peerName.length > 0) {
         self.navigationItem.title = self.peerName;
     } else {
@@ -158,17 +155,9 @@
     return [[PeerMessageDB instance] eraseMessageFailure:msg.msgLocalID uid:cid];
 }
 
--(void) setNormalNavigationButtons{
-    
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"对话"
-                                                             style:UIBarButtonItemStyleDone
-                                                            target:self
-                                                            action:@selector(returnMainTableViewController)];
-    
-    self.navigationItem.leftBarButtonItem = item;
-}
 
-- (void)returnMainTableViewController {
+
+- (void)onBack {
     DraftDB *db = [DraftDB instance];
     [db setDraft:self.peerUID draft:[self getDraft]];
     

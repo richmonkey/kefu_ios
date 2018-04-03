@@ -170,7 +170,9 @@
 
 }
 
+- (void)onBack {
 
+}
 
 - (void)setDraft:(NSString *)draft {
     if (draft.length > 0) {
@@ -188,19 +190,13 @@
 
 
 #pragma mark - View lifecycle
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+-(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    if (!self.navigationController || [self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
+        [self onBack];
+    }
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [self setEditing:NO animated:YES];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    NSLog(@"*** %@: didReceiveMemoryWarning ***", self.class);
-}
 
 - (void)dealloc {
     self.tableView.delegate = nil;

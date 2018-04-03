@@ -31,7 +31,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self setNormalNavigationButtons];
     self.navigationItem.title = self.groupName;
     
     DraftDB *db = [DraftDB instance];
@@ -114,17 +113,8 @@
     return [[GroupMessageDB instance] markMessageFailure:msg.msgLocalID gid:cid];
 }
 
--(void) setNormalNavigationButtons{
-    
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"对话"
-                                                             style:UIBarButtonItemStyleDone
-                                                            target:self
-                                                            action:@selector(returnMainTableViewController)];
-    
-    self.navigationItem.leftBarButtonItem = item;
-}
 
-- (void)returnMainTableViewController {
+- (void)onBack {
     DraftDB *db = [DraftDB instance];
     [db setGroupDraft:self.groupID draft:[self getDraft]];
     
