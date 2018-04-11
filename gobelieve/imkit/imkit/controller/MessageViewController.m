@@ -93,10 +93,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self setup];
     [self loadConversationData];
-
+    [self setup];
+    
     //scroll tableview to bottom
+    self.tableView.estimatedRowHeight = 0;
+    [self.tableView reloadData];
     [self.tableView setContentOffset:CGPointMake(0, CGFLOAT_MAX)];
 }
 
@@ -106,8 +108,7 @@
     
     self.automaticallyAdjustsScrollViewInsets = NO;
 
-    int y = kStatusBarHeight + KNavigationBarHeight;
-    CGRect tableFrame = CGRectMake(0.0f, y, w, h - [EaseChatToolbar defaultHeight] - 64);
+    CGRect tableFrame = CGRectMake(0.0f, 0, w, h - [EaseChatToolbar defaultHeight]);
     
     self.view.backgroundColor = RGBACOLOR(235, 235, 235, 1);
 
