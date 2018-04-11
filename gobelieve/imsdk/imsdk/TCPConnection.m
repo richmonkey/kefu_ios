@@ -10,6 +10,11 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <ifaddrs.h>
+#include <net/if.h>
+
 #import "AsyncTCP.h"
 #import "util.h"
 #import "GOReachability.h"
@@ -249,7 +254,17 @@
     
 }
 
--(NSString*)resolveIP:(NSString*)host {
+-(NSString*)IPV62String:(struct in6_addr)addr {
+    char buf[64] = {0};
+    const char *p = inet_ntop(AF_INET6, &addr, buf, 64);
+    if (p) {
+        return [NSString stringWithUTF8String:p];
+    }
+    return nil;
+    
+}
+
+-(NSString*)resolveIP:(NSString*)host ipv6:(BOOL)ipv6 {
     struct addrinfo hints;
     struct addrinfo *result, *rp;
     int s;
@@ -258,7 +273,11 @@
     snprintf(buf, 32, "%d", 0);
     
     memset(&hints, 0, sizeof(struct addrinfo));
-    hints.ai_family = AF_INET;
+    if (ipv6) {
+        hints.ai_family = AF_INET6;
+    } else {
+        hints.ai_family = AF_INET;
+    }
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
     hints.ai_flags = 0;
@@ -268,27 +287,60 @@
         NSLog(@"get addr info error:%s", gai_strerror(s));
         return nil;
     }
+    struct addrinfo *res;
+    for (res = result; res; res = res->ai_next) {
+        NSLog(@"family:%d socktype;%d protocol:%d", res->ai_family, res->ai_socktype, res->ai_protocol);
+    }
+    
+    
     NSString *ip = nil;
     rp = result;
     if (rp != NULL) {
-        struct sockaddr_in *addr = (struct sockaddr_in*)rp->ai_addr;
-        ip = [self IP2String:addr->sin_addr];
+        if (ipv6) {
+            struct sockaddr_in6 *addr = (struct sockaddr_in6*)rp->ai_addr;
+            ip = [self IPV62String:addr->sin6_addr];
+        } else {
+            struct sockaddr_in *addr = (struct sockaddr_in*)rp->ai_addr;
+            ip = [self IP2String:addr->sin_addr];
+        }
     }
     freeaddrinfo(result);
     return ip;
 }
 
+
+
 -(void)refreshHostIP {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         NSLog(@"refresh host ip...");
-        NSString *ip = [self resolveIP:self.host];
+        BOOL ipv6Only = [self isIPV6OnlyNetwork];
+        NSString *ip = [self resolveIP:self.host ipv6:ipv6Only];
         NSLog(@"host:%@ ip:%@", self.host, ip);
         if ([ip length] > 0) {
             self.hostIP = ip;
             self.timestmap = time(NULL);
         }
     });
+}
+
+- (BOOL)isIPV6OnlyNetwork {
+    BOOL ipv6only = YES;
+    struct ifaddrs *interfaces;
+    if(!getifaddrs(&interfaces)) {
+        struct ifaddrs *interface;
+        for(interface=interfaces; interface; interface=interface->ifa_next) {
+            if (!(interface->ifa_flags & IFF_UP) || (interface->ifa_flags & IFF_LOOPBACK) ) {
+                continue;
+            }
+            const struct sockaddr_in *addr = (const struct sockaddr_in*)interface->ifa_addr;
+            if (addr && addr->sin_family == AF_INET) {
+                ipv6only = NO;
+            }
+        }
+        freeifaddrs(interfaces);
+    }
+    return ipv6only;
 }
 
 -(void)connect {
