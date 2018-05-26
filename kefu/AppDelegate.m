@@ -37,7 +37,21 @@
     return (AppDelegate*)[UIApplication sharedApplication].delegate;
 }
 
+- (void)redirectLogToDocuments {
+    
+    NSArray *allPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [allPaths objectAtIndex:0];
+    NSString *pathForLog = [documentsDirectory stringByAppendingPathComponent:@"app.log"];
+    
+    NSLog(@"log path:%@", pathForLog);
+    freopen([pathForLog cStringUsingEncoding:NSASCIIStringEncoding],"w+",stderr);
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+#ifndef DEBUG
+    [self redirectLogToDocuments];
+#endif
+    
     
     //小微团队图标
     UIImage *image = [UIImage imageNamed:@"icon"];
@@ -147,7 +161,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSLog(@"refresh host ip...");
         for (int i = 0; i < 10; i++) {
-            NSString *host = @"imnode.gobelieve.io";
+            NSString *host = @"imnode2.gobelieve.io";
             NSString *ip = [self resolveIP:host];
             
             NSString *apiHost = @"api.gobelieve.io";
@@ -166,11 +180,11 @@
             }
         }
         
-        NSString *hostIP = [ResolveUtil resolveHost:IM_HOST usingDNSServer:@"223.5.5.5"];//ali dns
-        if (hostIP.length > 0) {
-            NSLog(@"set im host ip:%@ %@", IM_HOST, hostIP);
-            [IMService instance].hostIP = hostIP;
-        }
+        //NSString *hostIP = [ResolveUtil resolveHost:IM_HOST usingDNSServer:@"223.5.5.5"];//ali dns
+        //if (hostIP.length > 0) {
+            //NSLog(@"set im host ip:%@ %@", IM_HOST, hostIP);
+            //[IMService instance].hostIP = hostIP;
+        //}
     });
 }
 

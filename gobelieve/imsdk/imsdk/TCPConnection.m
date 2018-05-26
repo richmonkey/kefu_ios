@@ -70,6 +70,7 @@
 
 -(void)startRechabilityNotifier {
     TCPConnection *wself = self;
+
     self.reach = [GOReachability reachabilityForInternetConnection];
     
     self.reach.reachableBlock = ^(GOReachability*reach) {
@@ -264,7 +265,7 @@
     
 }
 
--(NSString*)resolveIP:(NSString*)host ipv6:(BOOL)ipv6 {
+-(NSString*)resolveIP:(NSString*)host address:(struct sockaddr*)address {
     struct addrinfo hints;
     struct addrinfo *result, *rp;
     int s;
@@ -273,14 +274,10 @@
     snprintf(buf, 32, "%d", 0);
     
     memset(&hints, 0, sizeof(struct addrinfo));
-    if (ipv6) {
-        hints.ai_family = AF_INET6;
-    } else {
-        hints.ai_family = AF_INET;
-    }
+    hints.ai_family = PF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
-    hints.ai_flags = 0;
+    hints.ai_flags = AI_DEFAULT;
     
     s = getaddrinfo([host UTF8String], buf, &hints, &result);
     if (s != 0) {
@@ -292,55 +289,48 @@
         NSLog(@"family:%d socktype;%d protocol:%d", res->ai_family, res->ai_socktype, res->ai_protocol);
     }
     
-    
     NSString *ip = nil;
     rp = result;
     if (rp != NULL) {
-        if (ipv6) {
-            struct sockaddr_in6 *addr = (struct sockaddr_in6*)rp->ai_addr;
-            ip = [self IPV62String:addr->sin6_addr];
-        } else {
+        if (rp->ai_family == AF_INET) {
             struct sockaddr_in *addr = (struct sockaddr_in*)rp->ai_addr;
             ip = [self IP2String:addr->sin_addr];
+            memcpy(address, addr, sizeof(struct sockaddr_in));
+        } else if (rp->ai_family == AF_INET6) {
+            struct sockaddr_in6 *addr = (struct sockaddr_in6*)rp->ai_addr;
+            ip = [self IPV62String:addr->sin6_addr];
+            memcpy(address, addr, sizeof(struct sockaddr_in6));
         }
     }
     freeaddrinfo(result);
     return ip;
 }
 
-
+-(BOOL)detectReachable:(struct sockaddr*)addr {
+    GOReachability *r = [GOReachability reachabilityWithAddress:addr];
+    return [r isReachable];
+}
 
 -(void)refreshHostIP {
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         NSLog(@"refresh host ip...");
-        BOOL ipv6Only = [self isIPV6OnlyNetwork];
-        NSString *ip = [self resolveIP:self.host ipv6:ipv6Only];
+        struct sockaddr_in6 addr = {0};
+        NSString *ip = [self resolveIP:self.host address:(struct sockaddr*)&addr];
+        
+        if ([ip length] > 0) {
+            BOOL r = [self detectReachable:(struct sockaddr*)&addr];
+            if (r) {
+                NSLog(@"ipv6:%@ reachable", ip);
+            } else {
+                NSLog(@"ipv6:%@ unreachable", ip);
+            }
+        }
         NSLog(@"host:%@ ip:%@", self.host, ip);
         if ([ip length] > 0) {
             self.hostIP = ip;
             self.timestmap = time(NULL);
         }
     });
-}
-
-- (BOOL)isIPV6OnlyNetwork {
-    BOOL ipv6only = YES;
-    struct ifaddrs *interfaces;
-    if(!getifaddrs(&interfaces)) {
-        struct ifaddrs *interface;
-        for(interface=interfaces; interface; interface=interface->ifa_next) {
-            if (!(interface->ifa_flags & IFF_UP) || (interface->ifa_flags & IFF_LOOPBACK) ) {
-                continue;
-            }
-            const struct sockaddr_in *addr = (const struct sockaddr_in*)interface->ifa_addr;
-            if (addr && addr->sin_family == AF_INET) {
-                ipv6only = NO;
-            }
-        }
-        freeifaddrs(interfaces);
-    }
-    return ipv6only;
 }
 
 -(void)connect {

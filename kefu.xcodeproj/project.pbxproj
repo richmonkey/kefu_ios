@@ -38,6 +38,8 @@
 		6D485E131CE17ED90082588F /* RobotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D485E121CE17ED90082588F /* RobotViewController.m */; };
 		6D76AFC21D0FC19100C9E89A /* ResolveUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D76AFC11D0FC19100C9E89A /* ResolveUtil.m */; };
 		6D76AFC41D0FC1F100C9E89A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D76AFC31D0FC1F100C9E89A /* libresolv.tbd */; };
+		6D8462932086B99A0030A73A /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D8462912086B99A0030A73A /* LogViewController.m */; };
+		6D8462942086B99A0030A73A /* LogViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D8462922086B99A0030A73A /* LogViewController.xib */; };
 		6DBB2CCA1DBDBCC800BC545A /* XWMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CC91DBDBCC800BC545A /* XWMessageViewController.m */; };
 		6DBB2CCD1DBDC06500BC545A /* XWCustomerOutbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CCC1DBDC06500BC545A /* XWCustomerOutbox.m */; };
 		6DBB2CD71DBE246800BC545A /* AppDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 6DBB2CD01DBE246800BC545A /* AppDB.m */; };
@@ -108,6 +110,9 @@
 		6D76AFC01D0FC19100C9E89A /* ResolveUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResolveUtil.h; sourceTree = "<group>"; };
 		6D76AFC11D0FC19100C9E89A /* ResolveUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResolveUtil.m; sourceTree = "<group>"; };
 		6D76AFC31D0FC1F100C9E89A /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
+		6D8462902086B99A0030A73A /* LogViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LogViewController.h; sourceTree = "<group>"; };
+		6D8462912086B99A0030A73A /* LogViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LogViewController.m; sourceTree = "<group>"; };
+		6D8462922086B99A0030A73A /* LogViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogViewController.xib; sourceTree = "<group>"; };
 		6DBB2CC81DBDBCC800BC545A /* XWMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XWMessageViewController.h; sourceTree = "<group>"; };
 		6DBB2CC91DBDBCC800BC545A /* XWMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XWMessageViewController.m; sourceTree = "<group>"; };
 		6DBB2CCB1DBDC06500BC545A /* XWCustomerOutbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XWCustomerOutbox.h; sourceTree = "<group>"; };
@@ -176,6 +181,9 @@
 				487D48C01CC3E350005DE19D /* SettingViewController.h */,
 				487D48C11CC3E350005DE19D /* SettingViewController.m */,
 				487D48C21CC3E350005DE19D /* SettingViewController.xib */,
+				6D8462902086B99A0030A73A /* LogViewController.h */,
+				6D8462912086B99A0030A73A /* LogViewController.m */,
+				6D8462922086B99A0030A73A /* LogViewController.xib */,
 			);
 			path = setting;
 			sourceTree = "<group>";
@@ -357,6 +365,7 @@
 				6D12EC801CB5FFC70003A03B /* Localizable.strings in Resources */,
 				6D12EC711CB517650003A03B /* Assets.xcassets in Resources */,
 				4803C8121CC3B323007550E6 /* LoginViewTwoCell.xib in Resources */,
+				6D8462942086B99A0030A73A /* LogViewController.xib in Resources */,
 				6D12EC971CB606390003A03B /* MessageConversationCell.xib in Resources */,
 				6D13A6411DEC39A400683948 /* AboutViewController.xib in Resources */,
 			);
@@ -372,7 +381,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-kefu/Pods-kefu-resources.sh",
-				"$PODS_CONFIGURATION_BUILD_DIR/JSBadgeView/JSBadgeView.bundle",
+				$PODS_CONFIGURATION_BUILD_DIR/JSBadgeView/JSBadgeView.bundle,
 				"${PODS_ROOT}/../gobelieve/imkit/imkit/imKitRes/sounds/messageReceived.aiff",
 				"${PODS_ROOT}/../gobelieve/imkit/imkit/imKitRes/sounds/messageSent.aiff",
 				"${PODS_ROOT}/../gobelieve/imkit/imkit/imKitRes/images.xcassets",
@@ -439,6 +448,7 @@
 				6D13A6401DEC39A400683948 /* AboutViewController.m in Sources */,
 				6D76AFC21D0FC19100C9E89A /* ResolveUtil.m in Sources */,
 				6D12EC921CB6061E0003A03B /* CustomerMessageListViewController.m in Sources */,
+				6D8462932086B99A0030A73A /* LogViewController.m in Sources */,
 				6D2521A71CC1DF27004C6FBE /* CustomerSupportMessageHandler.m in Sources */,
 				6D12EC691CB517650003A03B /* AppDelegate.m in Sources */,
 				6DBB2CCA1DBDBCC800BC545A /* XWMessageViewController.m in Sources */,
@@ -584,11 +594,11 @@
 					MAS_SHORTHAND,
 				);
 				INFOPLIST_FILE = kefu/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "5f7e3100-f016-43ba-a85e-426be6e367b8";
+				PROVISIONING_PROFILE = "49ff6295-73b8-4672-add4-d0227c1bbcbf";
 			};
 			name = Debug;
 		};
@@ -609,11 +619,11 @@
 					MAS_SHORTHAND,
 				);
 				INFOPLIST_FILE = kefu/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.beetle.kefu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "ac2b9c5b-8045-43ff-a644-585942e9530c";
+				PROVISIONING_PROFILE = "22fc1c40-2d93-4414-bdf5-ba816adb1e46";
 			};
 			name = Release;
 		};

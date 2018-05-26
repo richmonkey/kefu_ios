@@ -15,11 +15,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.3</string>
+	<string>1.4</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.3.0</string>
+	<string>1.4.7</string>
 	<key>LSHasLocalizedDisplayName</key>
 	<true/>
 	<key>LSRequiresIPhoneOS</key>
@@ -30,15 +30,24 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to camera.</string>
+	<string>我们需要使用您的相机,可以拍照后照片来和您的同事及好友进行沟通</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This application requires location services to work</string>
+	<string>我们需要使用您地理位置，通过发送地理位置消息来和您的同事及好友进行沟通
+我们需要使用您地理位置，通过发送地理位置消息来和您的同事及好友进行沟通
+我们需要使用您地理位置，通过发送地理位置消息来和您的同事及好友进行沟通
+我们需要使用您地理位置，通过发送地理位置消息来和您的同事及好友进行沟通
+我们需要使用您地理位置，通过发送地理位置消息来和您的同事及好友进行沟通
+我们需要使用您地理位置，通过发送地理位置消息来和您的同事及好友进行沟通
+我们需要使用您地理位置，通过发送地理位置消息来和您的同事及好友进行沟通
+我们需要使用您地理位置，通过发送地理位置消息来和您的同事及好友进行沟通</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This application requires location services to work</string>
+	<string>我们需要使用您地理位置，我们需要使用您地理位置，通过发送地理位置消息来和您的同事及好友进行沟通
+发送地理位置消息来回答您客户的问询
+</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app requires access to microphone.</string>
+	<string>我们需要使用您的麦克风,通过语音消息来和您的同事及好友进行沟通</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library.</string>
+	<string>我们需要使用您的相册,可以发送相册里的照片来和您的同事及好友进行沟通</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

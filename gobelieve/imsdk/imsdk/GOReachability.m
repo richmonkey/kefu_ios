@@ -109,7 +109,7 @@ static void TMReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     return nil;
 }
 
-+(GOReachability *)reachabilityWithAddress:(const struct sockaddr_in *)hostAddress
++(GOReachability *)reachabilityWithAddress:(const struct sockaddr *)hostAddress
 {
     SCNetworkReachabilityRef ref = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr*)hostAddress);
     if (ref) 
@@ -133,7 +133,7 @@ static void TMReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkRea
     zeroAddress.sin_len = sizeof(zeroAddress);
     zeroAddress.sin_family = AF_INET;
     
-    return [self reachabilityWithAddress:&zeroAddress];
+    return [self reachabilityWithAddress:(const struct sockaddr *)&zeroAddress];
 }
 
 +(GOReachability*)reachabilityForLocalWiFi

@@ -53,6 +53,19 @@
     NSLog(@"LoginViewControler dealloc");
 }
 
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.delegate   = self;
@@ -72,6 +85,8 @@
                                                        delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
         [alert show];
     }
+    
+    [self registerForKeyboardNotifications];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -120,6 +135,8 @@
         if (cell == nil) {
             NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"LoginViewTwoCell" owner:self options:nil];
             cell = [array objectAtIndex:0];
+            cell.userNumberTextField.delegate = self;
+            cell.passwordTextField.delegate = self;
         }
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
@@ -217,6 +234,26 @@
     }
     return nil;
 }
+
+// Called when the UIKeyboardDidShowNotification is sent.
+- (void)keyboardWasShown:(NSNotification*)aNotification
+{
+    NSDictionary* info = [aNotification userInfo];
+    CGSize kbSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
+}
+
+// Called when the UIKeyboardWillHideNotification is sent
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+{
+    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+    self.tableView.contentInset = contentInsets;
+    self.tableView.scrollIndicatorInsets = contentInsets;
+}
+
 
 
 - (void)login:(NSString*)username password:(NSString*)password {

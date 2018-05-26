@@ -56,7 +56,7 @@ typedef void (^NetworkUnreachable)(GOReachability * reachability);
 //compatibility with Apples original code. (see .m)
 +(GOReachability*)reachabilityWithHostName:(NSString*)hostname;
 +(GOReachability*)reachabilityForInternetConnection;
-+(GOReachability*)reachabilityWithAddress:(const struct sockaddr_in*)hostAddress;
++(GOReachability*)reachabilityWithAddress:(const struct sockaddr *)hostAddress;
 +(GOReachability*)reachabilityForLocalWiFi;
 
 -(GOReachability *)initWithReachabilityRef:(SCNetworkReachabilityRef)ref;

@@ -22,6 +22,7 @@
 #import "API.h"
 #import "UIAlertView+XPAlertView.h"
 #import "AboutViewController.h"
+#import "LogViewController.h"
 
 @interface SettingViewController () <UITableViewDelegate,UITableViewDataSource, UIActionSheetDelegate>
 @property(nonatomic) int64_t number;
@@ -63,7 +64,7 @@
     } else if (section == 1) {
         return 2;
     } else if (section == 2) {
-        return 3;
+        return 4;
     } else if (section == 3) {
         return 1;
     }
@@ -143,6 +144,16 @@
                 [cell.detailTextLabel setText:@"全部"];
             }
             return cell;
+        } else if (indexPath.row == 3) {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell1"];
+            
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell1"];
+            }
+            
+            [cell.textLabel setText:@"日志"];
+            
+            return cell;
         }
         
         return nil;
@@ -194,6 +205,9 @@
         actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
         [actionSheet showInView:self.view];
         
+    } else if (indexPath.section == 2 && indexPath.row == 3) {
+        LogViewController * logCtrl = [[LogViewController alloc] init];
+        [self.navigationController pushViewController:logCtrl animated: YES];
     } else if (indexPath.section == 1 && indexPath.row == 0) {
         if (![Profile instance].isOnline) {
             [self setUserStatus:YES];
